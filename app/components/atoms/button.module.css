@@ -31,6 +31,7 @@
     background: var(--color-accent-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    color: #ffffff;
 }
 
 .secondary {

@@ -1,18 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FiTrendingUp, FiMenu, FiX } from 'react-icons/fi';
+import { FiTrendingUp, FiMenu, FiX, FiHome, FiUser, FiBriefcase, FiCode, FiMail } from 'react-icons/fi';
 import { NavLink } from '@/app/components/molecules/nav-link';
 import { Button } from '@/app/components/atoms/button';
 import { ThemeToggle } from '@/app/components/atoms/theme-toggle';
 import styles from './header.module.css';
 
 const navLinks = [
-    { href: '#home', label: 'Home' },
-    { href: '#about', label: 'About' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#projects', label: 'Projects' },
-    { href: '#contact', label: 'Contact' },
+    { href: '#home', label: 'Home', icon: FiHome },
+    { href: '#about', label: 'About', icon: FiUser },
+    { href: '#experience', label: 'Experience', icon: FiBriefcase },
+    { href: '#projects', label: 'Projects', icon: FiCode },
+    { href: '#contact', label: 'Contact', icon: FiMail },
 ];
 
 interface HeaderProps {
@@ -44,6 +44,7 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
                 <nav className={styles.nav}>
                     {navLinks.map((link) => (
                         <NavLink key={link.href} href={link.href}>
+                            <link.icon size={14} />
                             {link.label}
                         </NavLink>
                     ))}
@@ -69,6 +70,7 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
                 <nav className={styles.mobileNav}>
                     {navLinks.map((link) => (
                         <NavLink key={link.href} href={link.href} onClick={closeMobileMenu}>
+                            <link.icon size={14} />
                             {link.label}
                         </NavLink>
                     ))}

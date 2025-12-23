@@ -1,5 +1,8 @@
 .link {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
     padding: var(--space-sm) var(--space-md);
     font-size: 0.9375rem;
     font-weight: 500;
