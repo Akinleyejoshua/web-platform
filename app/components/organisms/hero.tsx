@@ -98,11 +98,11 @@ export function Hero({
                             {/* Floating Cards */}
                             <div className={`${styles.floatingCard} ${styles.floatingCard1}`}>
                                 <span>🚀 Latest Project</span>
-                                <strong>AI Dashboard</strong>
+                                <strong>AI & Automations</strong>
                             </div>
                             <div className={`${styles.floatingCard} ${styles.floatingCard2}`}>
                                 <span>⚡ Tech Stack</span>
-                                <strong>React & Node.js</strong>
+                                <strong>Nextjs, Node.js, TypeScript, MySQL, MongoDB.</strong>
                             </div>
                         </div>
                     </div>
