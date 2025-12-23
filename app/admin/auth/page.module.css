@@ -1,5 +1,6 @@
 .authPage {
     min-height: 100vh;
+    height: 100%;
     background: var(--color-bg);
 }
 
@@ -7,6 +8,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 100vh;
+    height: 100%;
 }
 
 @media (max-width: 968px) {
