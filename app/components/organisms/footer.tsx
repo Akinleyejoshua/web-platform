@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiArrowRight } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiArrowRight, FiYoutube } from 'react-icons/fi';
 import styles from './footer.module.css';
 
 interface FooterProps {
@@ -53,10 +53,21 @@ export function Footer({ className = '' }: FooterProps) {
                             </a>
                             <a
                                 href="mailto:akinleyejoshua.dev@gmail.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className={styles.socialLink}
                                 aria-label="Email"
                             >
                                 <FiMail size={18} />
+                            </a>
+                            <a
+                                href="https://www.youtube.com/channel/UCQ51Ney9amBf0T5C69OmBog"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.socialLink}
+                                aria-label="Youtube"
+                            >
+                                <FiYoutube size={18} />
                             </a>
                         </div>
                     </div>
