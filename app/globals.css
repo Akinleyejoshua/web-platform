@@ -131,7 +131,7 @@ body {
   background-color: var(--color-bg);
   transition: background-color var(--transition-base), color var(--transition-base);
   /* 80% zoom effect */
-  zoom: 0.8;
+  zoom: 0.84;
 }
 
 /* === TYPOGRAPHY === */
