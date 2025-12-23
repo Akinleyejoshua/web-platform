@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FiHeart, FiMenu, FiX } from 'react-icons/fi';
+import { FiTrendingUp, FiMenu, FiX } from 'react-icons/fi';
 import { NavLink } from '@/app/components/molecules/nav-link';
 import { Button } from '@/app/components/atoms/button';
 import { ThemeToggle } from '@/app/components/atoms/theme-toggle';
@@ -16,10 +16,10 @@ const navLinks = [
 ];
 
 interface HeaderProps {
-    donateUrl?: string;
+    investUrl?: string;
 }
 
-export function Header({ donateUrl = '#' }: HeaderProps) {
+export function Header({ investUrl = '/invest' }: HeaderProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -50,9 +50,9 @@ export function Header({ donateUrl = '#' }: HeaderProps) {
                 </nav>
 
                 <div className={styles.actions}>
-                    <Button variant="primary" size="sm" href={donateUrl} className={styles.donateBtn}>
-                        <FiHeart size={16} />
-                        Donate
+                    <Button variant="primary" size="sm" href={investUrl} className={styles.donateBtn}>
+                        <FiTrendingUp size={16} />
+                        Invest
                     </Button>
                     <ThemeToggle />
                     <button
@@ -74,9 +74,9 @@ export function Header({ donateUrl = '#' }: HeaderProps) {
                     ))}
                 </nav>
                 <div className={styles.mobileActions}>
-                    <Button variant="primary" size="sm" href={donateUrl} className={styles.donateBtn}>
-                        <FiHeart size={16} />
-                        Donate
+                    <Button variant="primary" size="sm" href={investUrl} className={styles.donateBtn}>
+                        <FiTrendingUp size={16} />
+                        Invest
                     </Button>
                     <ThemeToggle />
                 </div>
@@ -84,3 +84,4 @@ export function Header({ donateUrl = '#' }: HeaderProps) {
         </header>
     );
 }
+

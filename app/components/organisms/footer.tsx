@@ -16,7 +16,7 @@ export function Footer({ className = '' }: FooterProps) {
                     {/* Brand Section */}
                     <div className={styles.brand}>
                         <a href="#home" className={styles.logo}>
-                            Port<span className={styles.logoAccent}>folio</span>
+                            Joshua<span className={styles.logoAccent}>.Dev</span>
                         </a>
                         <p className={styles.brandDescription}>
                             Building innovative digital solutions across web development,
@@ -89,7 +89,7 @@ export function Footer({ className = '' }: FooterProps) {
                         <h3 className={styles.linkTitle}>Resources</h3>
                         <div className={styles.links}>
                             <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.link}>GitHub</a>
-                            <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Parent Company(Buisness)</a>
+                            <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Parent Company(Business)</a>
                             <a href="https://akinleyejoshua-old.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v3</a>
                             <a href="https://akinleyejoshua.netlify.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v2</a>
                             <a href="https://akinleyejoshua-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v1</a>
