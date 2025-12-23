@@ -26,7 +26,7 @@ export async function PUT(request: NextRequest) {
         await connectDB();
         const data = await request.json();
 
-        let about = await About.findOne();
+        let about:any = await About.findOne();
 
         if (!about) {
             about = await About.create(data);
