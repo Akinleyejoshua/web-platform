@@ -36,6 +36,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: var(--space-sm);
+    color: #ffffff;
 }
 
 .infoSubtitle {
@@ -43,6 +44,7 @@
     opacity: 0.9;
     margin-bottom: var(--space-xl);
     line-height: 1.6;
+    color: #ffffff;
 }
 
 .contactItems {
