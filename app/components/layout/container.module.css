@@ -1,0 +1,14 @@
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+.fluid {
+    max-width: 100%;
+}
+
+.narrow {
+    max-width: 800px;
+}

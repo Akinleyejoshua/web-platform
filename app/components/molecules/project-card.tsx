@@ -1,0 +1,92 @@
+import React from 'react';
+import { FiGithub, FiExternalLink } from 'react-icons/fi';
+import { Badge } from '@/app/components/atoms/badge';
+import styles from './project-card.module.css';
+
+interface ProjectCardProps {
+    title: string;
+    description: string;
+    mediaType: 'image' | 'video';
+    mediaUrl: string;
+    technologies: string[];
+    githubUrl?: string;
+    liveUrl?: string;
+    className?: string;
+}
+
+export function ProjectCard({
+    title,
+    description,
+    mediaType,
+    mediaUrl,
+    technologies,
+    githubUrl,
+    liveUrl,
+    className = '',
+}: ProjectCardProps) {
+    const getYouTubeEmbedUrl = (url: string) => {
+        const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+        return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}` : url;
+    };
+
+    return (
+        <article className={`${styles.card} ${className}`.trim()}>
+            <div className={styles.media}>
+                {mediaType === 'video' ? (
+                    <iframe
+                        className={styles.video}
+                        src={getYouTubeEmbedUrl(mediaUrl)}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={title}
+                    />
+                ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                        src={mediaUrl || '/placeholder-project.jpg'}
+                        alt={title}
+                        className={styles.image}
+                    />
+                )}
+            </div>
+
+            <div className={styles.content}>
+                <h3 className={styles.title}>{title}</h3>
+                <p className={styles.description}>{description}</p>
+
+                {technologies.length > 0 && (
+                    <div className={styles.technologies}>
+                        {technologies.map((tech) => (
+                            <Badge key={tech}>{tech}</Badge>
+                        ))}
+                    </div>
+                )}
+
+                <div className={styles.links}>
+                    {githubUrl && (
+                        <a
+                            href={githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.linkButton}
+                        >
+                            <FiGithub size={16} />
+                            GitHub
+                        </a>
+                    )}
+                    {liveUrl && (
+                        <a
+                            href={liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.linkButton}
+                        >
+                            <FiExternalLink size={16} />
+                            Live Demo
+                        </a>
+                    )}
+                </div>
+            </div>
+        </article>
+    );
+}
