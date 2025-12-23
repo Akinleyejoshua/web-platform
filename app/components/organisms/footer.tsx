@@ -52,7 +52,7 @@ export function Footer({ className = '' }: FooterProps) {
                                 <FiTwitter size={18} />
                             </a>
                             <a
-                                href="mailto:akinleyejoshua@gmail.com"
+                                href="mailto:akinleyejoshua.dev@gmail.com"
                                 className={styles.socialLink}
                                 aria-label="Email"
                             >

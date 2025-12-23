@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { FiArrowRight, FiDownload } from 'react-icons/fi';
 import { Container } from '@/app/components/layout/container';
+import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './hero.module.css';
 
 interface HeroProps {
@@ -26,6 +29,14 @@ export function Hero({
     const words = headline.split(' ');
     const gradientWords = words.slice(0, 2).join(' ');
     const restWords = words.slice(2).join(' ');
+
+    const handlePrimaryClick = () => {
+        trackClick('hero-primary-cta');
+    };
+
+    const handleSecondaryClick = () => {
+        trackClick('hero-secondary-cta');
+    };
 
     return (
         <section id="home" className={styles.hero}>
@@ -55,11 +66,19 @@ export function Hero({
                         <p className={styles.subtext}>{subtext}</p>
 
                         <div className={styles.ctas}>
-                            <a href={primaryCtaLink} className={styles.primaryCta}>
+                            <a
+                                href={primaryCtaLink}
+                                className={styles.primaryCta}
+                                onClick={handlePrimaryClick}
+                            >
                                 {primaryCtaText}
                                 <FiArrowRight size={18} />
                             </a>
-                            <a href={secondaryCtaLink} className={styles.secondaryCta}>
+                            <a
+                                href={secondaryCtaLink}
+                                className={styles.secondaryCta}
+                                onClick={handleSecondaryClick}
+                            >
                                 <FiDownload size={18} />
                                 {secondaryCtaText}
                             </a>
