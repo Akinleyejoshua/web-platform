@@ -34,6 +34,33 @@
     transform: scale(1.05);
 }
 
+/* Placeholder for broken/missing images */
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background: linear-gradient(135deg, var(--color-accent) 0%, #667eea 50%, #764ba2 100%);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.placeholderIcon {
+    width: 48px;
+    height: 48px;
+    opacity: 0.8;
+}
+
+.placeholderText {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+}
+
 .video {
     width: 100%;
     height: 100%;

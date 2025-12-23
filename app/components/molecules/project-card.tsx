@@ -1,5 +1,7 @@
-import React from 'react';
-import { FiGithub, FiExternalLink } from 'react-icons/fi';
+'use client';
+
+import React, { useState } from 'react';
+import { FiGithub, FiExternalLink, FiCode } from 'react-icons/fi';
 import { Badge } from '@/app/components/atoms/badge';
 import styles from './project-card.module.css';
 
@@ -24,9 +26,15 @@ export function ProjectCard({
     liveUrl,
     className = '',
 }: ProjectCardProps) {
+    const [imageError, setImageError] = useState(false);
+
     const getYouTubeEmbedUrl = (url: string) => {
         const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
         return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}` : url;
+    };
+
+    const handleImageError = () => {
+        setImageError(true);
     };
 
     return (
@@ -40,12 +48,18 @@ export function ProjectCard({
                         allowFullScreen
                         title={title}
                     />
+                ) : imageError || !mediaUrl ? (
+                    <div className={styles.imagePlaceholder}>
+                        <FiCode className={styles.placeholderIcon} />
+                        <span className={styles.placeholderText}>Project</span>
+                    </div>
                 ) : (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                        src={mediaUrl || '/placeholder-project.jpg'}
+                        src={mediaUrl}
                         alt={title}
                         className={styles.image}
+                        onError={handleImageError}
                     />
                 )}
             </div>
@@ -90,3 +104,4 @@ export function ProjectCard({
         </article>
     );
 }
+
