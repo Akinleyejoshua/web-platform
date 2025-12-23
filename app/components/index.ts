@@ -23,5 +23,7 @@ export { Experience } from './organisms/experience';
 export { CategoryTabs } from './organisms/category-tabs';
 export { Carousel } from './organisms/carousel';
 export { Projects } from './organisms/projects';
+export { ProductProjects } from './organisms/product-projects';
 export { Contact } from './organisms/contact';
 export { Footer } from './organisms/footer';
+

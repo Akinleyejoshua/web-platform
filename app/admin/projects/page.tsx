@@ -40,6 +40,7 @@ const emptyProject: ProjectItem = {
 export default function AdminProjectsPage() {
     const [projects, setProjects] = useState<ProjectItem[]>([]);
     const [editingItem, setEditingItem] = useState<ProjectItem | null>(null);
+    const [techInput, setTechInput] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -61,10 +62,12 @@ export default function AdminProjectsPage() {
 
     const handleAdd = () => {
         setEditingItem({ ...emptyProject, order: projects.length });
+        setTechInput('');
     };
 
     const handleEdit = (project: ProjectItem) => {
         setEditingItem({ ...project });
+        setTechInput(project.technologies.join(', '));
     };
 
     const handleCancel = () => {
@@ -105,9 +108,9 @@ export default function AdminProjectsPage() {
         }
     };
 
-    const handleTechChange = (value: string) => {
+    const handleTechBlur = () => {
         if (!editingItem) return;
-        const techs = value.split(',').map((t) => t.trim()).filter((t) => t);
+        const techs = techInput.split(',').map((t) => t.trim()).filter((t) => t);
         setEditingItem({ ...editingItem, technologies: techs });
     };
 
@@ -218,13 +221,14 @@ export default function AdminProjectsPage() {
                     )}
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Technologies</label>
+                        <label className={styles.label}>Technologies (comma-separated)</label>
                         <input
                             type="text"
-                            value={editingItem.technologies.join(', ')}
-                            onChange={(e) => handleTechChange(e.target.value)}
+                            value={techInput}
+                            onChange={(e) => setTechInput(e.target.value)}
+                            onBlur={handleTechBlur}
                             className={styles.input}
-                            placeholder="React, Next.js, TensorFlow (comma separated)"
+                            placeholder="React, Next.js, TensorFlow"
                         />
                     </div>
 

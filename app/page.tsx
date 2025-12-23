@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Header, Hero, About, Experience, Projects, Contact, Footer } from '@/app/components';
+import { Header, Hero, About, Experience, Projects, ProductProjects, Contact, Footer } from '@/app/components';
 import { IHero } from '@/app/lib/models/hero';
 import { IAbout } from '@/app/lib/models/about';
 import { IContact } from '@/app/lib/models/contact';
@@ -28,6 +28,7 @@ export default function Home() {
   const aboutRef = useRef<HTMLElement>(null);
   const experienceRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
+  const productsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
 
   // Track page view (with localStorage deduplication)
@@ -38,6 +39,7 @@ export default function Home() {
   useSectionViewTracker('about', aboutRef);
   useSectionViewTracker('experience', experienceRef);
   useSectionViewTracker('projects', projectsRef);
+  useSectionViewTracker('products', productsRef);
   useSectionViewTracker('contact', contactRef);
 
   useEffect(() => {
@@ -105,6 +107,10 @@ export default function Home() {
         <Projects />
       </section>
 
+      <section ref={productsRef} id="products-section">
+        <ProductProjects />
+      </section>
+
       <section ref={contactRef} id="contact-section">
         <Contact
           email={contact?.email}
@@ -116,4 +122,5 @@ export default function Home() {
     </main>
   );
 }
+
 

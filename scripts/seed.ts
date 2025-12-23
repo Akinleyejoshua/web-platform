@@ -6,7 +6,7 @@
 
 import mongoose from 'mongoose';
 
-const MONGODB_URI:any = process.env.MONGODB_URI || "mongodb+srv://joshua_web:joshua_web1@cluster0.azy4nir.mongodb.net/?appName=Cluster0";
+const MONGODB_URI: any = process.env.MONGODB_URI || "mongodb+srv://joshua_web:joshua_web1@cluster0.azy4nir.mongodb.net/?appName=Cluster0";
 
 // Schema definitions (inline for standalone script)
 const HeroSchema = new mongoose.Schema({
@@ -56,6 +56,18 @@ const ProjectSchema = new mongoose.Schema({
 const ContactSchema = new mongoose.Schema({
     email: String,
     phone: String,
+}, { timestamps: true });
+
+const ProductProjectSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    category: String,
+    mediaType: String,
+    mediaUrl: String,
+    technologies: [String],
+    liveUrl: String,
+    featured: Boolean,
+    order: Number,
 }, { timestamps: true });
 
 // Seed Data from akinleyejoshua.vercel.app
@@ -277,8 +289,8 @@ const projectsData = [
 ];
 
 const contactData = {
-    email: 'akinleyejoshua@gmail.com',
-    phone: '',
+    email: 'akinleyejoshua.dev@gmail.com',
+    phone: '23408131519518',
 };
 
 async function seed() {
@@ -318,6 +330,35 @@ async function seed() {
         console.log('📝 Seeding Contact...');
         await Contact.create(contactData);
 
+        // Seed Product Projects
+        console.log('📝 Seeding Product Projects...');
+        const ProductProject = mongoose.models.ProductProject || mongoose.model('ProductProject', ProductProjectSchema);
+        await ProductProject.deleteMany({});
+        await ProductProject.insertMany([
+            {
+                title: 'FlashMailPro',
+                description: 'Helping businesses grow through the power of email. Our mission is to make professional email marketing accessible to everyone.',
+                category: 'saas',
+                mediaType: 'image',
+                mediaUrl: '',
+                technologies: ['Next.js', 'Node.js', 'MongoDB', 'Email APIs'],
+                liveUrl: 'https://flashmailpro.vercel.app/',
+                featured: true,
+                order: 0,
+            },
+            {
+                title: 'DropifyPro',
+                description: 'A powerful B2B e-commerce solution designed to streamline wholesale operations and simplify supply chain management for growing enterprises.',
+                category: 'b2b',
+                mediaType: 'image',
+                mediaUrl: '',
+                technologies: ['Next.js', 'Node.js', 'PostgreSQL', 'Stripe'],
+                liveUrl: 'https://dropifypro.vercel.app/',
+                featured: true,
+                order: 1,
+            },
+        ]);
+
         console.log('✅ Database seeded successfully!');
         console.log(`
     Summary:
@@ -325,6 +366,7 @@ async function seed() {
     - 1 About entry with ${aboutData.socialLinks.length} social links
     - ${experienceData.length} Experience entries
     - ${projectsData.length} Project entries
+    - 2 Product Project entries
     - 1 Contact entry
     `);
 

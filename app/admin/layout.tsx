@@ -17,7 +17,8 @@ import {
     FiExternalLink,
     FiMenu,
     FiX,
-    FiChevronRight
+    FiChevronRight,
+    FiPackage
 } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './layout.module.css';
@@ -36,6 +37,7 @@ const navGroups = [
             { href: '/admin/about', label: 'About', icon: FiUser },
             { href: '/admin/experience', label: 'Experience', icon: FiBriefcase },
             { href: '/admin/projects', label: 'Projects', icon: FiFolder },
+            { href: '/admin/products', label: 'Products', icon: FiPackage },
             { href: '/admin/contact', label: 'Contact', icon: FiMail },
         ]
     },
