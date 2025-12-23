@@ -90,7 +90,7 @@ export function Footer({ className = '' }: FooterProps) {
                         <div className={styles.links}>
                             <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.link}>GitHub</a>
                             <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Parent Company(Buisness)</a>
-                            <a href="https://akinleyejoshua.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v3</a>
+                            <a href="https://akinleyejoshua-old.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v3</a>
                             <a href="https://akinleyejoshua.netlify.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v2</a>
                             <a href="https://akinleyejoshua-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Portfolio v1</a>
                             <a href="https://j-resume.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link}>Prev. Ml Projects</a>
