@@ -1,0 +1,102 @@
+JOSHUA AKINLEYE
+Full-Stack Developer
+
+Email: akinleyejoshua.dev@gmail.com
+Phone: +234 08131519518
+Location: Available Worldwide (Remote)
+LinkedIn: linkedin.com/in/joshua-a-9895b61ab
+GitHub: github.com/Akinleyejoshua
+Portfolio: joshuaakinleye.vercel.app
+
+================================================================================
+PROFESSIONAL SUMMARY
+================================================================================
+
+Innovative Full-Stack Developer with 5+ years of professional experience 
+building innovative digital solutions across web development, machine learning, 
+and Web3 technologies. Successfully delivered 50+ projects for 30+ satisfied 
+clients. Passionate about creating cutting-edge applications using modern 
+technologies including Next.js, Node.js, TypeScript, and cloud databases.
+
+================================================================================
+CORE COMPETENCIES
+================================================================================
+
+Technical Skills:
+- Frontend: Next.js, React.js, TypeScript, JavaScript, HTML5, CSS3
+- Backend: Node.js, Express.js, REST APIs
+- Databases: MySQL, MongoDB
+- Version Control: Git, GitHub
+- AI & Automation: Machine Learning Applications, AI Solutions
+- Web3: Blockchain Technologies, Decentralized Applications
+
+Soft Skills:
+- Problem-solving and analytical thinking
+- Cross-functional collaboration
+- Remote work proficiency
+- Client communication and project management
+- Agile development methodologies
+
+================================================================================
+PROFESSIONAL EXPERIENCE
+================================================================================
+
+Full-Stack Developer | Freelance/Independent Contractor
+[Date Range - Present]
+
+- Delivered 50+ successful projects across web, machine learning, and Web3 
+  domains for diverse client base
+- Developed and maintained full-stack web applications using Next.js, Node.js, 
+  TypeScript, MySQL, and MongoDB
+- Implemented AI and automation solutions to enhance business processes
+- Collaborated with 30+ clients worldwide to translate requirements into 
+  functional, user-centric applications
+- Maintained excellent client relationships resulting in repeat business and 
+  referrals
+- Applied modern development practices including responsive design, performance 
+  optimization, and accessibility standards
+
+================================================================================
+TECHNICAL PROJECTS
+================================================================================
+
+Web Development Projects:
+- Built responsive, full-stack web applications with modern frameworks
+- Implemented database solutions using both SQL and NoSQL databases
+- Created RESTful APIs and integrated third-party services
+
+Machine Learning Projects:
+- Developed ML-powered applications and automation tools
+- Integrated AI solutions into web platforms
+
+Web3 Projects:
+- Built decentralized applications (dApps)
+- Implemented blockchain-based solutions
+
+================================================================================
+EDUCATION
+================================================================================
+
+[Relevant Degree/Certification in Computer Science or related field]
+[Institution Name]
+[Year of Completion]
+
+================================================================================
+CERTIFICATIONS & CONTINUOUS LEARNING
+================================================================================
+
+- [Add relevant certifications]
+- Ongoing professional development in emerging technologies
+- Active contributor to open-source projects on GitHub
+
+================================================================================
+ADDITIONAL INFORMATION
+================================================================================
+
+- Available for remote opportunities worldwide
+- Strong portfolio of deployed applications
+- Active presence in developer communities
+
+================================================================================
+
+References available upon request.

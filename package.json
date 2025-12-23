@@ -22,8 +22,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "docx": "^9.5.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
+    "pdfkit": "^0.17.2",
     "typescript": "^5"
   }
 }

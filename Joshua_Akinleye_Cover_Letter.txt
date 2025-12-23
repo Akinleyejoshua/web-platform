@@ -1,0 +1,66 @@
+JOSHUA AKINLEYE
+Full-Stack Developer
+
+Email: akinleyejoshua.dev@gmail.com
+Phone: +234 08131519518
+Location: Available Worldwide (Remote)
+LinkedIn: linkedin.com/in/joshua-a-9895b61ab
+GitHub: github.com/Akinleyejoshua
+Portfolio: joshuaakinleye.vercel.app
+
+--------------------------------------------------------------------------------
+
+[Date]
+
+[Hiring Manager's Name]
+[Company Name]
+[Company Address]
+[City, State, ZIP]
+
+Dear [Hiring Manager's Name],
+
+I am writing to express my strong interest in the [Position Title] role at 
+[Company Name]. As a Full-Stack Developer with 5+ years of experience building 
+innovative digital solutions and a proven track record of delivering 50+ 
+successful projects, I am confident in my ability to contribute meaningfully 
+to your team.
+
+Throughout my career, I have developed expertise in creating cutting-edge 
+applications using modern technologies including Next.js, Node.js, TypeScript, 
+MySQL, and MongoDB. My experience spans web development, machine learning, and 
+Web3 technologies, allowing me to bring a diverse skill set and fresh 
+perspectives to complex technical challenges.
+
+Key highlights of my qualifications include:
+
+- Successfully delivered 50+ projects across multiple technology domains, 
+  serving 30+ satisfied clients with excellent retention rates
+- Deep expertise in full-stack development with React/Next.js frontend and 
+  Node.js backend architectures
+- Experience implementing AI and automation solutions that enhance business 
+  processes and user experiences
+- Strong problem-solving abilities and a passion for staying current with 
+  emerging technologies and industry best practices
+- Proven ability to work effectively in remote environments while maintaining 
+  clear communication with stakeholders
+
+What excites me most about [Company Name] is [specific reason related to the 
+company's mission, products, or culture]. I am particularly drawn to 
+opportunities where I can leverage my full-stack expertise to build scalable, 
+user-centric applications that make a real impact.
+
+I am eager to bring my technical skills, collaborative mindset, and dedication 
+to excellence to your team. I would welcome the opportunity to discuss how my 
+experience aligns with your needs and how I can contribute to [Company Name]'s 
+continued success.
+
+Thank you for considering my application. I look forward to the possibility of 
+speaking with you soon.
+
+Sincerely,
+
+Joshua Akinleye
+
+--------------------------------------------------------------------------------
+
+Enclosure: Resume
