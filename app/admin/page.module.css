@@ -348,6 +348,47 @@
     }
 }
 
+/* Details List for Section Views and Clicks */
+.detailsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.detailItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+}
+
+.detailItem:hover {
+    border-color: var(--color-accent);
+    background: rgba(var(--color-accent-rgb), 0.02);
+}
+
+.detailLabel {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: capitalize;
+}
+
+.detailValue {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: rgba(var(--color-accent-rgb), 0.1);
+    padding: 4px 12px;
+    border-radius: 16px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .chartSection {

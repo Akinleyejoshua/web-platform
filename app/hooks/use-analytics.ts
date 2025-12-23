@@ -6,10 +6,14 @@ import axios from 'axios';
 interface DailyStat {
     date: string;
     views: number;
+    sectionViews?: Record<string, number>;
+    clicks?: Record<string, number>;
 }
 
 interface AnalyticsData {
     totalViews: number;
+    sectionViews: Record<string, number>;
+    clicks: Record<string, number>;
     dailyStats: DailyStat[];
 }
 
@@ -44,7 +48,10 @@ export function useAnalytics(): UseAnalyticsReturn {
 
     const trackView = useCallback(async () => {
         try {
-            await axios.post('/api/analytics');
+            await axios.post('/api/analytics/track', {
+                type: 'pageView',
+                target: 'home',
+            });
         } catch (err) {
             console.error('Failed to track view:', err);
         }

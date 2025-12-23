@@ -11,7 +11,9 @@ import {
     FiUser,
     FiMail,
     FiRefreshCw,
-    FiArrowUpRight
+    FiArrowUpRight,
+    FiMousePointer,
+    FiLayout
 } from 'react-icons/fi';
 import { useAnalytics } from '@/app/hooks/use-analytics';
 import styles from './page.module.css';
@@ -37,11 +39,18 @@ export default function AdminDashboardPage() {
 
     const totalViews = analytics?.totalViews || 0;
     const dailyStats = analytics?.dailyStats || [];
+    const sectionViews = analytics?.sectionViews || {};
+    const clicks = analytics?.clicks || {};
+
     const todayViews = dailyStats[0]?.views || 0;
     const yesterdayViews = dailyStats[1]?.views || 0;
     const viewsChange = yesterdayViews > 0
         ? Math.round(((todayViews - yesterdayViews) / yesterdayViews) * 100)
         : 0;
+
+    // Calculate totals
+    const totalSectionViews = Object.values(sectionViews).reduce((a, b) => a + b, 0);
+    const totalClicks = Object.values(clicks).reduce((a, b) => a + b, 0);
 
     // Get last 7 days for chart
     const last7Days = dailyStats.slice(0, 7).reverse();
@@ -70,7 +79,7 @@ export default function AdminDashboardPage() {
                         <FiEye size={22} />
                     </div>
                     <div className={styles.statContent}>
-                        <div className={styles.statLabel}>Total Views (30 days)</div>
+                        <div className={styles.statLabel}>Total Page Views</div>
                         <div className={styles.statValue}>{totalViews.toLocaleString()}</div>
                     </div>
                 </div>
@@ -92,22 +101,22 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className={styles.statCard}>
-                    <div className={styles.statIcon}>
-                        <FiFolder size={22} />
+                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
+                        <FiLayout size={22} />
                     </div>
                     <div className={styles.statContent}>
-                        <div className={styles.statLabel}>Projects</div>
-                        <div className={styles.statValue}>11</div>
+                        <div className={styles.statLabel}>Section Views</div>
+                        <div className={styles.statValue}>{totalSectionViews.toLocaleString()}</div>
                     </div>
                 </div>
 
                 <div className={styles.statCard}>
-                    <div className={styles.statIcon}>
-                        <FiBriefcase size={22} />
+                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' }}>
+                        <FiMousePointer size={22} />
                     </div>
                     <div className={styles.statContent}>
-                        <div className={styles.statLabel}>Experiences</div>
-                        <div className={styles.statValue}>4</div>
+                        <div className={styles.statLabel}>Total Clicks</div>
+                        <div className={styles.statValue}>{totalClicks.toLocaleString()}</div>
                     </div>
                 </div>
             </div>
@@ -149,6 +158,53 @@ export default function AdminDashboardPage() {
                                 </Link>
                             );
                         })}
+                    </div>
+                </div>
+            </div>
+
+            {/* Section Views & Clicks Details */}
+            <div className={styles.chartSection}>
+                <div className={styles.chartCard}>
+                    <div className={styles.chartHeader}>
+                        <h2 className={styles.chartTitle}>Section Views Breakdown</h2>
+                    </div>
+                    <div className={styles.detailsList}>
+                        {Object.keys(sectionViews).length === 0 ? (
+                            <p style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '1rem' }}>
+                                No section views recorded yet
+                            </p>
+                        ) : (
+                            Object.entries(sectionViews)
+                                .sort(([, a], [, b]) => b - a)
+                                .map(([section, count]) => (
+                                    <div key={section} className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>{section}</span>
+                                        <span className={styles.detailValue}>{count.toLocaleString()}</span>
+                                    </div>
+                                ))
+                        )}
+                    </div>
+                </div>
+
+                <div className={styles.chartCard}>
+                    <div className={styles.chartHeader}>
+                        <h2 className={styles.chartTitle}>Click Tracking</h2>
+                    </div>
+                    <div className={styles.detailsList}>
+                        {Object.keys(clicks).length === 0 ? (
+                            <p style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '1rem' }}>
+                                No clicks recorded yet
+                            </p>
+                        ) : (
+                            Object.entries(clicks)
+                                .sort(([, a], [, b]) => b - a)
+                                .map(([target, count]) => (
+                                    <div key={target} className={styles.detailItem}>
+                                        <span className={styles.detailLabel}>{target}</span>
+                                        <span className={styles.detailValue}>{count.toLocaleString()}</span>
+                                    </div>
+                                ))
+                        )}
                     </div>
                 </div>
             </div>
