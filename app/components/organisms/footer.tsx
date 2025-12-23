@@ -33,7 +33,7 @@ export function Footer({ className = '' }: FooterProps) {
                                 <FiGithub size={18} />
                             </a>
                             <a
-                                href="https://linkedin.com"
+                                href="https://www.linkedin.com/in/joshua-a-9895b61ab/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.socialLink}
@@ -42,7 +42,8 @@ export function Footer({ className = '' }: FooterProps) {
                                 <FiLinkedin size={18} />
                             </a>
                             <a
-                                href="https://twitter.com"
+                                href="https://x.com/Joshuaakinleye4
+                                "
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.socialLink}
@@ -88,7 +89,7 @@ export function Footer({ className = '' }: FooterProps) {
                         <h3 className={styles.linkTitle}>Resources</h3>
                         <div className={styles.links}>
                             <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.link}>GitHub</a>
-                            <a href="https://j-resume.netlify.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Resume</a>
+                            <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link}>Parent Company(Buisness)</a>
                             <a href="https://matching.turing.com/developer-resume-preview/94fcd098ef28063a611a36b6c211b83394302204b3221e" target="_blank" rel="noopener noreferrer" className={styles.link}>Turing Profile</a>
                         </div>
                     </div>
@@ -97,12 +98,12 @@ export function Footer({ className = '' }: FooterProps) {
                 {/* Bottom Bar */}
                 <div className={styles.bottomBar}>
                     <p className={styles.copyright}>
-                        © {currentYear} Joshua Akinleye. Made with <span className={styles.heart}>♥</span> All rights reserved.
+                        © {currentYear} Joshua Akinleye.  All rights reserved.
                     </p>
-                    <div className={styles.bottomLinks}>
+                    {/* <div className={styles.bottomLinks}>
                         <a href="#" className={styles.bottomLink}>Privacy Policy</a>
                         <a href="#" className={styles.bottomLink}>Terms of Service</a>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </footer>
