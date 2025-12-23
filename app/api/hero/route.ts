@@ -26,7 +26,7 @@ export async function PUT(request: NextRequest) {
         await connectDB();
         const data = await request.json();
 
-        let hero = await Hero.findOne();
+        let hero:any = await Hero.findOne();
 
         if (!hero) {
             hero = await Hero.create(data);

@@ -13,6 +13,7 @@ interface CarouselProps {
 export function Carousel({ children, autoPlay = false, interval = 5000 }: CarouselProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [slidesPerView, setSlidesPerView] = useState(1);
+    const trackRef = React.useRef<HTMLDivElement>(null);
 
     // Responsive slides per view
     useEffect(() => {
@@ -33,17 +34,35 @@ export function Carousel({ children, autoPlay = false, interval = 5000 }: Carous
 
     const maxIndex = Math.max(0, children.length - slidesPerView);
 
-    const goTo = useCallback((index: number) => {
-        setCurrentIndex(Math.max(0, Math.min(index, maxIndex)));
-    }, [maxIndex]);
+    const scrollToSlide = useCallback((index: number) => {
+        if (trackRef.current) {
+            const slideWidth = trackRef.current.scrollWidth / children.length;
+            trackRef.current.scrollTo({
+                left: index * slideWidth,
+                behavior: 'smooth'
+            });
+        }
+    }, [children.length]);
+
+    const handleScroll = useCallback(() => {
+        if (trackRef.current) {
+            const slideWidth = trackRef.current.scrollWidth / children.length;
+            const newIndex = Math.round(trackRef.current.scrollLeft / slideWidth);
+            if (newIndex !== currentIndex && newIndex >= 0 && newIndex <= maxIndex) {
+                setCurrentIndex(newIndex);
+            }
+        }
+    }, [children.length, currentIndex, maxIndex]);
 
     const goNext = useCallback(() => {
-        goTo(currentIndex + 1);
-    }, [currentIndex, goTo]);
+        const nextIndex = Math.min(currentIndex + 1, maxIndex);
+        scrollToSlide(nextIndex);
+    }, [currentIndex, maxIndex, scrollToSlide]);
 
     const goPrev = useCallback(() => {
-        goTo(currentIndex - 1);
-    }, [currentIndex, goTo]);
+        const prevIndex = Math.max(currentIndex - 1, 0);
+        scrollToSlide(prevIndex);
+    }, [currentIndex, scrollToSlide]);
 
     // Auto-play
     useEffect(() => {
@@ -51,27 +70,29 @@ export function Carousel({ children, autoPlay = false, interval = 5000 }: Carous
 
         const timer = setInterval(() => {
             if (currentIndex >= maxIndex) {
-                setCurrentIndex(0);
+                scrollToSlide(0);
             } else {
                 goNext();
             }
         }, interval);
 
         return () => clearInterval(timer);
-    }, [autoPlay, interval, currentIndex, maxIndex, goNext]);
+    }, [autoPlay, interval, currentIndex, maxIndex, goNext, scrollToSlide]);
 
-    // Reset index when children change
+    // Reset scroll when children change
     useEffect(() => {
-        setCurrentIndex(0);
+        if (trackRef.current) {
+            trackRef.current.scrollTo({ left: 0, behavior: 'instant' });
+            setCurrentIndex(0);
+        }
     }, [children.length]);
-
-    const translateX = -(currentIndex * (100 / slidesPerView));
 
     return (
         <div className={styles.carousel}>
             <div
+                ref={trackRef}
                 className={styles.track}
-                style={{ transform: `translateX(${translateX}%)` }}
+                onScroll={handleScroll}
             >
                 {children.map((child, index) => (
                     <div key={index} className={styles.slide}>
@@ -106,7 +127,7 @@ export function Carousel({ children, autoPlay = false, interval = 5000 }: Carous
                             <button
                                 key={i}
                                 className={`${styles.dot} ${i === currentIndex ? styles.active : ''}`}
-                                onClick={() => goTo(i)}
+                                onClick={() => scrollToSlide(i)}
                                 aria-label={`Go to slide ${i + 1}`}
                             />
                         ))}

@@ -1,16 +1,31 @@
 .carousel {
     position: relative;
-    overflow: hidden;
+    width: 100%;
 }
 
 .track {
     display: flex;
-    transition: transform 0.5s ease;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+    padding-bottom: var(--space-md);
+    /* Space for shadow/overflow */
+}
+
+.track::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari/Opera */
 }
 
 .slide {
     flex: 0 0 100%;
     min-width: 0;
+    scroll-snap-align: start;
     padding: 0 var(--space-md);
 }
 
@@ -30,7 +45,7 @@
     display: flex;
     justify-content: center;
     gap: var(--space-md);
-    margin-top: var(--space-xl);
+    margin-top: var(--space-lg);
 }
 
 .controlBtn {
@@ -45,6 +60,7 @@
     color: var(--color-text);
     cursor: pointer;
     transition: all var(--transition-fast);
+    z-index: 10;
 }
 
 .controlBtn:hover:not(:disabled) {
@@ -62,7 +78,7 @@
     display: flex;
     justify-content: center;
     gap: var(--space-sm);
-    margin-top: var(--space-lg);
+    margin-top: var(--space-md);
 }
 
 .dot {
@@ -86,17 +102,8 @@
         padding: 0 var(--space-sm);
     }
 
-    .controls {
-        gap: var(--space-sm);
-        margin-top: var(--space-lg);
-    }
-
     .controlBtn {
         width: 40px;
         height: 40px;
-    }
-
-    .dots {
-        margin-top: var(--space-md);
     }
 }
