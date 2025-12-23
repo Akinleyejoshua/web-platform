@@ -1,4 +1,4 @@
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle } = require('docx');
+const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle, ExternalHyperlink } = require('docx');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
@@ -12,8 +12,11 @@ const resumeData = {
         phone: '+234 08131519518',
         location: 'Available Worldwide (Remote)',
         linkedin: 'linkedin.com/in/joshua-a-9895b61ab',
+        linkedinUrl: 'https://www.linkedin.com/in/joshua-a-9895b61ab/',
         github: 'github.com/Akinleyejoshua',
-        portfolio: 'joshuaakinleye.vercel.app'
+        githubUrl: 'https://github.com/Akinleyejoshua',
+        portfolio: 'joshuaakinleye.vercel.app',
+        portfolioUrl: 'https://joshuaakinleye.vercel.app'
     },
     summary: 'Innovative Full-Stack Developer with 5+ years of professional experience building innovative digital solutions across web development, machine learning, and Web3 technologies. Successfully delivered 50+ projects for 30+ satisfied clients. Passionate about creating cutting-edge applications using modern technologies including Next.js, Node.js, TypeScript, and cloud databases.',
     skills: {
@@ -80,7 +83,7 @@ const coverLetterData = {
     ]
 };
 
-// Generate DOCX Resume
+// Generate DOCX Resume with clickable links
 async function generateResumeDocx() {
     const doc = new Document({
         sections: [{
@@ -97,27 +100,50 @@ async function generateResumeDocx() {
                     alignment: AlignmentType.CENTER,
                     spacing: { after: 200 },
                 }),
-                // Contact Info
+                // Contact Info with clickable links
                 new Paragraph({
-                    children: [
-                        new TextRun({ text: `Email: ${resumeData.contact.email} | Phone: ${resumeData.contact.phone}`, size: 20 })
-                    ],
                     alignment: AlignmentType.CENTER,
+                    children: [
+                        new TextRun({ text: 'Email: ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.email, size: 20, color: '0563C1', underline: {} })],
+                            link: `mailto:${resumeData.contact.email}`,
+                        }),
+                        new TextRun({ text: ' | Phone: ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.phone, size: 20, color: '0563C1', underline: {} })],
+                            link: `tel:${resumeData.contact.phone.replace(/\s/g, '')}`,
+                        }),
+                    ],
                 }),
                 new Paragraph({
-                    children: [
-                        new TextRun({ text: `LinkedIn: ${resumeData.contact.linkedin} | GitHub: ${resumeData.contact.github}`, size: 20 })
-                    ],
                     alignment: AlignmentType.CENTER,
+                    children: [
+                        new TextRun({ text: 'LinkedIn: ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.linkedin, size: 20, color: '0563C1', underline: {} })],
+                            link: resumeData.contact.linkedinUrl,
+                        }),
+                        new TextRun({ text: ' | GitHub: ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.github, size: 20, color: '0563C1', underline: {} })],
+                            link: resumeData.contact.githubUrl,
+                        }),
+                    ],
                 }),
                 new Paragraph({
-                    children: [
-                        new TextRun({ text: `Portfolio: ${resumeData.contact.portfolio} | ${resumeData.contact.location}`, size: 20 })
-                    ],
                     alignment: AlignmentType.CENTER,
                     spacing: { after: 300 },
+                    children: [
+                        new TextRun({ text: 'Portfolio: ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.portfolio, size: 20, color: '0563C1', underline: {} })],
+                            link: resumeData.contact.portfolioUrl,
+                        }),
+                        new TextRun({ text: ` | ${resumeData.contact.location}`, size: 20 }),
+                    ],
                 }),
-
+                
                 // Professional Summary
                 new Paragraph({
                     text: 'PROFESSIONAL SUMMARY',
@@ -128,20 +154,20 @@ async function generateResumeDocx() {
                     text: resumeData.summary,
                     spacing: { after: 300 },
                 }),
-
+                
                 // Core Competencies
                 new Paragraph({
                     text: 'CORE COMPETENCIES',
                     heading: HeadingLevel.HEADING_2,
                     border: { bottom: { color: '000000', space: 1, size: 6, style: BorderStyle.SINGLE } },
                 }),
-                new Paragraph({ text: 'Technical Skills:', children: [new TextRun({ text: 'Technical Skills:', bold: true })] }),
+                new Paragraph({ children: [new TextRun({ text: 'Technical Skills:', bold: true })] }),
                 ...resumeData.skills.technical.map(skill => new Paragraph({ text: `• ${skill}`, spacing: { before: 100 } })),
                 new Paragraph({ text: '', spacing: { after: 100 } }),
                 new Paragraph({ children: [new TextRun({ text: 'Soft Skills:', bold: true })] }),
                 ...resumeData.skills.soft.map(skill => new Paragraph({ text: `• ${skill}`, spacing: { before: 100 } })),
                 new Paragraph({ text: '', spacing: { after: 300 } }),
-
+                
                 // Professional Experience
                 new Paragraph({
                     text: 'PROFESSIONAL EXPERIENCE',
@@ -162,7 +188,7 @@ async function generateResumeDocx() {
                     ...exp.achievements.map(achievement => new Paragraph({ text: `• ${achievement}`, spacing: { before: 50 } }))
                 ]),
                 new Paragraph({ text: '', spacing: { after: 300 } }),
-
+                
                 // Technical Projects
                 new Paragraph({
                     text: 'TECHNICAL PROJECTS',
@@ -179,14 +205,14 @@ async function generateResumeDocx() {
             ],
         }],
     });
-
+    
     const buffer = await Packer.toBuffer(doc);
     const outputPath = path.join(__dirname, '..', 'Joshua_Akinleye_Resume.docx');
     fs.writeFileSync(outputPath, buffer);
     console.log(`Resume DOCX saved to: ${outputPath}`);
 }
 
-// Generate Cover Letter DOCX
+// Generate Cover Letter DOCX with clickable links
 async function generateCoverLetterDocx() {
     const doc = new Document({
         sections: [{
@@ -202,16 +228,26 @@ async function generateCoverLetterDocx() {
                     alignment: AlignmentType.LEFT,
                 }),
                 new Paragraph({
-                    children: [new TextRun({ text: `${resumeData.contact.email} | ${resumeData.contact.phone}`, size: 20 })],
                     spacing: { after: 400 },
+                    children: [
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.email, size: 20, color: '0563C1', underline: {} })],
+                            link: `mailto:${resumeData.contact.email}`,
+                        }),
+                        new TextRun({ text: ' | ', size: 20 }),
+                        new ExternalHyperlink({
+                            children: [new TextRun({ text: resumeData.contact.phone, size: 20, color: '0563C1', underline: {} })],
+                            link: `tel:${resumeData.contact.phone.replace(/\s/g, '')}`,
+                        }),
+                    ],
                 }),
-
+                
                 // Date
                 new Paragraph({
                     text: coverLetterData.date,
                     spacing: { after: 400 },
                 }),
-
+                
                 // Content
                 ...coverLetterData.content.map(line => new Paragraph({
                     text: line,
@@ -220,40 +256,71 @@ async function generateCoverLetterDocx() {
             ],
         }],
     });
-
+    
     const buffer = await Packer.toBuffer(doc);
     const outputPath = path.join(__dirname, '..', 'Joshua_Akinleye_Cover_Letter.docx');
     fs.writeFileSync(outputPath, buffer);
     console.log(`Cover Letter DOCX saved to: ${outputPath}`);
 }
 
-// Generate Resume PDF
+// Generate Resume PDF with clickable links
 function generateResumePdf() {
     const doc = new PDFDocument({ margin: 50 });
     const outputPath = path.join(__dirname, '..', 'Joshua_Akinleye_Resume.pdf');
     doc.pipe(fs.createWriteStream(outputPath));
-
+    
     // Name
     doc.fontSize(24).font('Helvetica-Bold').text(resumeData.name, { align: 'center' });
     doc.fontSize(14).font('Helvetica').text(resumeData.title, { align: 'center' });
     doc.moveDown(0.5);
-
-    // Contact
-    doc.fontSize(10).text(`Email: ${resumeData.contact.email} | Phone: ${resumeData.contact.phone}`, { align: 'center' });
-    doc.text(`LinkedIn: ${resumeData.contact.linkedin} | GitHub: ${resumeData.contact.github}`, { align: 'center' });
-    doc.text(`Portfolio: ${resumeData.contact.portfolio} | ${resumeData.contact.location}`, { align: 'center' });
+    
+    // Contact with clickable links - centered
+    const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+    
+    // Email and Phone line
+    doc.fontSize(10);
+    const emailPhoneLine = `Email: ${resumeData.contact.email} | Phone: ${resumeData.contact.phone}`;
+    const emailPhoneWidth = doc.widthOfString(emailPhoneLine);
+    const emailPhoneX = doc.page.margins.left + (pageWidth - emailPhoneWidth) / 2;
+    
+    doc.text('Email: ', emailPhoneX, doc.y, { continued: true });
+    doc.fillColor('#0563C1').text(resumeData.contact.email, { link: `mailto:${resumeData.contact.email}`, continued: true, underline: true });
+    doc.fillColor('black').text(' | Phone: ', { continued: true, underline: false });
+    doc.fillColor('#0563C1').text(resumeData.contact.phone, { link: `tel:${resumeData.contact.phone.replace(/\\s/g, '')}`, underline: true });
+    doc.fillColor('black');
+    
+    // LinkedIn and GitHub line
+    const linkedinGithubLine = `LinkedIn: ${resumeData.contact.linkedin} | GitHub: ${resumeData.contact.github}`;
+    const linkedinGithubWidth = doc.widthOfString(linkedinGithubLine);
+    const linkedinGithubX = doc.page.margins.left + (pageWidth - linkedinGithubWidth) / 2;
+    
+    doc.text('LinkedIn: ', linkedinGithubX, doc.y, { continued: true });
+    doc.fillColor('#0563C1').text(resumeData.contact.linkedin, { link: resumeData.contact.linkedinUrl, continued: true, underline: true });
+    doc.fillColor('black').text(' | GitHub: ', { continued: true, underline: false });
+    doc.fillColor('#0563C1').text(resumeData.contact.github, { link: resumeData.contact.githubUrl, underline: true });
+    doc.fillColor('black');
+    
+    // Portfolio and Location line
+    const portfolioLine = `Portfolio: ${resumeData.contact.portfolio} | ${resumeData.contact.location}`;
+    const portfolioWidth = doc.widthOfString(portfolioLine);
+    const portfolioX = doc.page.margins.left + (pageWidth - portfolioWidth) / 2;
+    
+    doc.text('Portfolio: ', portfolioX, doc.y, { continued: true });
+    doc.fillColor('#0563C1').text(resumeData.contact.portfolio, { link: resumeData.contact.portfolioUrl, continued: true, underline: true });
+    doc.fillColor('black').text(` | ${resumeData.contact.location}`, { underline: false });
+    
     doc.moveDown();
-
+    
     // Separator
     doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
     doc.moveDown();
-
+    
     // Professional Summary
     doc.fontSize(12).font('Helvetica-Bold').text('PROFESSIONAL SUMMARY');
     doc.moveDown(0.3);
     doc.fontSize(10).font('Helvetica').text(resumeData.summary);
     doc.moveDown();
-
+    
     // Core Competencies
     doc.fontSize(12).font('Helvetica-Bold').text('CORE COMPETENCIES');
     doc.moveDown(0.3);
@@ -267,7 +334,7 @@ function generateResumePdf() {
         doc.fontSize(10).font('Helvetica').text(`• ${skill}`);
     });
     doc.moveDown();
-
+    
     // Professional Experience
     doc.fontSize(12).font('Helvetica-Bold').text('PROFESSIONAL EXPERIENCE');
     doc.moveDown(0.3);
@@ -279,7 +346,7 @@ function generateResumePdf() {
         });
     });
     doc.moveDown();
-
+    
     // Technical Projects
     doc.fontSize(12).font('Helvetica-Bold').text('TECHNICAL PROJECTS');
     doc.moveDown(0.3);
@@ -287,27 +354,34 @@ function generateResumePdf() {
         doc.fontSize(10).font('Helvetica-Bold').text(proj.category + ': ', { continued: true });
         doc.font('Helvetica').text(proj.description);
     });
-
+    
     doc.end();
     console.log(`Resume PDF saved to: ${outputPath}`);
 }
 
-// Generate Cover Letter PDF
+// Generate Cover Letter PDF with clickable links
 function generateCoverLetterPdf() {
     const doc = new PDFDocument({ margin: 50 });
     const outputPath = path.join(__dirname, '..', 'Joshua_Akinleye_Cover_Letter.pdf');
     doc.pipe(fs.createWriteStream(outputPath));
-
+    
     // Header
     doc.fontSize(18).font('Helvetica-Bold').text(resumeData.name);
     doc.fontSize(12).font('Helvetica').text(resumeData.title);
-    doc.fontSize(10).text(`${resumeData.contact.email} | ${resumeData.contact.phone}`);
+    
+    // Contact with clickable links
+    doc.fontSize(10);
+    doc.fillColor('#0563C1').text(resumeData.contact.email, { link: `mailto:${resumeData.contact.email}`, continued: true, underline: true });
+    doc.fillColor('black').text(' | ', { continued: true, underline: false });
+    doc.fillColor('#0563C1').text(resumeData.contact.phone, { link: `tel:${resumeData.contact.phone.replace(/\\s/g, '')}`, underline: true });
+    doc.fillColor('black');
+    
     doc.moveDown(2);
-
+    
     // Date
     doc.text(coverLetterData.date);
     doc.moveDown(2);
-
+    
     // Content
     coverLetterData.content.forEach(line => {
         if (line === '') {
@@ -316,7 +390,7 @@ function generateCoverLetterPdf() {
             doc.text(line);
         }
     });
-
+    
     doc.end();
     console.log(`Cover Letter PDF saved to: ${outputPath}`);
 }
@@ -328,7 +402,7 @@ async function main() {
         await generateCoverLetterDocx();
         generateResumePdf();
         generateCoverLetterPdf();
-        console.log('\n✅ All documents generated successfully!');
+        console.log('\n✅ All documents generated successfully with clickable links!');
     } catch (error) {
         console.error('Error generating documents:', error);
     }
