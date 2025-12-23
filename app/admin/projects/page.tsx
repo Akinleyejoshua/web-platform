@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import styles from '../components/editor.module.css';
-import managerStyles from '../about/page.module.css';
+
+// Local specific styles for project card grid
+import projectStyles from './projects.module.css';
 
 type ProjectCategory = 'web' | 'ml' | 'web3' | 'others';
 type MediaType = 'image' | 'video';
@@ -121,6 +123,12 @@ export default function AdminProjectsPage() {
         <div className={styles.editor}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Manage Projects</h1>
+                {!editingItem && (
+                    <button onClick={handleAdd} className={styles.addBtn}>
+                        <FiPlus size={18} />
+                        New Project
+                    </button>
+                )}
             </div>
 
             {message && (
@@ -131,6 +139,10 @@ export default function AdminProjectsPage() {
 
             {editingItem ? (
                 <div className={styles.form}>
+                    <div className={styles.sectionTitle}>
+                        {editingItem._id ? 'Edit Project' : 'Create New Project'}
+                    </div>
+
                     <div className={styles.field}>
                         <label className={styles.label}>Project Title</label>
                         <input
@@ -138,6 +150,7 @@ export default function AdminProjectsPage() {
                             value={editingItem.title}
                             onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
                             className={styles.input}
+                            placeholder="e.g. E-Commerce Platform"
                         />
                     </div>
 
@@ -147,6 +160,7 @@ export default function AdminProjectsPage() {
                             value={editingItem.description}
                             onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
                             className={styles.textarea}
+                            placeholder="Brief description of the project..."
                         />
                     </div>
 
@@ -156,12 +170,13 @@ export default function AdminProjectsPage() {
                             <select
                                 value={editingItem.category}
                                 onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value as ProjectCategory })}
-                                className={styles.input}
+                                className={styles.input} // Ensure using .input class for select
+                                style={{ height: '48px' }} // Fix height match
                             >
-                                <option value="web">Web</option>
+                                <option value="web">Web Development</option>
                                 <option value="ml">Machine Learning</option>
-                                <option value="web3">Web3</option>
-                                <option value="others">Others</option>
+                                <option value="web3">Web3 / Blockchain</option>
+                                <option value="others">Other</option>
                             </select>
                         </div>
                         <div className={styles.field}>
@@ -170,6 +185,7 @@ export default function AdminProjectsPage() {
                                 value={editingItem.mediaType}
                                 onChange={(e) => setEditingItem({ ...editingItem, mediaType: e.target.value as MediaType })}
                                 className={styles.input}
+                                style={{ height: '48px' }}
                             >
                                 <option value="image">Image</option>
                                 <option value="video">YouTube Video</option>
@@ -181,90 +197,122 @@ export default function AdminProjectsPage() {
                         <FileUpload
                             value={editingItem.mediaUrl}
                             onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
-                            label="Project Image"
+                            label="Project Thumbnail"
                             accept="image/*"
                         />
                     ) : (
                         <div className={styles.field}>
                             <label className={styles.label}>YouTube URL</label>
-                            <input
-                                type="text"
-                                value={editingItem.mediaUrl}
-                                onChange={(e) => setEditingItem({ ...editingItem, mediaUrl: e.target.value })}
-                                className={styles.input}
-                                placeholder="https://youtube.com/watch?v=..."
-                            />
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={editingItem.mediaUrl}
+                                    onChange={(e) => setEditingItem({ ...editingItem, mediaUrl: e.target.value })}
+                                    className={styles.input}
+                                    placeholder="https://youtube.com/watch?v=..."
+                                    style={{ paddingLeft: '40px' }}
+                                />
+                                <FiYoutube style={{ position: 'absolute', left: '12px', top: '14px', color: '#ff0000' }} size={18} />
+                            </div>
                         </div>
                     )}
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Technologies (comma separated)</label>
+                        <label className={styles.label}>Technologies</label>
                         <input
                             type="text"
                             value={editingItem.technologies.join(', ')}
                             onChange={(e) => handleTechChange(e.target.value)}
                             className={styles.input}
-                            placeholder="React, Node.js, MongoDB"
+                            placeholder="React, Next.js, TensorFlow (comma separated)"
                         />
                     </div>
 
                     <div className={styles.row}>
                         <div className={styles.field}>
-                            <label className={styles.label}>GitHub URL</label>
-                            <input
-                                type="text"
-                                value={editingItem.githubUrl}
-                                onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
-                                className={styles.input}
-                            />
+                            <label className={styles.label}>GitHub Repo</label>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={editingItem.githubUrl}
+                                    onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
+                                    className={styles.input}
+                                    style={{ paddingLeft: '40px' }}
+                                />
+                                <FiGithub style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                            </div>
                         </div>
                         <div className={styles.field}>
-                            <label className={styles.label}>Live Demo URL</label>
-                            <input
-                                type="text"
-                                value={editingItem.liveUrl}
-                                onChange={(e) => setEditingItem({ ...editingItem, liveUrl: e.target.value })}
-                                className={styles.input}
-                            />
+                            <label className={styles.label}>Live Link</label>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={editingItem.liveUrl}
+                                    onChange={(e) => setEditingItem({ ...editingItem, liveUrl: e.target.value })}
+                                    className={styles.input}
+                                    style={{ paddingLeft: '40px' }}
+                                />
+                                <FiExternalLink style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                            </div>
                         </div>
                     </div>
 
                     <div className={styles.actions}>
                         <button onClick={handleSave} disabled={isSaving} className={styles.submitBtn}>
                             <FiCheck size={18} />
-                            {isSaving ? 'Saving...' : 'Save'}
+                            {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>
-                        <button onClick={handleCancel} className={managerStyles.deleteBtn} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
+                        <button onClick={handleCancel} className={styles.cancelBtn}>
                             <FiX size={18} />
                             Cancel
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className={styles.form}>
-                    <div className={managerStyles.sectionHeader}>
-                        <h2 className={managerStyles.sectionTitle}>Project Entries</h2>
-                        <button onClick={handleAdd} className={managerStyles.addBtn}>
-                            <FiPlus size={18} />
-                            Add Project
-                        </button>
-                    </div>
-
+                <div className={styles.grid}>
                     {projects.length === 0 ? (
-                        <p className={managerStyles.empty}>No projects yet.</p>
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--color-muted)' }}>
+                            No projects found. Create your first one!
+                        </div>
                     ) : (
                         projects.map((project) => (
-                            <div key={project._id} className={managerStyles.item}>
-                                <div className={managerStyles.itemFields}>
-                                    <strong>{project.title}</strong>
-                                    <span style={{ textTransform: 'capitalize' }}>{project.category}</span>
+                            <div key={project._id} className={projectStyles.card}>
+                                <div className={projectStyles.cardMedia}>
+                                    {project.mediaType === 'image' && project.mediaUrl ? (
+                                        <img src={project.mediaUrl} alt={project.title} />
+                                    ) : project.mediaType === 'video' && project.mediaUrl ? (
+                                        <div className={projectStyles.videoPlaceholder}>
+                                            <FiYoutube size={32} />
+                                        </div>
+                                    ) : (
+                                        <div className={projectStyles.noMedia}>
+                                            <FiImage size={24} />
+                                        </div>
+                                    )}
+                                    <div className={projectStyles.cardBadge}>
+                                        {project.category}
+                                    </div>
                                 </div>
-                                <button onClick={() => handleEdit(project)} className={managerStyles.addBtn}>
-                                    <FiEdit2 size={16} />
-                                </button>
-                                <button onClick={() => handleDelete(project._id!)} className={managerStyles.deleteBtn}>
-                                    <FiTrash2 size={16} />
-                                </button>
+                                <div className={projectStyles.cardContent}>
+                                    <h3 className={projectStyles.cardTitle}>{project.title}</h3>
+                                    <p className={projectStyles.cardDesc}>{project.description}</p>
+                                    <div className={projectStyles.cardTechs}>
+                                        {project.technologies.slice(0, 3).map(t => (
+                                            <span key={t}>{t}</span>
+                                        ))}
+                                        {project.technologies.length > 3 && (
+                                            <span>+{project.technologies.length - 3}</span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={projectStyles.cardActions}>
+                                    <button onClick={() => handleEdit(project)} className={projectStyles.actionBtn}>
+                                        <FiEdit2 size={16} />
+                                    </button>
+                                    <button onClick={() => handleDelete(project._id!)} className={`${projectStyles.actionBtn} ${projectStyles.delete}`}>
+                                        <FiTrash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
                         ))
                     )}

@@ -17,38 +17,45 @@
 
 .urlInput {
     flex: 1;
-    padding: var(--space-sm) var(--space-md);
-    font-size: 1rem;
+    padding: 12px 14px;
+    font-size: 0.9375rem;
+    font-family: inherit;
     color: var(--color-text);
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .urlInput:focus {
     outline: none;
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.urlInput::placeholder {
+    color: var(--color-muted);
 }
 
 .uploadBtn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     padding: 0;
-    color: var(--color-accent);
-    background: var(--color-accent-light);
-    border: 1px solid var(--color-accent);
+    color: white;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #667eea 100%);
+    border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-fast);
+    box-shadow: 0 2px 8px rgba(26, 79, 214, 0.2);
 }
 
 .uploadBtn:hover:not(:disabled) {
-    background: var(--color-accent);
-    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 79, 214, 0.3);
 }
 
 .uploadBtn:disabled {

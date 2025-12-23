@@ -21,6 +21,17 @@
     margin: 0;
 }
 
+/* Section Title for Form Groups */
+.sectionTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.01em;
+}
+
 .form {
     padding: var(--space-xl);
     display: flex;
@@ -43,8 +54,8 @@
 .input,
 .textarea,
 .select {
-    padding: var(--space-sm) var(--space-md);
-    font-size: 1rem;
+    padding: 12px 14px;
+    font-size: 0.9375rem;
     font-family: inherit;
     color: var(--color-text);
     background: var(--color-bg);
@@ -88,11 +99,42 @@
     gap: var(--space-lg);
 }
 
+/* Grid Layout for Listings */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+}
+
+/* Add Button - Primary Action */
+.addBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #667eea 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(26, 79, 214, 0.2);
+}
+
+.addBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 79, 214, 0.3);
+}
+
 /* Actions */
 .actions {
     display: flex;
     gap: var(--space-md);
-    padding-top: var(--space-md);
+    padding-top: var(--space-lg);
     border-top: 1px solid var(--color-border);
     margin-top: var(--space-md);
 }
@@ -102,7 +144,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-xl);
+    padding: 12px 24px;
     font-size: 0.9375rem;
     font-weight: 600;
     color: white;
@@ -111,11 +153,12 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(26, 79, 214, 0.25);
 }
 
 .submitBtn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(26, 79, 214, 0.3);
+    box-shadow: 0 8px 20px rgba(26, 79, 214, 0.35);
 }
 
 .submitBtn:disabled {
@@ -128,7 +171,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-lg);
+    padding: 12px 20px;
     font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-text-secondary);
@@ -142,6 +185,7 @@
 .cancelBtn:hover {
     border-color: var(--color-text-secondary);
     color: var(--color-text);
+    background: var(--color-bg);
 }
 
 /* Message alerts */
@@ -149,24 +193,37 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
     font-size: 0.875rem;
+    font-weight: 500;
     color: #059669;
     background: #d1fae5;
     border: 1px solid #6ee7b7;
     border-radius: var(--radius-md);
+    margin: 0 var(--space-xl);
 }
 
 .error {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
     font-size: 0.875rem;
+    font-weight: 500;
     color: #dc2626;
     background: #fee2e2;
     border: 1px solid #fca5a5;
     border-radius: var(--radius-md);
+    margin: 0 var(--space-xl);
+}
+
+/* Empty State */
+.empty {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+    grid-column: 1 / -1;
 }
 
 /* Loading */
@@ -202,11 +259,18 @@
     }
 
     .header {
-        padding: var(--space-md);
+        padding: var(--space-md) var(--space-lg);
+        flex-wrap: wrap;
+        gap: var(--space-md);
     }
 
     .form {
-        padding: var(--space-md);
+        padding: var(--space-lg);
+    }
+
+    .grid {
+        padding: var(--space-lg);
+        grid-template-columns: 1fr;
     }
 
     .actions {
@@ -216,5 +280,10 @@
     .submitBtn,
     .cancelBtn {
         width: 100%;
+    }
+
+    .success,
+    .error {
+        margin: 0 var(--space-lg);
     }
 }

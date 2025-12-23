@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiCheck, FiLink } from 'react-icons/fi';
 import styles from '../components/editor.module.css';
 import managerStyles from './page.module.css';
 
@@ -78,14 +78,17 @@ export default function AdminAboutPage() {
             </div>
 
             <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.sectionTitle}>Personal Bio</div>
+
                 <div className={styles.field}>
-                    <label htmlFor="bio" className={styles.label}>Bio / Personal Summary</label>
+                    <label htmlFor="bio" className={styles.label}>Your Summary</label>
                     <textarea
                         id="bio"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         className={styles.textarea}
                         style={{ minHeight: '200px' }}
+                        placeholder="Write a brief introduction about yourself, your skills, and what you do..."
                     />
                 </div>
 
@@ -102,33 +105,38 @@ export default function AdminAboutPage() {
                         </button>
                     </div>
 
-                    {socialLinks.map((link, index) => (
-                        <div key={index} className={managerStyles.item}>
-                            <div className={managerStyles.itemFields}>
-                                <input
-                                    type="text"
-                                    placeholder="Platform (e.g., github, twitter)"
-                                    value={link.platform}
-                                    onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
-                                    className={styles.input}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="URL"
-                                    value={link.url}
-                                    onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
-                                    className={styles.input}
-                                />
+                    {socialLinks.length === 0 ? (
+                        <p className={managerStyles.empty}>No social links added yet.</p>
+                    ) : (
+                        socialLinks.map((link, index) => (
+                            <div key={index} className={managerStyles.item}>
+                                <FiLink size={20} color="var(--color-accent)" style={{ flexShrink: 0 }} />
+                                <div className={managerStyles.itemFields}>
+                                    <input
+                                        type="text"
+                                        placeholder="Platform (e.g., GitHub, LinkedIn)"
+                                        value={link.platform}
+                                        onChange={(e) => handleSocialLinkChange(index, 'platform', e.target.value)}
+                                        className={styles.input}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="URL (https://...)"
+                                        value={link.url}
+                                        onChange={(e) => handleSocialLinkChange(index, 'url', e.target.value)}
+                                        className={styles.input}
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveSocialLink(index)}
+                                    className={managerStyles.deleteBtn}
+                                >
+                                    <FiTrash2 size={18} />
+                                </button>
                             </div>
-                            <button
-                                type="button"
-                                onClick={() => handleRemoveSocialLink(index)}
-                                className={managerStyles.deleteBtn}
-                            >
-                                <FiTrash2 size={18} />
-                            </button>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
 
                 {message && (
@@ -139,6 +147,7 @@ export default function AdminAboutPage() {
 
                 <div className={styles.actions}>
                     <button type="submit" disabled={isSaving} className={styles.submitBtn}>
+                        <FiCheck size={18} />
                         {isSaving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>

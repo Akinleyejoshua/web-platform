@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FiMail, FiPhone, FiCheck } from 'react-icons/fi';
 import styles from '../components/editor.module.css';
 
 export default function AdminContactPage() {
@@ -65,30 +66,58 @@ export default function AdminContactPage() {
             </div>
 
             <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.sectionTitle}>Contact Details</div>
+
                 <div className={styles.field}>
                     <label htmlFor="email" className={styles.label}>Email Address</label>
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={styles.input}
-                        placeholder="hello@example.com"
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className={styles.input}
+                            placeholder="hello@example.com"
+                            style={{ paddingLeft: '42px' }}
+                        />
+                        <FiMail
+                            size={18}
+                            style={{
+                                position: 'absolute',
+                                left: '14px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                color: 'var(--color-muted)'
+                            }}
+                        />
+                    </div>
                 </div>
 
                 <div className={styles.field}>
                     <label htmlFor="phone" className={styles.label}>Phone Number</label>
-                    <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className={styles.input}
-                        placeholder="+1 (555) 123-4567"
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className={styles.input}
+                            placeholder="+1 (555) 123-4567"
+                            style={{ paddingLeft: '42px' }}
+                        />
+                        <FiPhone
+                            size={18}
+                            style={{
+                                position: 'absolute',
+                                left: '14px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                color: 'var(--color-muted)'
+                            }}
+                        />
+                    </div>
                 </div>
 
                 {message && (
@@ -99,6 +128,7 @@ export default function AdminContactPage() {
 
                 <div className={styles.actions}>
                     <button type="submit" disabled={isSaving} className={styles.submitBtn}>
+                        <FiCheck size={18} />
                         {isSaving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from '../components/file-upload';
+import models from '../components/editor.module.css'; // Importing as models to avoid conflict if needed, or just styles
 import styles from '../components/editor.module.css';
 
 export default function AdminHeroPage() {
@@ -76,6 +77,9 @@ export default function AdminHeroPage() {
             </div>
 
             <form onSubmit={handleSubmit} className={styles.form}>
+
+                <div className={styles.sectionTitle}>Main Content</div>
+
                 <div className={styles.field}>
                     <label htmlFor="headline" className={styles.label}>Headline</label>
                     <input
@@ -85,6 +89,7 @@ export default function AdminHeroPage() {
                         value={formData.headline}
                         onChange={handleChange}
                         className={styles.input}
+                        placeholder="e.g. Building the Future of Web"
                     />
                 </div>
 
@@ -96,8 +101,11 @@ export default function AdminHeroPage() {
                         value={formData.subtext}
                         onChange={handleChange}
                         className={styles.textarea}
+                        placeholder="A brief introduction about yourself or your mission..."
                     />
                 </div>
+
+                <div className={styles.sectionTitle} style={{ marginTop: '1rem' }}>Call to Actions</div>
 
                 <div className={styles.row}>
                     <div className={styles.field}>
@@ -109,6 +117,7 @@ export default function AdminHeroPage() {
                             value={formData.primaryCtaText}
                             onChange={handleChange}
                             className={styles.input}
+                            placeholder="e.g. View Projects"
                         />
                     </div>
                     <div className={styles.field}>
@@ -120,6 +129,7 @@ export default function AdminHeroPage() {
                             value={formData.primaryCtaLink}
                             onChange={handleChange}
                             className={styles.input}
+                            placeholder="e.g. /projects"
                         />
                     </div>
                 </div>
@@ -134,6 +144,7 @@ export default function AdminHeroPage() {
                             value={formData.secondaryCtaText}
                             onChange={handleChange}
                             className={styles.input}
+                            placeholder="e.g. Contact Me"
                         />
                     </div>
                     <div className={styles.field}>
@@ -145,9 +156,12 @@ export default function AdminHeroPage() {
                             value={formData.secondaryCtaLink}
                             onChange={handleChange}
                             className={styles.input}
+                            placeholder="e.g. /contact"
                         />
                     </div>
                 </div>
+
+                <div className={styles.sectionTitle} style={{ marginTop: '1rem' }}>Visuals</div>
 
                 <FileUpload
                     value={formData.heroImage}

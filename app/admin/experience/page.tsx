@@ -2,9 +2,74 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiBriefcase, FiCalendar } from 'react-icons/fi';
 import styles from '../components/editor.module.css';
-import managerStyles from '../about/page.module.css';
+
+// Local styles for experience items (can be inline or reuse shared classes, adding inline for specific tweaks)
+const itemStyles = {
+    card: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1.5rem',
+        background: 'var(--color-card)',
+        border: '1px solid var(--color-border)',
+        borderRadius: '16px',
+        marginBottom: '1rem',
+        transition: 'all 0.2s'
+    },
+    info: {
+        flex: 1,
+    },
+    role: {
+        fontSize: '1.1rem',
+        fontWeight: 700,
+        color: 'var(--color-text)',
+        marginBottom: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    },
+    company: {
+        fontSize: '0.95rem',
+        color: 'var(--color-accent)',
+        fontWeight: 600,
+        marginBottom: '4px'
+    },
+    date: {
+        fontSize: '0.825rem',
+        color: 'var(--color-muted)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px'
+    },
+    actions: {
+        display: 'flex',
+        gap: '8px'
+    },
+    actionBtn: {
+        width: '36px',
+        height: '36px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px solid var(--color-border)',
+        borderRadius: '8px',
+        background: 'var(--color-bg)',
+        color: 'var(--color-text-secondary)',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+    },
+    badge: {
+        fontSize: '0.65rem',
+        background: 'rgba(16, 185, 129, 0.1)',
+        color: '#10b981',
+        padding: '2px 8px',
+        borderRadius: '12px',
+        fontWeight: 600,
+        textTransform: 'uppercase' as const,
+    }
+};
 
 interface ExperienceItem {
     _id?: string;
@@ -101,7 +166,7 @@ export default function AdminExperiencePage() {
 
     const handleDescriptionChange = (value: string) => {
         if (!editingItem) return;
-        const descriptions = value.split('\n').filter((d) => d.trim());
+        const descriptions = value.split('\n'); // Allow empty lines during editing
         setEditingItem({ ...editingItem, description: descriptions });
     };
 
@@ -117,6 +182,12 @@ export default function AdminExperiencePage() {
         <div className={styles.editor}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Manage Experience</h1>
+                {!editingItem && (
+                    <button onClick={handleAdd} className={styles.addBtn}>
+                        <FiPlus size={18} />
+                        New Experience
+                    </button>
+                )}
             </div>
 
             {message && (
@@ -127,6 +198,10 @@ export default function AdminExperiencePage() {
 
             {editingItem ? (
                 <div className={styles.form}>
+                    <div className={styles.sectionTitle}>
+                        {editingItem._id ? 'Edit Experience' : 'New Experience'}
+                    </div>
+
                     <div className={styles.row}>
                         <div className={styles.field}>
                             <label className={styles.label}>Role / Title</label>
@@ -135,6 +210,7 @@ export default function AdminExperiencePage() {
                                 value={editingItem.role}
                                 onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
                                 className={styles.input}
+                                placeholder="e.g. Senior Frontend Engineer"
                             />
                         </div>
                         <div className={styles.field}>
@@ -144,6 +220,7 @@ export default function AdminExperiencePage() {
                                 value={editingItem.company}
                                 onChange={(e) => setEditingItem({ ...editingItem, company: e.target.value })}
                                 className={styles.input}
+                                placeholder="e.g. Google"
                             />
                         </div>
                     </div>
@@ -171,11 +248,12 @@ export default function AdminExperiencePage() {
                     </div>
 
                     <div className={styles.field}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
                             <input
                                 type="checkbox"
                                 checked={editingItem.isCurrent}
                                 onChange={(e) => setEditingItem({ ...editingItem, isCurrent: e.target.checked, endDate: '' })}
+                                style={{ width: '18px', height: '18px', accentColor: 'var(--color-accent)' }}
                             />
                             Currently working here
                         </label>
@@ -187,46 +265,69 @@ export default function AdminExperiencePage() {
                             value={editingItem.description.join('\n')}
                             onChange={(e) => handleDescriptionChange(e.target.value)}
                             className={styles.textarea}
-                            style={{ minHeight: '150px' }}
+                            placeholder="• Led a team of 5 developers...&#10;• Improved site performance by 20%..."
                         />
                     </div>
 
                     <div className={styles.actions}>
                         <button onClick={handleSave} disabled={isSaving} className={styles.submitBtn}>
                             <FiCheck size={18} />
-                            {isSaving ? 'Saving...' : 'Save'}
+                            {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>
-                        <button onClick={handleCancel} className={managerStyles.deleteBtn} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
+                        <button onClick={handleCancel} className={styles.cancelBtn}>
                             <FiX size={18} />
                             Cancel
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className={styles.form}>
-                    <div className={managerStyles.sectionHeader}>
-                        <h2 className={managerStyles.sectionTitle}>Experience Entries</h2>
-                        <button onClick={handleAdd} className={managerStyles.addBtn}>
-                            <FiPlus size={18} />
-                            Add Experience
-                        </button>
-                    </div>
-
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {experiences.length === 0 ? (
-                        <p className={managerStyles.empty}>No experience entries yet.</p>
+                        <div className={styles.form} style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-muted)' }}>
+                            No experience entries found. Add your work history!
+                        </div>
                     ) : (
                         experiences.map((exp) => (
-                            <div key={exp._id} className={managerStyles.item}>
-                                <div className={managerStyles.itemFields}>
-                                    <strong>{exp.role}</strong>
-                                    <span>{exp.company}</span>
+                            <div key={exp._id} style={itemStyles.card}>
+                                <div style={itemStyles.info}>
+                                    <div style={itemStyles.role}>
+                                        <FiBriefcase size={16} color="var(--color-accent)" />
+                                        {exp.role}
+                                        {exp.isCurrent && <span style={itemStyles.badge}>Current</span>}
+                                    </div>
+                                    <div style={itemStyles.company}>{exp.company}</div>
+                                    <div style={itemStyles.date}>
+                                        <FiCalendar size={14} />
+                                        {new Date(exp.startDate).getFullYear()} -
+                                        {exp.isCurrent ? 'Present' : new Date(exp.endDate).getFullYear()}
+                                    </div>
                                 </div>
-                                <button onClick={() => handleEdit(exp)} className={managerStyles.addBtn}>
-                                    <FiEdit2 size={16} />
-                                </button>
-                                <button onClick={() => handleDelete(exp._id!)} className={managerStyles.deleteBtn}>
-                                    <FiTrash2 size={16} />
-                                </button>
+                                <div style={itemStyles.actions}>
+                                    <button
+                                        onClick={() => handleEdit(exp)}
+                                        style={itemStyles.actionBtn}
+                                        onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--color-accent)'}
+                                        onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--color-border)'}
+                                    >
+                                        <FiEdit2 size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(exp._id!)}
+                                        style={{ ...itemStyles.actionBtn, color: '#ef4444' }}
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.background = '#ef4444';
+                                            e.currentTarget.style.borderColor = '#ef4444';
+                                            e.currentTarget.style.color = 'white';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.currentTarget.style.background = 'var(--color-bg)';
+                                            e.currentTarget.style.borderColor = 'var(--color-border)';
+                                            e.currentTarget.style.color = '#ef4444';
+                                        }}
+                                    >
+                                        <FiTrash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
                         ))
                     )}

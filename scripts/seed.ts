@@ -6,7 +6,7 @@
 
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/portfolio';
+const MONGODB_URI:any = process.env.MONGODB_URI || "mongodb+srv://joshua_web:joshua_web1@cluster0.azy4nir.mongodb.net/?appName=Cluster0";
 
 // Schema definitions (inline for standalone script)
 const HeroSchema = new mongoose.Schema({
