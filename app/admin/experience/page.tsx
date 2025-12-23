@@ -4,72 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiBriefcase, FiCalendar } from 'react-icons/fi';
 import styles from '../components/editor.module.css';
-
-// Local styles for experience items (can be inline or reuse shared classes, adding inline for specific tweaks)
-const itemStyles = {
-    card: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1.5rem',
-        background: 'var(--color-card)',
-        border: '1px solid var(--color-border)',
-        borderRadius: '16px',
-        marginBottom: '1rem',
-        transition: 'all 0.2s'
-    },
-    info: {
-        flex: 1,
-    },
-    role: {
-        fontSize: '1.1rem',
-        fontWeight: 700,
-        color: 'var(--color-text)',
-        marginBottom: '4px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px'
-    },
-    company: {
-        fontSize: '0.95rem',
-        color: 'var(--color-accent)',
-        fontWeight: 600,
-        marginBottom: '4px'
-    },
-    date: {
-        fontSize: '0.825rem',
-        color: 'var(--color-muted)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '6px'
-    },
-    actions: {
-        display: 'flex',
-        gap: '8px'
-    },
-    actionBtn: {
-        width: '36px',
-        height: '36px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '1px solid var(--color-border)',
-        borderRadius: '8px',
-        background: 'var(--color-bg)',
-        color: 'var(--color-text-secondary)',
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-    },
-    badge: {
-        fontSize: '0.65rem',
-        background: 'rgba(16, 185, 129, 0.1)',
-        color: '#10b981',
-        padding: '2px 8px',
-        borderRadius: '12px',
-        fontWeight: 600,
-        textTransform: 'uppercase' as const,
-    }
-};
+import cardStyles from './experience.module.css';
 
 interface ExperienceItem {
     _id?: string;
@@ -166,8 +101,14 @@ export default function AdminExperiencePage() {
 
     const handleDescriptionChange = (value: string) => {
         if (!editingItem) return;
-        const descriptions = value.split('\n'); // Allow empty lines during editing
+        const descriptions = value.split('\n');
         setEditingItem({ ...editingItem, description: descriptions });
+    };
+
+    const formatDate = (dateStr: string) => {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     };
 
     if (isLoading) {
@@ -281,50 +222,41 @@ export default function AdminExperiencePage() {
                     </div>
                 </div>
             ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className={styles.grid}>
                     {experiences.length === 0 ? (
-                        <div className={styles.form} style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-muted)' }}>
-                            No experience entries found. Add your work history!
+                        <div className={styles.empty}>
+                            No experience entries yet. Add your work history!
                         </div>
                     ) : (
                         experiences.map((exp) => (
-                            <div key={exp._id} style={itemStyles.card}>
-                                <div style={itemStyles.info}>
-                                    <div style={itemStyles.role}>
-                                        <FiBriefcase size={16} color="var(--color-accent)" />
-                                        {exp.role}
-                                        {exp.isCurrent && <span style={itemStyles.badge}>Current</span>}
+                            <div key={exp._id} className={cardStyles.card}>
+                                <div className={cardStyles.cardHeader}>
+                                    <div className={cardStyles.iconWrapper}>
+                                        <FiBriefcase size={24} />
                                     </div>
-                                    <div style={itemStyles.company}>{exp.company}</div>
-                                    <div style={itemStyles.date}>
-                                        <FiCalendar size={14} />
-                                        {new Date(exp.startDate).getFullYear()} -
-                                        {exp.isCurrent ? 'Present' : new Date(exp.endDate).getFullYear()}
-                                    </div>
+                                    {exp.isCurrent && (
+                                        <span className={cardStyles.badge}>Current</span>
+                                    )}
                                 </div>
-                                <div style={itemStyles.actions}>
-                                    <button
-                                        onClick={() => handleEdit(exp)}
-                                        style={itemStyles.actionBtn}
-                                        onMouseOver={(e) => e.currentTarget.style.borderColor = 'var(--color-accent)'}
-                                        onMouseOut={(e) => e.currentTarget.style.borderColor = 'var(--color-border)'}
-                                    >
+                                <div className={cardStyles.cardContent}>
+                                    <h3 className={cardStyles.cardTitle}>{exp.role}</h3>
+                                    <p className={cardStyles.cardCompany}>{exp.company}</p>
+                                    <div className={cardStyles.cardDate}>
+                                        <FiCalendar size={14} />
+                                        {formatDate(exp.startDate)} - {exp.isCurrent ? 'Present' : formatDate(exp.endDate)}
+                                    </div>
+                                    {exp.description.length > 0 && (
+                                        <p className={cardStyles.cardDesc}>
+                                            {exp.description[0]}
+                                            {exp.description.length > 1 && ` (+${exp.description.length - 1} more)`}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className={cardStyles.cardActions}>
+                                    <button onClick={() => handleEdit(exp)} className={cardStyles.actionBtn}>
                                         <FiEdit2 size={16} />
                                     </button>
-                                    <button
-                                        onClick={() => handleDelete(exp._id!)}
-                                        style={{ ...itemStyles.actionBtn, color: '#ef4444' }}
-                                        onMouseOver={(e) => {
-                                            e.currentTarget.style.background = '#ef4444';
-                                            e.currentTarget.style.borderColor = '#ef4444';
-                                            e.currentTarget.style.color = 'white';
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.currentTarget.style.background = 'var(--color-bg)';
-                                            e.currentTarget.style.borderColor = 'var(--color-border)';
-                                            e.currentTarget.style.color = '#ef4444';
-                                        }}
-                                    >
+                                    <button onClick={() => handleDelete(exp._id!)} className={`${cardStyles.actionBtn} ${cardStyles.delete}`}>
                                         <FiTrash2 size={16} />
                                     </button>
                                 </div>
