@@ -38,7 +38,7 @@ export function Header({ donateUrl = '#' }: HeaderProps) {
         <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
             <div className={styles.inner}>
                 <a href="#home" className={styles.logo}>
-                    Port<span className={styles.logoAccent}>folio</span>
+                    Joshua<span className={styles.logoAccent}>.Dev</span>
                 </a>
 
                 <nav className={styles.nav}>
