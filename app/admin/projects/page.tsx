@@ -9,7 +9,7 @@ import styles from '../components/editor.module.css';
 // Local specific styles for project card grid
 import projectStyles from './projects.module.css';
 
-type ProjectCategory = 'web' | 'ml' | 'web3' | 'others';
+type ProjectCategory = 'web' | 'ml' | 'web3' | 'data-science' | 'others';
 type MediaType = 'image' | 'video';
 
 interface ProjectItem {
@@ -178,6 +178,7 @@ export default function AdminProjectsPage() {
                             >
                                 <option value="web">Web Development</option>
                                 <option value="ml">Machine Learning</option>
+                                <option value="data-science">Data Science/Analysis</option>
                                 <option value="web3">Web3 / Blockchain</option>
                                 <option value="others">Other</option>
                             </select>
