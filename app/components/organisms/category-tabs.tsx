@@ -13,6 +13,7 @@ const categories: { value: TabCategory; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'web', label: 'Web' },
     { value: 'ml', label: 'Machine Learning' },
+    { value: 'data-science', label: 'Data Science/Analysis' },
     { value: 'web3', label: 'Web3' },
     { value: 'others', label: 'Others' },
 ];

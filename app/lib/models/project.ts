@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export type ProjectCategory = 'web' | 'ml' | 'web3' | 'others';
+export type ProjectCategory = 'web' | 'ml' | 'web3' | 'data-science' | 'others';
 export type MediaType = 'image' | 'video';
 
 export interface IProject extends Document {
@@ -24,7 +24,7 @@ const ProjectSchema = new Schema<IProject>(
         description: { type: String, required: true },
         category: {
             type: String,
-            enum: ['web', 'ml', 'web3', 'others'],
+            enum: ['web', 'ml', 'web3', 'data-science', 'others'],
             required: true,
             default: 'web',
         },

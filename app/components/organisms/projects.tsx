@@ -14,7 +14,7 @@ export function Projects() {
     return (
         <Section
             id="projects"
-            title="Projects"
+            title="Enterprise Projects"
             subtitle="Explore my latest work across various domains"
             className={styles.projects}
             alternate
