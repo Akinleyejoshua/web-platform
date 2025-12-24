@@ -145,7 +145,6 @@ body {
   transition: background-color var(--transition-base), color var(--transition-base);
   min-height: 100vh;
   height: 100vh;
-
 }
 
 /* === TYPOGRAPHY === */
