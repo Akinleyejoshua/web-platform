@@ -22,7 +22,7 @@ export function ProductProjects() {
     return (
         <Section
             id="product-projects"
-            title="Products"
+            title="Enterprise Products"
             subtitle="Innovative product solutions powering businesses worldwide"
             className={styles.projects}
         >
