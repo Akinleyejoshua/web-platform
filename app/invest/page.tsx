@@ -1,16 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft, FiCopy, FiCheck, FiGlobe, FiMapPin, FiHeart, FiTrendingUp, FiShield, FiZap } from 'react-icons/fi';
-import { usePageViewTracker, trackClick } from '@/app/hooks/useAnalyticsTracker';
+import { usePageViewTracker, useSectionViewTracker, trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './invest.module.css';
 
 export default function InvestPage() {
     const [copiedField, setCopiedField] = useState<string | null>(null);
 
+    // Section refs for tracking
+    const heroRef = useRef<HTMLElement>(null);
+    const valuePropsRef = useRef<HTMLDivElement>(null);
+    const bankSectionRef = useRef<HTMLElement>(null);
+    const footerRef = useRef<HTMLElement>(null);
+
     // Track invest page view
     usePageViewTracker('invest');
+
+    // Track section views
+    useSectionViewTracker('invest_hero', heroRef);
+    useSectionViewTracker('invest_value_props', valuePropsRef);
+    useSectionViewTracker('invest_bank_details', bankSectionRef);
+    useSectionViewTracker('invest_footer', footerRef);
 
     const copyToClipboard = (text: string, field: string) => {
         navigator.clipboard.writeText(text);
@@ -55,13 +67,13 @@ export default function InvestPage() {
 
             <div className={styles.container}>
                 {/* Back Button */}
-                <Link href="/" className={styles.backBtn}>
+                <Link href="/" className={styles.backBtn} onClick={() => trackClick('invest_back_button', true)}>
                     <FiArrowLeft size={18} />
                     Back to Portfolio
                 </Link>
 
                 {/* Hero Section */}
-                <header className={styles.hero}>
+                <header ref={heroRef} className={styles.hero}>
                     <div className={styles.badge}>
                         <FiTrendingUp size={14} />
                         Invest in Innovation
@@ -76,7 +88,7 @@ export default function InvestPage() {
                 </header>
 
                 {/* Value Propositions */}
-                <div className={styles.valueProps}>
+                <div ref={valuePropsRef} className={styles.valueProps}>
                     <div className={styles.valueProp}>
                         <div className={styles.valueIcon}>
                             <FiZap size={20} />
@@ -101,7 +113,7 @@ export default function InvestPage() {
                 </div>
 
                 {/* Bank Details Section */}
-                <section className={styles.bankSection}>
+                <section ref={bankSectionRef} className={styles.bankSection}>
                     <h2 className={styles.sectionTitle}>Investment Options</h2>
                     <p className={styles.sectionSubtitle}>
                         Choose your preferred payment method. All transactions are secure and appreciated.
@@ -347,7 +359,7 @@ export default function InvestPage() {
                 </section>
 
                 {/* Thank You Message */}
-                <footer className={styles.footer}>
+                <footer ref={footerRef} className={styles.footer}>
                     <div className={styles.thankYou}>
                         <FiHeart className={styles.heartIcon} size={24} />
                         <h3>Thank You for Your Support</h3>
