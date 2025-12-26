@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiLock, FiMail, FiEye, FiEyeOff, FiShield, FiZap, FiTrendingUp } from 'react-icons/fi';
 import styles from './page.module.css';
 
 export default function AdminAuthPage() {
@@ -42,11 +42,11 @@ export default function AdminAuthPage() {
                 <div className={styles.brandingSide}>
                     <div className={styles.brandingContent}>
                         <div className={styles.brandLogo}>
-                            Port<span>folio</span>
+                            Joshua<span>.Dev</span>
                         </div>
-                        <h1 className={styles.brandTitle}>Admin Panel</h1>
+                        <h1 className={styles.brandTitle}>Admin Control Center</h1>
                         <p className={styles.brandSubtitle}>
-                            Manage your portfolio content, track analytics, and keep your site updated.
+                            Access your portfolio dashboard to manage content, monitor analytics, and keep your digital presence updated.
                         </p>
                         <div className={styles.brandDecoration}>
                             <div className={styles.decorCircle1} />
@@ -61,17 +61,17 @@ export default function AdminAuthPage() {
                     <div className={styles.formContainer}>
                         <div className={styles.formHeader}>
                             <div className={styles.lockIcon}>
-                                <FiLock size={24} />
+                                <FiShield size={28} />
                             </div>
-                            <h2>Welcome back</h2>
-                            <p>Enter your credentials to access the dashboard</p>
+                            <h2>Welcome Back</h2>
+                            <p>Enter your credentials to access the admin dashboard</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <div className={styles.inputGroup}>
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email">Email Address</label>
                                 <div className={styles.inputWrapper}>
-                                    <FiMail className={styles.inputIcon} />
+                                    <FiMail className={styles.inputIcon} size={18} />
                                     <input
                                         id="email"
                                         type="email"
@@ -87,13 +87,13 @@ export default function AdminAuthPage() {
                             <div className={styles.inputGroup}>
                                 <label htmlFor="password">Password</label>
                                 <div className={styles.inputWrapper}>
-                                    <FiLock className={styles.inputIcon} />
+                                    <FiLock className={styles.inputIcon} size={18} />
                                     <input
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••"
+                                        placeholder="••••••••••"
                                         required
                                         autoComplete="current-password"
                                     />
@@ -101,8 +101,9 @@ export default function AdminAuthPage() {
                                         type="button"
                                         className={styles.togglePassword}
                                         onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
                                     >
-                                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                                        {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                                     </button>
                                 </div>
                             </div>
@@ -125,6 +126,17 @@ export default function AdminAuthPage() {
                                 )}
                             </button>
                         </form>
+
+                        <div className={styles.featuresHint}>
+                            <div className={styles.featureItem}>
+                                <FiZap size={16} />
+                                <span>Manage hero, about, projects & more</span>
+                            </div>
+                            <div className={styles.featureItem}>
+                                <FiTrendingUp size={16} />
+                                <span>Track real-time analytics & visitors</span>
+                            </div>
+                        </div>
 
                         <div className={styles.backLink}>
                             <a href="/">← Back to Portfolio</a>
