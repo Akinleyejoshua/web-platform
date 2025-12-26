@@ -3,14 +3,19 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft, FiCopy, FiCheck, FiGlobe, FiMapPin, FiHeart, FiTrendingUp, FiShield, FiZap } from 'react-icons/fi';
+import { usePageViewTracker, trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './invest.module.css';
 
 export default function InvestPage() {
     const [copiedField, setCopiedField] = useState<string | null>(null);
 
+    // Track invest page view
+    usePageViewTracker('invest');
+
     const copyToClipboard = (text: string, field: string) => {
         navigator.clipboard.writeText(text);
         setCopiedField(field);
+        trackClick(`invest_copy_${field}`, true);
         setTimeout(() => setCopiedField(null), 2000);
     };
 

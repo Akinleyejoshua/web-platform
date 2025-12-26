@@ -31,11 +31,11 @@ export function Hero({
     const restWords = words.slice(2).join(' ');
 
     const handlePrimaryClick = () => {
-        trackClick('hero-primary-cta');
+        trackClick('hero_primary_cta', true);
     };
 
     const handleSecondaryClick = () => {
-        trackClick('hero-secondary-cta');
+        trackClick('hero_secondary_cta', true);
     };
 
     return (

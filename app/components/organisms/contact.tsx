@@ -3,6 +3,7 @@
 import React from 'react';
 import { FiMail, FiPhone, FiMapPin, FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
 import { Section } from '@/app/components/layout/section';
+import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './contact.module.css';
 
 interface ContactProps {
@@ -31,7 +32,7 @@ export function Contact({
 
                     <div className={styles.contactItems}>
                         {email && (
-                            <a href={`mailto:${email}`} className={styles.contactItem}>
+                            <a href={`mailto:${email}`} className={styles.contactItem} onClick={() => trackClick('contact_email', true)}>
                                 <div className={styles.contactIcon}>
                                     <FiMail size={20} />
                                 </div>
@@ -43,7 +44,7 @@ export function Contact({
                         )}
 
                         {phone && (
-                            <a href={`tel:${phone}`} className={styles.contactItem}>
+                            <a href={`tel:${phone}`} className={styles.contactItem} onClick={() => trackClick('contact_phone', true)}>
                                 <div className={styles.contactIcon}>
                                     <FiPhone size={20} />
                                 </div>
@@ -68,13 +69,13 @@ export function Contact({
                     <div className={styles.socialSection}>
                         <p className={styles.socialLabel}>Connect with me</p>
                         <div className={styles.socialLinks}>
-                            <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                            <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_github', true)}>
                                 <FiGithub size={18} />
                             </a>
-                            <a href="https://www.linkedin.com/in/joshua-a-9895b61ab/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                            <a href="https://www.linkedin.com/in/joshua-a-9895b61ab/" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_linkedin', true)}>
                                 <FiLinkedin size={18} />
                             </a>
-                            <a href="https://x.com/Joshuaakinleye4" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                            <a href="https://x.com/Joshuaakinleye4" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_twitter', true)}>
                                 <FiTwitter size={18} />
                             </a>
                         </div>

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FiGithub, FiExternalLink, FiCode } from 'react-icons/fi';
 import { Badge } from '@/app/components/atoms/badge';
+import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './project-card.module.css';
 
 interface ProjectCardProps {
@@ -37,8 +38,28 @@ export function ProjectCard({
         setImageError(true);
     };
 
+    // Track card click
+    const handleCardClick = () => {
+        const sanitizedTitle = title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+        trackClick(`project_card_${sanitizedTitle}`, true);
+    };
+
+    // Track github link click
+    const handleGithubClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const sanitizedTitle = title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+        trackClick(`project_github_${sanitizedTitle}`, true);
+    };
+
+    // Track live demo link click
+    const handleLiveDemoClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const sanitizedTitle = title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+        trackClick(`project_livedemo_${sanitizedTitle}`, true);
+    };
+
     return (
-        <article className={`${styles.card} ${className}`.trim()}>
+        <article className={`${styles.card} ${className}`.trim()} onClick={handleCardClick}>
             <div className={styles.media}>
                 {mediaType === 'video' ? (
                     <iframe
@@ -83,6 +104,7 @@ export function ProjectCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.linkButton}
+                            onClick={handleGithubClick}
                         >
                             <FiGithub size={16} />
                             GitHub
@@ -94,6 +116,7 @@ export function ProjectCard({
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.linkButton}
+                            onClick={handleLiveDemoClick}
                         >
                             <FiExternalLink size={16} />
                             Live Demo

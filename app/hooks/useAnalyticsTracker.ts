@@ -99,35 +99,60 @@ export function usePageViewTracker(pageName: string = 'home') {
 
 /**
  * Hook for tracking section views using Intersection Observer
+ * Uses localStorage to avoid duplicate tracking per day
  */
 export function useSectionViewTracker(sectionId: string, elementRef: React.RefObject<HTMLElement | null>) {
     const hasTracked = useRef(false);
+    const observerRef = useRef<IntersectionObserver | null>(null);
 
     useEffect(() => {
-        const element = elementRef.current;
-        if (!element || hasTracked.current) return;
-
+        // Check if already tracked today (from localStorage)
         if (wasTrackedToday('sectionView', sectionId)) {
             hasTracked.current = true;
             return;
         }
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting && !hasTracked.current) {
-                        hasTracked.current = true;
-                        markAsTracked('sectionView', sectionId);
-                        sendTrackingEvent('sectionView', sectionId);
-                    }
-                });
-            },
-            { threshold: 0.5 }
-        );
+        // Wait for element to be available
+        const checkElement = () => {
+            const element = elementRef.current;
+            if (!element) {
+                // Retry after a short delay if element isn't ready yet
+                const timeoutId = setTimeout(checkElement, 100);
+                return () => clearTimeout(timeoutId);
+            }
 
-        observer.observe(element);
+            if (hasTracked.current) return;
 
-        return () => observer.disconnect();
+            // Clean up previous observer if any
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+
+            observerRef.current = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting && !hasTracked.current) {
+                            hasTracked.current = true;
+                            markAsTracked('sectionView', sectionId);
+                            sendTrackingEvent('sectionView', sectionId);
+                            console.log(`[Analytics] Section viewed: ${sectionId}`);
+                            // Disconnect after tracking
+                            observerRef.current?.disconnect();
+                        }
+                    });
+                },
+                { threshold: 0.3, rootMargin: '0px' }
+            );
+
+            observerRef.current.observe(element);
+        };
+
+        checkElement();
+
+        return () => {
+            observerRef.current?.disconnect();
+            observerRef.current = null;
+        };
     }, [sectionId, elementRef]);
 }
 
