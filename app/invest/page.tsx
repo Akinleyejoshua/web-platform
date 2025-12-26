@@ -28,6 +28,20 @@ export default function InvestPage() {
         currency: 'USD',
     };
 
+    const ukBank = {
+        bankName: 'Clear Junction Limited',
+        accountNumber: '40938263',
+        accountName: 'Joshua Akinleye',
+        currency: 'GBP',
+    };
+
+    const euBank = {
+        bankName: 'Clear Junction Limited',
+        accountNumber: '40938263',
+        accountName: 'Joshua Akinleye',
+        currency: 'EUR',
+    };
+
     return (
         <div className={styles.page}>
             {/* Background Elements */}
@@ -207,6 +221,118 @@ export default function InvestPage() {
                                             className={styles.copyBtn}
                                         >
                                             {copiedField === 'intName' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* UK Bank Card */}
+                        <div className={`${styles.bankCard} ${styles.internationalCard}`}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.cardIcon}>
+                                    <FiGlobe size={24} />
+                                </div>
+                                <div>
+                                    <h3 className={styles.cardTitle}>UK Transfer</h3>
+                                    <span className={styles.cardBadge}>GBP</span>
+                                </div>
+                            </div>
+
+                            <p className={styles.cardDesc}>
+                                For transfers from the United Kingdom in British Pounds (£)
+                            </p>
+
+                            <div className={styles.detailsGrid}>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Bank Name</span>
+                                    <div className={styles.detailValue}>
+                                        <span>{ukBank.bankName}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(ukBank.bankName, 'ukBank')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'ukBank' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Number</span>
+                                    <div className={styles.detailValue}>
+                                        <span className={styles.highlight}>{ukBank.accountNumber}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(ukBank.accountNumber, 'ukAcc')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'ukAcc' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Name</span>
+                                    <div className={styles.detailValue}>
+                                        <span>{ukBank.accountName}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(ukBank.accountName, 'ukName')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'ukName' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* EU Bank Card */}
+                        <div className={`${styles.bankCard} ${styles.internationalCard}`}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.cardIcon}>
+                                    <FiGlobe size={24} />
+                                </div>
+                                <div>
+                                    <h3 className={styles.cardTitle}>EU Transfer</h3>
+                                    <span className={styles.cardBadge}>EUR</span>
+                                </div>
+                            </div>
+
+                            <p className={styles.cardDesc}>
+                                For transfers from the European Union in Euros (€)
+                            </p>
+
+                            <div className={styles.detailsGrid}>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Bank Name</span>
+                                    <div className={styles.detailValue}>
+                                        <span>{euBank.bankName}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(euBank.bankName, 'euBank')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'euBank' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Number</span>
+                                    <div className={styles.detailValue}>
+                                        <span className={styles.highlight}>{euBank.accountNumber}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(euBank.accountNumber, 'euAcc')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'euAcc' ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className={styles.detailRow}>
+                                    <span className={styles.detailLabel}>Account Name</span>
+                                    <div className={styles.detailValue}>
+                                        <span>{euBank.accountName}</span>
+                                        <button
+                                            onClick={() => copyToClipboard(euBank.accountName, 'euName')}
+                                            className={styles.copyBtn}
+                                        >
+                                            {copiedField === 'euName' ? <FiCheck size={14} /> : <FiCopy size={14} />}
                                         </button>
                                     </div>
                                 </div>
