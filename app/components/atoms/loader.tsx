@@ -16,7 +16,7 @@ export function Loader({ variant = 'fullscreen', text, className = '' }: LoaderP
     // Construct class names based on variant
     const containerClasses = [
         styles.loader,
-        variant === 'fixed' || variant === 'fullscreen' ? styles.fixed : '',
+        variant === 'fullscreen' ? styles.fixed : '',
         variant === 'section' ? styles.section : '',
         variant === 'inline' ? styles.inline : '',
         isDark ? styles.dark : '', // Apply dark class for theme awareness
