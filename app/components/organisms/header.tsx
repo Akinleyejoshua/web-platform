@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FiTrendingUp, FiMenu, FiX, FiHome, FiUser, FiBriefcase, FiCode, FiMail } from 'react-icons/fi';
+import { FiTrendingUp, FiMenu, FiX, FiHome, FiUser, FiBriefcase, FiCode, FiMail, FiFileText } from 'react-icons/fi';
 import { NavLink } from '@/app/components/molecules/nav-link';
 import { Button } from '@/app/components/atoms/button';
 import { ThemeToggle } from '@/app/components/atoms/theme-toggle';
@@ -14,6 +14,7 @@ const navLinks = [
     { href: '#experience', label: 'Experience', icon: FiBriefcase },
     { href: '#projects', label: 'Projects', icon: FiCode },
     { href: '#contact', label: 'Contact', icon: FiMail },
+    { href: '/resume.pdf', label: 'Resume', icon: FiFileText },
 ];
 
 interface HeaderProps {

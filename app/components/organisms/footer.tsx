@@ -126,6 +126,8 @@ export function Footer({ className = '' }: FooterProps) {
                             <a href="https://akinleyejoshua-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('portfolio_v1')}>Prev. Portfolio v1</a>
                             <a href="https://j-resume.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('ml_projects')}>Prev. Ml Projects</a>
                             <a href="https://matching.turing.com/developer-resume-preview/94fcd098ef28063a611a36b6c211b83394302204b3221e" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('turing_profile')}>Turing Profile</a>
+                            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('resume')}>Resume</a>
+                            <a href="/cover.pdf" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('cover_letter')}>Cover Letter</a>
                         </div>
                     </div>
                 </div>
