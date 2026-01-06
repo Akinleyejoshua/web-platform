@@ -116,6 +116,13 @@
     width: 6px;
     height: 6px;
     border-radius: 5px;
+    background: #000;
+    box-shadow: 0 0 9px rgba(0, 0, 0, .5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark mode override */
+.dark .circle:after {
     background: #fff;
     box-shadow: 0 0 9px rgba(255, 255, 255, .7);
 }
