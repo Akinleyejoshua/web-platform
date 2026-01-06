@@ -9,9 +9,11 @@ interface NavLinkProps {
     active?: boolean;
     onClick?: () => void;
     className?: string;
+    target?: string;
+    rel?: string;
 }
 
-export function NavLink({ href, children, active = false, onClick, className = '' }: NavLinkProps) {
+export function NavLink({ href, children, active = false, onClick, className = '', target, rel }: NavLinkProps) {
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (href.startsWith('#')) {
             e.preventDefault();
@@ -28,6 +30,8 @@ export function NavLink({ href, children, active = false, onClick, className = '
             href={href}
             onClick={handleClick}
             className={`${styles.link} ${active ? styles.active : ''} ${className}`.trim()}
+            target={target}
+            rel={rel}
         >
             {children}
         </a>

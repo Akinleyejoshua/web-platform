@@ -14,7 +14,7 @@ const navLinks = [
     { href: '#experience', label: 'Experience', icon: FiBriefcase },
     { href: '#projects', label: 'Projects', icon: FiCode },
     { href: '#contact', label: 'Contact', icon: FiMail },
-    { href: '/resume.pdf', label: 'Resume', icon: FiFileText },
+    { href: '/resume.pdf', label: 'Resume', icon: FiFileText, target: '_blank', rel: 'noopener noreferrer' },
 ];
 
 interface HeaderProps {
@@ -55,7 +55,13 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
 
                 <nav className={styles.nav}>
                     {navLinks.map((link) => (
-                        <NavLink key={link.href} href={link.href} onClick={() => handleNavClick(link.label)}>
+                        <NavLink
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => handleNavClick(link.label)}
+                            target={link.target}
+                            rel={link.rel}
+                        >
                             <link.icon size={14} />
                             {link.label}
                         </NavLink>
@@ -81,7 +87,13 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
             <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
                 <nav className={styles.mobileNav}>
                     {navLinks.map((link) => (
-                        <NavLink key={link.href} href={link.href} onClick={() => { handleNavClick(link.label); closeMobileMenu(); }}>
+                        <NavLink
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => { handleNavClick(link.label); closeMobileMenu(); }}
+                            target={link.target}
+                            rel={link.rel}
+                        >
                             <link.icon size={14} />
                             {link.label}
                         </NavLink>
