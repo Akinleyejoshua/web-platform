@@ -3,6 +3,7 @@ export { Button } from './atoms/button';
 export { Badge } from './atoms/badge';
 export { ThemeToggle } from './atoms/theme-toggle';
 export { IconWrapper } from './atoms/icon-wrapper';
+export { Loader } from './atoms/loader';
 
 // Layout
 export { Container } from './layout/container';

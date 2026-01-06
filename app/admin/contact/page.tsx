@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiMail, FiPhone, FiCheck } from 'react-icons/fi';
+import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
 
 export default function AdminContactPage() {
@@ -52,11 +53,7 @@ export default function AdminContactPage() {
     };
 
     if (isLoading) {
-        return (
-            <div className={styles.loading}>
-                <div className={styles.spinner} />
-            </div>
-        );
+        return <Loader variant="section" />;
     }
 
     return (

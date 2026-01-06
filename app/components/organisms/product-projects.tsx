@@ -4,6 +4,7 @@ import React from 'react';
 import { Section } from '@/app/components/layout/section';
 import { ProjectCard } from '@/app/components/molecules/project-card';
 import { Carousel } from './carousel';
+import { Loader } from '@/app/components/atoms/loader';
 import { useProductProjects } from '@/app/hooks/use-product-projects';
 import styles from './projects.module.css';
 
@@ -40,9 +41,7 @@ export function ProductProjects() {
             </div>
 
             {isLoading ? (
-                <div className={styles.loading}>
-                    <div className={styles.spinner} />
-                </div>
+                <Loader variant="section" />
             ) : products.length === 0 ? (
                 <p className={styles.empty}>No products in this category yet.</p>
             ) : (

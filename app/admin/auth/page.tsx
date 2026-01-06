@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { FiLock, FiMail, FiEye, FiEyeOff, FiShield, FiZap, FiTrendingUp } from 'react-icons/fi';
+import { Loader } from '@/app/components/atoms/loader';
 import styles from './page.module.css';
 
 export default function AdminAuthPage() {
@@ -120,7 +121,7 @@ export default function AdminAuthPage() {
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
-                                    <span className={styles.loadingSpinner} />
+                                    <Loader variant="inline" />
                                 ) : (
                                     'Sign In'
                                 )}

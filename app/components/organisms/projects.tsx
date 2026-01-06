@@ -4,6 +4,7 @@ import React from 'react';
 import { Section } from '@/app/components/layout/section';
 import { ProjectCard } from '@/app/components/molecules/project-card';
 import { CategoryTabs } from './category-tabs';
+import { Loader } from '@/app/components/atoms/loader';
 import { Carousel } from './carousel';
 import { useProjects } from '@/app/hooks/use-projects';
 import styles from './projects.module.css';
@@ -25,9 +26,7 @@ export function Projects() {
             />
 
             {isLoading ? (
-                <div className={styles.loading}>
-                    <div className={styles.spinner} />
-                </div>
+                <Loader variant="section" />
             ) : projects.length === 0 ? (
                 <p className={styles.empty}>No projects in this category yet.</p>
             ) : (

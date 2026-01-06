@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiLink, FiUser } from 'react-icons/fi';
+import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
 import cardStyles from './about.module.css';
 
@@ -99,11 +100,7 @@ export default function AdminAboutPage() {
     };
 
     if (isLoading) {
-        return (
-            <div className={styles.loading}>
-                <div className={styles.spinner} />
-            </div>
-        );
+        return <Loader variant="section" />;
     }
 
     return (

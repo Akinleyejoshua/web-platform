@@ -3,6 +3,7 @@
 import React from 'react';
 import { Section } from '@/app/components/layout/section';
 import { TimelineItem } from '@/app/components/molecules/timeline-item';
+import { Loader } from '@/app/components/atoms/loader';
 import { useExperience } from '@/app/hooks/use-experience';
 import styles from './experience.module.css';
 
@@ -16,9 +17,7 @@ export function Experience() {
             subtitle="My professional journey and career milestones"
         >
             {isLoading ? (
-                <div className={styles.loading}>
-                    <div className={styles.spinner} />
-                </div>
+                <Loader variant="section" />
             ) : error ? (
                 <p className={styles.empty}>Unable to load experiences</p>
             ) : experiences.length === 0 ? (

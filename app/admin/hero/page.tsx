@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from '../components/file-upload';
+import { Loader } from '@/app/components/atoms/loader';
 import models from '../components/editor.module.css'; // Importing as models to avoid conflict if needed, or just styles
 import styles from '../components/editor.module.css';
 
@@ -63,11 +64,7 @@ export default function AdminHeroPage() {
     };
 
     if (isLoading) {
-        return (
-            <div className={styles.loading}>
-                <div className={styles.spinner} />
-            </div>
-        );
+        return <Loader variant="section" />;
     }
 
     return (

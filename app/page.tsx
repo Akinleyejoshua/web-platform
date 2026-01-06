@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Header, Hero, About, Experience, Projects, ProductProjects, Contact, Footer } from '@/app/components';
+import { Header, Hero, About, Experience, Projects, ProductProjects, Contact, Footer, Loader } from '@/app/components';
 import { IHero } from '@/app/lib/models/hero';
 import { IAbout } from '@/app/lib/models/about';
 import { IContact } from '@/app/lib/models/contact';
@@ -67,11 +67,7 @@ export default function Home() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner} />
-      </div>
-    );
+    return <Loader variant="fullscreen" />;
   }
 
   const { hero, about, contact } = data;

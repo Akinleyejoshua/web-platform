@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
+import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
 import projectStyles from '../projects/projects.module.css';
 
@@ -117,11 +118,7 @@ export default function AdminProductsPage() {
     };
 
     if (isLoading) {
-        return (
-            <div className={styles.loading}>
-                <div className={styles.spinner} />
-            </div>
-        );
+        return <Loader variant="section" />;
     }
 
     return (

@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { FiUpload, FiX, FiImage } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './file-upload.module.css';
+import { Loader } from '@/app/components/atoms/loader';
 
 interface FileUploadProps {
     value: string;
@@ -115,7 +116,7 @@ export function FileUpload({
                     className={styles.uploadBtn}
                 >
                     {isUploading ? (
-                        <span className={styles.spinner} />
+                        <Loader variant="inline" />
                     ) : (
                         <FiUpload size={18} />
                     )}

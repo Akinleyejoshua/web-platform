@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
+import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
 
 // Local specific styles for project card grid
@@ -115,11 +116,7 @@ export default function AdminProjectsPage() {
     };
 
     if (isLoading) {
-        return (
-            <div className={styles.loading}>
-                <div className={styles.spinner} />
-            </div>
-        );
+        return <Loader variant="section" />;
     }
 
     return (

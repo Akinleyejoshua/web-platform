@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fi';
 import { useAnalytics } from '@/app/hooks/use-analytics';
 import styles from './page.module.css';
+import { Loader } from '@/app/components/atoms/loader';
 
 const quickActions = [
     { href: '/admin/hero', label: 'Edit Hero Section', icon: FiImage },
