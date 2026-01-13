@@ -120,7 +120,7 @@ export function Footer({ className = '' }: FooterProps) {
                         <h3 className={styles.linkTitle}>Resources</h3>
                         <div className={styles.links}>
                             <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('github')}>GitHub</a>
-                            <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('parent_company')}>Parent Company(Business)</a>
+                            <a href="https://ultraspaceeng.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('parent_company')}>Building</a>
                             <a href="https://akinleyejoshua-old.vercel.app" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('portfolio_v3')}>Prev. Portfolio v3</a>
                             <a href="https://akinleyejoshua.netlify.app" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('portfolio_v2')}>Prev. Portfolio v2</a>
                             <a href="https://akinleyejoshua-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('portfolio_v1')}>Prev. Portfolio v1</a>
