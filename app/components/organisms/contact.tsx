@@ -72,7 +72,7 @@ export function Contact({
                             <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_github', true)}>
                                 <FiGithub size={18} />
                             </a>
-                            <a href="https://www.linkedin.com/in/joshua-a-9895b61ab/" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_linkedin', true)}>
+                            <a href="https://www.linkedin.com/in/joshua-akinleye-061a013a6/" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_linkedin', true)}>
                                 <FiLinkedin size={18} />
                             </a>
                             <a href="https://x.com/Joshuaakinleye4" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_twitter', true)}>
