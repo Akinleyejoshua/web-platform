@@ -49,7 +49,7 @@ export function Footer({ className = '' }: FooterProps) {
                                 <FiGithub size={18} />
                             </a>
                             <a
-                                href="https://www.linkedin.com/in/joshua-a-9895b61ab/"
+                                href="https://www.linkedin.com/in/joshua-akinleye-061a013a6/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.socialLink}
