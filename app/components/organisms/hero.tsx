@@ -121,7 +121,7 @@ export function Hero({
                             </div>
                             <div className={`${styles.floatingCard} ${styles.floatingCard2}`}>
                                 <span>⚡ Tech Stack</span>
-                                <strong>Nextjs, Node.js, TypeScript, MySQL, MongoDB.</strong>
+                                <strong>Full Stack</strong>
                             </div>
                         </div>
                     </div>
