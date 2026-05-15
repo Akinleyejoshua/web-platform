@@ -14,7 +14,7 @@ const navLinks = [
     { href: '#experience', label: 'Experience', icon: FiBriefcase },
     { href: '#projects', label: 'Projects', icon: FiCode },
     { href: '#contact', label: 'Contact', icon: FiMail },
-    { href: '/resume.pdf', label: 'Resume', icon: FiFileText, target: '_blank', rel: 'noopener noreferrer' },
+    { href: '/resume', label: 'Resume', icon: FiFileText, target: '_blank', rel: 'noopener noreferrer' },
 ];
 
 interface HeaderProps {
