@@ -42,7 +42,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
     { timestamps: true }
 );
 
-ProductProjectSchema.index({ category: 1, order: 1 });
+ProductProjectSchema.index({ isVisible: 1, category: 1, order: 1, createdAt: -1 });
 
 const ProductProject: Model<IProductProject> =
     mongoose.models.ProductProject || mongoose.model<IProductProject>('ProductProject', ProductProjectSchema);

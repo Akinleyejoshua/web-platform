@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         if (category && category !== 'all') query.category = category;
         if (!admin) query.isVisible = { $ne: false }; // Using $ne: false to handle older records without isVisible field
 
-        const products = await ProductProject.find(query).sort({ order: 1, createdAt: -1 });
+        const products = await ProductProject.find(query).sort({ order: 1, createdAt: -1 }).lean();
 
         return NextResponse.json(products, { status: 200 });
     } catch (error) {

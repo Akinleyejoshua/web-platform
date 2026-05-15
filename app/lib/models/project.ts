@@ -45,7 +45,7 @@ const ProjectSchema = new Schema<IProject>(
     { timestamps: true }
 );
 
-ProjectSchema.index({ category: 1, order: 1 });
+ProjectSchema.index({ isVisible: 1, category: 1, order: 1, createdAt: -1 });
 
 const Project: Model<IProject> =
     mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);

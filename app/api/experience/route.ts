@@ -5,7 +5,7 @@ import Experience from '@/app/lib/models/experience';
 export async function GET() {
     try {
         await connectDB();
-        const experiences = await Experience.find().sort({ order: 1, startDate: -1 });
+        const experiences = await Experience.find().sort({ order: 1, startDate: -1 }).lean();
         return NextResponse.json(experiences, { status: 200 });
     } catch (error) {
         console.error('Experience GET error:', error);
