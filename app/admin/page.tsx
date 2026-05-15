@@ -86,6 +86,16 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className={styles.statCard}>
+                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}>
+                        <FiUser size={22} />
+                    </div>
+                    <div className={styles.statContent}>
+                        <div className={styles.statLabel}>Total Unique Visitors</div>
+                        <div className={styles.statValue}>{(analytics?.totalVisitors || 0).toLocaleString()}</div>
+                    </div>
+                </div>
+
+                <div className={styles.statCard}>
                     <div className={styles.statIcon}>
                         <FiTrendingUp size={22} />
                     </div>

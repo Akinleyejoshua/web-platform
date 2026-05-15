@@ -22,6 +22,7 @@ export async function GET() {
 
         // Calculate totals
         const totalViews = analytics.reduce((sum, entry) => sum + (entry.views || 0), 0);
+        const totalVisitors = analytics.reduce((sum, entry) => sum + (entry.uniqueVisitors || 0), 0);
 
         // Aggregate section views
         const sectionViewTotals: Record<string, number> = {};
@@ -65,6 +66,7 @@ export async function GET() {
 
         return NextResponse.json({
             totalViews,
+            totalVisitors,
             sectionViews: sectionViewTotals,
             clicks: clickTotals,
             dailyStats,

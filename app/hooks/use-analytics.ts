@@ -12,6 +12,7 @@ interface DailyStat {
 
 interface AnalyticsData {
     totalViews: number;
+    totalVisitors: number;
     sectionViews: Record<string, number>;
     clicks: Record<string, number>;
     dailyStats: DailyStat[];
@@ -48,9 +49,17 @@ export function useAnalytics(): UseAnalyticsReturn {
 
     const trackView = useCallback(async () => {
         try {
+            let isUniqueVisitor = false;
+            const visitorKey = 'portfolio_has_visited';
+            if (typeof window !== 'undefined' && !localStorage.getItem(visitorKey)) {
+                localStorage.setItem(visitorKey, 'true');
+                isUniqueVisitor = true;
+            }
+
             await axios.post('/api/analytics/track', {
                 type: 'pageView',
                 target: 'home',
+                isUniqueVisitor,
             });
         } catch (err) {
             console.error('Failed to track view:', err);

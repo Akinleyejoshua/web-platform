@@ -13,6 +13,7 @@ export interface IProject extends Document {
     githubUrl: string;
     liveUrl: string;
     featured: boolean;
+    isVisible: boolean;
     order: number;
     createdAt: Date;
     updatedAt: Date;
@@ -38,6 +39,7 @@ const ProjectSchema = new Schema<IProject>(
         githubUrl: { type: String, default: '' },
         liveUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
+        isVisible: { type: Boolean, default: true },
         order: { type: Number, default: 0 },
     },
     { timestamps: true }

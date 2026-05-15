@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -24,6 +24,7 @@ interface ProjectItem {
     githubUrl: string;
     liveUrl: string;
     order: number;
+    isVisible: boolean;
 }
 
 const emptyProject: ProjectItem = {
@@ -36,6 +37,7 @@ const emptyProject: ProjectItem = {
     githubUrl: '',
     liveUrl: '',
     order: 0,
+    isVisible: true,
 };
 
 export default function AdminProjectsPage() {
@@ -48,7 +50,7 @@ export default function AdminProjectsPage() {
 
     const fetchProjects = async () => {
         try {
-            const response = await axios.get('/api/projects');
+            const response = await axios.get('/api/projects?admin=true');
             setProjects(response.data);
         } catch (error) {
             console.error('Failed to fetch projects:', error);
@@ -113,6 +115,29 @@ export default function AdminProjectsPage() {
         if (!editingItem) return;
         const techs = techInput.split(',').map((t) => t.trim()).filter((t) => t);
         setEditingItem({ ...editingItem, technologies: techs });
+    };
+
+    const handleMove = async (index: number, direction: 'up' | 'down') => {
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === projects.length - 1) return;
+
+        const newProjects = [...projects];
+        const swapIndex = direction === 'up' ? index - 1 : index + 1;
+        
+        [newProjects[index], newProjects[swapIndex]] = [newProjects[swapIndex], newProjects[index]];
+        
+        const updates = newProjects.map((p, i) => ({ ...p, order: i }));
+        setProjects(updates);
+
+        try {
+            await Promise.all([
+                axios.put('/api/projects', updates[index]),
+                axios.put('/api/projects', updates[swapIndex])
+            ]);
+        } catch (error) {
+            setMessage({ type: 'error', text: 'Failed to reorder.' });
+            fetchProjects();
+        }
     };
 
     if (isLoading) {
@@ -259,6 +284,30 @@ export default function AdminProjectsPage() {
                         </div>
                     </div>
 
+                    <div className={styles.row}>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Order (Sort Hierarchy)</label>
+                            <input
+                                type="number"
+                                value={editingItem.order}
+                                onChange={(e) => setEditingItem({ ...editingItem, order: parseInt(e.target.value) || 0 })}
+                                className={styles.input}
+                                placeholder="Lower numbers appear first"
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '100%', paddingTop: '32px' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={editingItem.isVisible !== false}
+                                    onChange={(e) => setEditingItem({ ...editingItem, isVisible: e.target.checked })}
+                                    style={{ width: '18px', height: '18px' }}
+                                />
+                                Publicly Visible
+                            </label>
+                        </div>
+                    </div>
+
                     <div className={styles.actions}>
                         <button onClick={handleSave} disabled={isSaving} className={styles.submitBtn}>
                             <FiCheck size={18} />
@@ -277,7 +326,7 @@ export default function AdminProjectsPage() {
                             No projects found. Create your first one!
                         </div>
                     ) : (
-                        projects.map((project) => (
+                        projects.map((project, index) => (
                             <div key={project._id} className={projectStyles.card}>
                                 <div className={projectStyles.cardMedia}>
                                     {project.mediaType === 'image' && project.mediaUrl ? (
@@ -308,6 +357,12 @@ export default function AdminProjectsPage() {
                                     </div>
                                 </div>
                                 <div className={projectStyles.cardActions}>
+                                    <button onClick={() => handleMove(index, 'up')} disabled={index === 0} className={projectStyles.actionBtn}>
+                                        <FiArrowUp size={16} />
+                                    </button>
+                                    <button onClick={() => handleMove(index, 'down')} disabled={index === projects.length - 1} className={projectStyles.actionBtn}>
+                                        <FiArrowDown size={16} />
+                                    </button>
                                     <button onClick={() => handleEdit(project)} className={projectStyles.actionBtn}>
                                         <FiEdit2 size={16} />
                                     </button>

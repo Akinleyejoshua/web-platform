@@ -11,6 +11,7 @@ export interface IProductProject extends Document {
     technologies: string[];
     liveUrl: string;
     featured: boolean;
+    isVisible: boolean;
     order: number;
     createdAt: Date;
     updatedAt: Date;
@@ -35,6 +36,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
         technologies: { type: [String], default: [] },
         liveUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
+        isVisible: { type: Boolean, default: true },
         order: { type: Number, default: 0 },
     },
     { timestamps: true }

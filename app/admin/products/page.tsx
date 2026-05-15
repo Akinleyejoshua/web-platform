@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -21,6 +21,7 @@ interface ProductItem {
     technologies: string[];
     liveUrl: string;
     order: number;
+    isVisible: boolean;
 }
 
 const emptyProduct: ProductItem = {
@@ -32,6 +33,7 @@ const emptyProduct: ProductItem = {
     technologies: [],
     liveUrl: '',
     order: 0,
+    isVisible: true,
 };
 
 const categoryLabels: Record<ProductCategory, string> = {
@@ -52,7 +54,7 @@ export default function AdminProductsPage() {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('/api/product-projects');
+            const response = await axios.get('/api/product-projects?admin=true');
             setProducts(response.data);
         } catch (error) {
             console.error('Failed to fetch products:', error);
@@ -114,6 +116,29 @@ export default function AdminProductsPage() {
             setMessage({ type: 'success', text: 'Product deleted successfully!' });
         } catch (error) {
             setMessage({ type: 'error', text: 'Failed to delete product.' });
+        }
+    };
+
+    const handleMove = async (index: number, direction: 'up' | 'down') => {
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === products.length - 1) return;
+
+        const newProducts = [...products];
+        const swapIndex = direction === 'up' ? index - 1 : index + 1;
+        
+        [newProducts[index], newProducts[swapIndex]] = [newProducts[swapIndex], newProducts[index]];
+        
+        const updates = newProducts.map((p, i) => ({ ...p, order: i }));
+        setProducts(updates);
+
+        try {
+            await Promise.all([
+                axios.put('/api/product-projects', updates[index]),
+                axios.put('/api/product-projects', updates[swapIndex])
+            ]);
+        } catch (error) {
+            setMessage({ type: 'error', text: 'Failed to reorder.' });
+            fetchProducts();
         }
     };
 
@@ -215,6 +240,30 @@ export default function AdminProductsPage() {
                         </div>
                     </div>
 
+                    <div className={styles.row}>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Order (Sort Hierarchy)</label>
+                            <input
+                                type="number"
+                                value={editingItem.order}
+                                onChange={(e) => setEditingItem({ ...editingItem, order: parseInt(e.target.value) || 0 })}
+                                className={styles.input}
+                                placeholder="Lower numbers appear first"
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '100%', paddingTop: '32px' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={editingItem.isVisible !== false}
+                                    onChange={(e) => setEditingItem({ ...editingItem, isVisible: e.target.checked })}
+                                    style={{ width: '18px', height: '18px' }}
+                                />
+                                Publicly Visible
+                            </label>
+                        </div>
+                    </div>
+
                     <div className={styles.actions}>
                         <button onClick={handleSave} disabled={isSaving} className={styles.submitBtn}>
                             <FiCheck size={18} />
@@ -233,7 +282,7 @@ export default function AdminProductsPage() {
                             No products found. Create your first one!
                         </div>
                     ) : (
-                        products.map((product) => (
+                        products.map((product, index) => (
                             <div key={product._id} className={projectStyles.card}>
                                 <div className={projectStyles.cardMedia}>
                                     {product.mediaUrl ? (
@@ -260,6 +309,12 @@ export default function AdminProductsPage() {
                                     )}
                                 </div>
                                 <div className={projectStyles.cardActions}>
+                                    <button onClick={() => handleMove(index, 'up')} disabled={index === 0} className={projectStyles.actionBtn}>
+                                        <FiArrowUp size={16} />
+                                    </button>
+                                    <button onClick={() => handleMove(index, 'down')} disabled={index === products.length - 1} className={projectStyles.actionBtn}>
+                                        <FiArrowDown size={16} />
+                                    </button>
                                     {product.liveUrl && (
                                         <a href={product.liveUrl} target="_blank" rel="noopener noreferrer" className={projectStyles.actionBtn}>
                                             <FiExternalLink size={16} />

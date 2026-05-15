@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         const body = await request.json();
-        const { type, target, sessionId } = body;
+        const { type, target, sessionId, isUniqueVisitor } = body;
 
         if (!type || !target) {
             return NextResponse.json(
@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
                 updateQuery = {
                     $inc: { views: 1 }
                 };
+                if (isUniqueVisitor) {
+                    updateQuery.$inc.uniqueVisitors = 1;
+                }
                 break;
 
             case 'sectionView':
