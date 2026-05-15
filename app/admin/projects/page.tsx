@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -140,6 +140,12 @@ export default function AdminProjectsPage() {
         }
     };
 
+    const copyLink = (category: string) => {
+        const url = `${window.location.origin}/?domain=${category}#projects`;
+        navigator.clipboard.writeText(url);
+        setMessage({ type: 'success', text: `Share link for ${category} copied to clipboard!` });
+    };
+
     if (isLoading) {
         return <Loader variant="section" />;
     }
@@ -159,6 +165,25 @@ export default function AdminProjectsPage() {
             {message && (
                 <div className={message.type === 'success' ? styles.success : styles.error}>
                     {message.text}
+                </div>
+            )}
+
+            {!editingItem && (
+                <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--color-surface)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--color-text)' }}>Share Portfolio by Domain</h3>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {['web', 'ml', 'data-science', 'web3', 'others'].map(cat => (
+                            <button 
+                                key={cat} 
+                                onClick={() => copyLink(cat)}
+                                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'var(--color-background)', border: '1px solid var(--color-border)', borderRadius: '6px', cursor: 'pointer', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}
+                                title={`Copy link for ${cat}`}
+                            >
+                                <FiCopy size={14} />
+                                {cat.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
 

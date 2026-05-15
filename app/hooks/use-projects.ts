@@ -19,14 +19,25 @@ export function useProjects(): UseProjectsReturn {
     const [error, setError] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<ProjectCategory | 'all'>('all');
 
-    const fetchProjects = useCallback(async () => {
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const domain = params.get('domain');
+            if (domain && ['web', 'ml', 'web3', 'data-science', 'others'].includes(domain)) {
+                setActiveCategory(domain as ProjectCategory);
+            }
+        }
+    }, []);
+
+    const fetchProjects = useCallback(async (signal?: AbortSignal) => {
         setIsLoading(true);
         setError(null);
         try {
             const params = activeCategory !== 'all' ? { category: activeCategory } : {};
-            const response = await axios.get('/api/projects', { params });
+            const response = await axios.get('/api/projects', { params, signal });
             setProjects(response.data);
         } catch (err) {
+            if (axios.isCancel(err)) return;
             const message = axios.isAxiosError(err)
                 ? err.response?.data?.error || 'Failed to fetch projects'
                 : 'An unexpected error occurred';
@@ -37,7 +48,9 @@ export function useProjects(): UseProjectsReturn {
     }, [activeCategory]);
 
     useEffect(() => {
-        fetchProjects();
+        const controller = new AbortController();
+        fetchProjects(controller.signal);
+        return () => controller.abort();
     }, [fetchProjects]);
 
     return {
