@@ -1,15 +1,22 @@
 'use client';
 
 import React from 'react';
-import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiArrowRight, FiYoutube } from 'react-icons/fi';
+import { FiArrowRight } from 'react-icons/fi';
+import { SocialLink } from '@/app/components/molecules/social-link';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './footer.module.css';
 
-interface FooterProps {
-    className?: string;
+interface SocialLinkData {
+    platform: string;
+    url: string;
 }
 
-export function Footer({ className = '' }: FooterProps) {
+interface FooterProps {
+    className?: string;
+    socialLinks?: SocialLinkData[];
+}
+
+export function Footer({ className = '', socialLinks = [] }: FooterProps) {
     const currentYear = new Date().getFullYear();
 
     const handleSocialClick = (platform: string) => {
@@ -37,59 +44,19 @@ export function Footer({ className = '' }: FooterProps) {
                             Building innovative digital solutions across web development,
                             machine learning, and cutting-edge technologies.
                         </p>
-                        <div className={styles.socials}>
-                            <a
-                                href="https://github.com/Akinleyejoshua"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                                aria-label="GitHub"
-                                onClick={() => handleSocialClick('github')}
-                            >
-                                <FiGithub size={18} />
-                            </a>
-                            <a
-                                href="https://www.linkedin.com/in/joshua-akinleye-061a013a6/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                                aria-label="LinkedIn"
-                                onClick={() => handleSocialClick('linkedin')}
-                            >
-                                <FiLinkedin size={18} />
-                            </a>
-                            <a
-                                href="https://x.com/Joshuaakinleye4
-                                "
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                                aria-label="Twitter"
-                                onClick={() => handleSocialClick('twitter')}
-                            >
-                                <FiTwitter size={18} />
-                            </a>
-                            <a
-                                href="mailto:akinleyejoshua.dev@gmail.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                                aria-label="Email"
-                                onClick={() => handleSocialClick('email')}
-                            >
-                                <FiMail size={18} />
-                            </a>
-                            <a
-                                href="https://www.youtube.com/channel/UCQ51Ney9amBf0T5C69OmBog"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.socialLink}
-                                aria-label="Youtube"
-                                onClick={() => handleSocialClick('youtube')}
-                            >
-                                <FiYoutube size={18} />
-                            </a>
-                        </div>
+                        {socialLinks.length > 0 && (
+                            <div className={styles.socials}>
+                                {socialLinks.map((link) => (
+                                    <div key={link.platform} onClick={() => handleSocialClick(link.platform)}>
+                                        <SocialLink
+                                            platform={link.platform}
+                                            url={link.url}
+                                            className={styles.socialLink}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Navigation Links */}

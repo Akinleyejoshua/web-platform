@@ -111,10 +111,11 @@ export default function Home() {
         <Contact
           email={contact?.email}
           phone={contact?.phone}
+          socialLinks={about?.socialLinks}
         />
       </section>
 
-      <Footer />
+      <Footer socialLinks={about?.socialLinks} />
     </main>
   );
 }

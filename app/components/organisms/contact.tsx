@@ -1,19 +1,27 @@
 'use client';
 
 import React from 'react';
-import { FiMail, FiPhone, FiMapPin, FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import { Section } from '@/app/components/layout/section';
+import { SocialLink } from '@/app/components/molecules/social-link';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import styles from './contact.module.css';
+
+interface SocialLinkData {
+    platform: string;
+    url: string;
+}
 
 interface ContactProps {
     email?: string;
     phone?: string;
+    socialLinks?: SocialLinkData[];
 }
 
 export function Contact({
     email = 'akinleyejoshua.dev@gmail.com',
     phone = '+234 08131519518',
+    socialLinks = [],
 }: ContactProps) {
     return (
         <Section
@@ -66,20 +74,22 @@ export function Contact({
                         </div>
                     </div>
 
-                    <div className={styles.socialSection}>
-                        <p className={styles.socialLabel}>Connect with me</p>
-                        <div className={styles.socialLinks}>
-                            <a href="https://github.com/Akinleyejoshua" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_github', true)}>
-                                <FiGithub size={18} />
-                            </a>
-                            <a href="https://www.linkedin.com/in/joshua-akinleye-061a013a6/" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_linkedin', true)}>
-                                <FiLinkedin size={18} />
-                            </a>
-                            <a href="https://x.com/Joshuaakinleye4" target="_blank" rel="noopener noreferrer" className={styles.socialLink} onClick={() => trackClick('contact_twitter', true)}>
-                                <FiTwitter size={18} />
-                            </a>
+                    {socialLinks.length > 0 && (
+                        <div className={styles.socialSection}>
+                            <p className={styles.socialLabel}>Connect with me</p>
+                            <div className={styles.socialLinks}>
+                                {socialLinks.map((link) => (
+                                    <div key={link.platform} onClick={() => trackClick(`contact_${link.platform.toLowerCase()}`, true)}>
+                                        <SocialLink
+                                            platform={link.platform}
+                                            url={link.url}
+                                            className={styles.socialLink}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Decorative Elements */}
                     <div className={styles.decorCircle1} />

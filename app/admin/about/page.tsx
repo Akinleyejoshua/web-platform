@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiLink, FiUser } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiUser } from 'react-icons/fi';
 import { Loader } from '@/app/components/atoms/loader';
+import { SocialIcon } from '@/app/components/atoms/social-icon';
 import styles from '../components/editor.module.css';
 import cardStyles from './about.module.css';
 
@@ -39,7 +40,7 @@ export default function AdminAboutPage() {
     }, []);
 
     const handleAddLink = () => {
-        setEditingLink({ platform: '', url: '', icon: '' });
+        setEditingLink({ platform: '', url: '', icon: 'link' });
         setEditingLinkIndex(null);
     };
 
@@ -91,12 +92,18 @@ export default function AdminAboutPage() {
         const colors: Record<string, string> = {
             github: '#333',
             twitter: '#1DA1F2',
+            x: '#000000',
             linkedin: '#0077B5',
             instagram: '#E4405F',
             youtube: '#FF0000',
             facebook: '#1877F2',
+            reddit: '#FF4500',
+            tiktok: '#000000',
+            turing: '#0047FF',
+            discord: '#5865F2',
+            whatsapp: '#25D366',
         };
-        return colors[platform.toLowerCase()] || 'var(--color-accent)';
+        return colors[platform.toLowerCase().trim()] || 'var(--color-accent)';
     };
 
     if (isLoading) {
@@ -178,7 +185,7 @@ export default function AdminAboutPage() {
                                             style={{ background: getPlatformColor(link.platform) }}
                                         >
                                             <div className={cardStyles.iconWrapper}>
-                                                <FiLink size={24} />
+                                                <SocialIcon platform={link.platform} size={24} />
                                             </div>
                                         </div>
                                         <div className={cardStyles.cardContent}>
