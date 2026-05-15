@@ -20,9 +20,24 @@ interface ResumeData {
     projects: IProject[];
 }
 
+// Map friendly domain names to actual DB category values
+const domainToCategoryMap: Record<string, string> = {
+    'machine_learning': 'ml',
+    'machine-learning': 'ml',
+    'ml': 'ml',
+    'web': 'web',
+    'web3': 'web3',
+    'data_analysis': 'data-science',
+    'data-analysis': 'data-science',
+    'data_science': 'data-science',
+    'data-science': 'data-science',
+    'others': 'others',
+};
+
 function ResumeContent() {
     const searchParams = useSearchParams();
-    const domain = searchParams.get('domain');
+    const rawDomain = searchParams.get('domain');
+    const domain = rawDomain ? (domainToCategoryMap[rawDomain.toLowerCase()] || rawDomain) : null;
 
     const [data, setData] = useState<ResumeData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +63,7 @@ function ResumeContent() {
                     contact: contactRes.data,
                     experience: expRes.data || [],
                     // Only get visible projects, limit to top 5 for resume
-                    projects: (projRes.data || []).filter((p: IProject) => p.isVisible !== false).slice(0, 5)
+                    projects: (projRes.data || []).filter((p: IProject) => p.isVisible !== false).slice(0, 8)
                 });
             } catch (error) {
                 console.error("Failed to load resume data:", error);
