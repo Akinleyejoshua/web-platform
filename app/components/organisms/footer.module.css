@@ -46,7 +46,8 @@
 }
 
 .socials {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 40px);
     gap: var(--space-sm);
 }
 
