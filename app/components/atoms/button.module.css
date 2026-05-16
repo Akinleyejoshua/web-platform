@@ -4,7 +4,7 @@
     justify-content: center;
     gap: var(--space-sm);
     padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-sans);
+    font-family: var(--font-active, inherit);
     font-size: 0.9375rem;
     font-weight: 500;
     line-height: 1.5;

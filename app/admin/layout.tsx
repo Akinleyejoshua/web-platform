@@ -41,6 +41,12 @@ const navGroups = [
             { href: '/admin/contact', label: 'Contact', icon: FiMail },
         ]
     },
+    {
+        label: 'System',
+        items: [
+            { href: '/admin/settings', label: 'Settings', icon: FiSettings },
+        ]
+    },
 ];
 
 interface AdminLayoutProps {

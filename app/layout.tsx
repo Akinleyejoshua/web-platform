@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Poppins, Raleway } from 'next/font/google';
 import { Bricolage_Grotesque } from 'next/font/google';
 import { ThemeProvider } from '@/app/components/providers/theme-provider';
 import './globals.css';
@@ -14,6 +14,20 @@ const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-bricolage',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-poppins',
+});
+
+const raleway = Raleway({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-raleway',
 });
 
 export const metadata: Metadata = {
@@ -35,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={bricolage.variable}
+      <body className={`${bricolage.variable} ${poppins.variable} ${raleway.variable}`}
       >
         <ThemeProvider>
           {children}

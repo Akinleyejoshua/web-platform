@@ -3,8 +3,8 @@
     min-height: 100vh;
     height: 100%;
     background: var(--color-bg-secondary);
-    font-family: 'Inter', sans-serif;
-    /* Ensure using the modern font if available */
+    font-family: var(--font-active, sans-serif);
+    /* Ensure using the active settings font */
 }
 
 /* ===== Sidebar ===== */
