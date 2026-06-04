@@ -357,3 +357,135 @@
         justify-content: space-between;
     }
 }
+
+/* Paystack Section */
+.paystackSection {
+    margin-bottom: var(--space-3xl);
+}
+
+.paystackCard {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: var(--space-xl);
+    max-width: 520px;
+    margin: 0 auto;
+    transition: all 0.3s;
+}
+
+.paystackCard:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 12px 40px rgba(var(--color-accent-rgb), 0.1);
+}
+
+.paystackForm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.currencyRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-md);
+    align-items: end;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.inputLabel {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.amountInput {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: 'Monaco', 'Consolas', monospace;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.amountInput:focus {
+    border-color: var(--color-accent);
+}
+
+.amountInput::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.5;
+}
+
+.currencySelect {
+    padding: 12px 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    min-width: 120px;
+}
+
+.currencySelect:focus {
+    border-color: var(--color-accent);
+}
+
+.conversionInfo {
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(var(--color-accent-rgb), 0.08);
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+.paystackBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #667eea 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.paystackBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(var(--color-accent-rgb), 0.3);
+}
+
+.paystackBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.paystackNote {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}

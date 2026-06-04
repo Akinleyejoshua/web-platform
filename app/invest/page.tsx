@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft, FiCopy, FiCheck, FiGlobe, FiMapPin, FiHeart, FiTrendingUp, FiShield, FiZap } from 'react-icons/fi';
 import { usePageViewTracker, useSectionViewTracker, trackClick } from '@/app/hooks/useAnalyticsTracker';
@@ -8,11 +8,34 @@ import styles from './invest.module.css';
 
 export default function InvestPage() {
     const [copiedField, setCopiedField] = useState<string | null>(null);
+    const [amount, setAmount] = useState<string>('');
+    const [currency, setCurrency] = useState<'USD'|'GBP'|'EUR'|'NGN'>('NGN');
+    const [isProcessing, setIsProcessing] = useState(false);
+    const conversionRates = {
+        USD: 1500,
+        GBP: 2000,
+        EUR: 1600,
+        NGN: 1,
+    };
+    const ngnAmount = parseFloat(amount) * conversionRates[currency];
+    const paystackPublicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
+
+    // Load Paystack inline script
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = 'https://js.paystack.co/v1/inline.js';
+        script.async = true;
+        document.body.appendChild(script);
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
 
     // Section refs for tracking
     const heroRef = useRef<HTMLElement>(null);
     const valuePropsRef = useRef<HTMLDivElement>(null);
     const bankSectionRef = useRef<HTMLElement>(null);
+    const paystackRef = useRef<HTMLElement>(null);
     const footerRef = useRef<HTMLElement>(null);
 
     // Track invest page view
@@ -22,6 +45,7 @@ export default function InvestPage() {
     useSectionViewTracker('invest_hero', heroRef);
     useSectionViewTracker('invest_value_props', valuePropsRef);
     useSectionViewTracker('invest_bank_details', bankSectionRef);
+    useSectionViewTracker('invest_paystack', paystackRef);
     useSectionViewTracker('invest_footer', footerRef);
 
     const copyToClipboard = (text: string, field: string) => {
@@ -50,6 +74,7 @@ export default function InvestPage() {
         accountNumber: '40938263',
         accountName: 'Joshua Akinleye',
         currency: 'GBP',
+        wireRouting: '',
     };
 
     const euBank = {
@@ -57,6 +82,7 @@ export default function InvestPage() {
         accountNumber: '40938263',
         accountName: 'Joshua Akinleye',
         currency: 'EUR',
+        wireRouting: '',
     };
 
     return (
@@ -354,6 +380,87 @@ export default function InvestPage() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Paystack Section */}
+                <section ref={paystackRef} className={styles.paystackSection}>
+                    <h2 className={styles.sectionTitle}>Pay with Paystack</h2>
+                    <p className={styles.sectionSubtitle}>
+                        Send any amount from any currency. It will be converted to NGN for processing.
+                    </p>
+
+                    <div className={styles.paystackCard}>
+                        <div className={styles.paystackForm}>
+                            <div className={styles.currencyRow}>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.inputLabel}>Amount</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        step="any"
+                                        value={amount}
+                                        onChange={(e) => setAmount(e.target.value)}
+                                        placeholder="0.00"
+                                        className={styles.amountInput}
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label className={styles.inputLabel}>Currency</label>
+                                    <select
+                                        value={currency}
+                                        onChange={(e) => setCurrency(e.target.value as 'USD'|'GBP'|'EUR'|'NGN')}
+                                        className={styles.currencySelect}
+                                    >
+                                        <option value="USD">USD ($)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="NGN">NGN (₦)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {amount && (
+                                <div className={styles.conversionInfo}>
+                                    <span>≈ ₦{ngnAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={() => {
+                                    if (!amount || parseFloat(amount) <= 0 || !paystackPublicKey) return;
+                                    setIsProcessing(true);
+                                    const finalNgn = Math.round(ngnAmount);
+                                    const handler = (window as any).PaystackPop.setup({
+                                        key: paystackPublicKey,
+                                        email: 'akinleyejoshua.dev@gmail.com',
+                                        amount: finalNgn * 100, // Paystack expects amount in kobo
+                                        currency: 'NGN',
+                                        ref: `INV-${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
+                                        callback: (response: any) => {
+                                            setIsProcessing(false);
+                                            trackClick('paystack_payment_success', true);
+                                            alert(`Payment successful! Reference: ${response.reference}`);
+                                        },
+                                        onClose: () => {
+                                            setIsProcessing(false);
+                                            trackClick('paystack_payment_cancelled', true);
+                                        },
+                                    });
+                                    handler.openIframe();
+                                    trackClick('paystack_manual_payment', true);
+                                }}
+                                disabled={!amount || parseFloat(amount) <= 0 || isProcessing}
+                                className={styles.paystackBtn}
+                            >
+                                <FiZap size={18} />
+                                {isProcessing ? 'Processing...' : `Pay ₦${amount ? Math.round(ngnAmount).toLocaleString() : '0'} with Paystack`}
+                            </button>
+
+                            <p className={styles.paystackNote}>
+                                Secure inline checkout powered by Paystack. Your payment is processed securely without leaving this page.
+                            </p>
                         </div>
                     </div>
                 </section>
