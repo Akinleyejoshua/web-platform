@@ -20,9 +20,22 @@ export async function GET() {
             date: { $gte: startDate },
         }).sort({ date: -1 }).lean();
 
-        // Calculate totals
+        // Calculate totals for the last 30 days
         const totalViews = analytics.reduce((sum, entry) => sum + (entry.views || 0), 0);
         const totalVisitors = analytics.reduce((sum, entry) => sum + (entry.uniqueVisitors || 0), 0);
+
+        // Calculate all-time totals
+        const allTimeStats = await Analytics.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalViews: { $sum: '$views' },
+                    totalVisitors: { $sum: '$uniqueVisitors' },
+                }
+            }
+        ]);
+        const allTimeViews = allTimeStats[0]?.totalViews || 0;
+        const allTimeVisitors = allTimeStats[0]?.totalVisitors || 0;
 
         // Aggregate section views
         const sectionViewTotals: Record<string, number> = {};
@@ -67,6 +80,8 @@ export async function GET() {
         return NextResponse.json({
             totalViews,
             totalVisitors,
+            allTimeViews,
+            allTimeVisitors,
             sectionViews: sectionViewTotals,
             clicks: clickTotals,
             dailyStats,

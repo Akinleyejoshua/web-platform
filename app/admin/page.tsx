@@ -39,6 +39,9 @@ export default function AdminDashboardPage() {
     }
 
     const totalViews = analytics?.totalViews || 0;
+    const totalVisitors = analytics?.totalVisitors || 0;
+    const allTimeViews = analytics?.allTimeViews || 0;
+    const allTimeVisitors = analytics?.allTimeVisitors || 0;
     const dailyStats = analytics?.dailyStats || [];
     const sectionViews = analytics?.sectionViews || {};
     const clicks = analytics?.clicks || {};
@@ -81,7 +84,10 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className={styles.statContent}>
                         <div className={styles.statLabel}>Total Page Views</div>
-                        <div className={styles.statValue}>{totalViews.toLocaleString()}</div>
+                        <div className={styles.statValue}>{allTimeViews.toLocaleString()}</div>
+                        <div style={{ fontSize: '0.825rem', color: 'var(--color-muted)', marginTop: '4px' }}>
+                            {totalViews.toLocaleString()} in last 30 days
+                        </div>
                     </div>
                 </div>
 
@@ -91,7 +97,10 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className={styles.statContent}>
                         <div className={styles.statLabel}>Total Unique Visitors</div>
-                        <div className={styles.statValue}>{(analytics?.totalVisitors || 0).toLocaleString()}</div>
+                        <div className={styles.statValue}>{allTimeVisitors.toLocaleString()}</div>
+                        <div style={{ fontSize: '0.825rem', color: 'var(--color-muted)', marginTop: '4px' }}>
+                            {totalVisitors.toLocaleString()} in last 30 days
+                        </div>
                     </div>
                 </div>
 

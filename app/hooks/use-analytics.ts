@@ -13,6 +13,8 @@ interface DailyStat {
 interface AnalyticsData {
     totalViews: number;
     totalVisitors: number;
+    allTimeViews: number;
+    allTimeVisitors: number;
     sectionViews: Record<string, number>;
     clicks: Record<string, number>;
     dailyStats: DailyStat[];
