@@ -96,7 +96,7 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
     border-radius: 30px;
-    color: #ffffff;
+    color: var(--color-text, #ffffff);
     font-size: 0.95rem;
     transition: all 0.2s;
 }
@@ -236,7 +236,7 @@
 }
 
 .cardTitle a {
-    color: #ffffff;
+    color: var(--color-text, #ffffff);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -332,7 +332,7 @@
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: var(--color-text, #ffffff);
 }
 
 .articleMeta {
@@ -365,7 +365,7 @@
 
 /* Custom internal Rich Text layout rendering from contentEditable */
 .articleContent h1, .articleContent h2, .articleContent h3 {
-    color: #ffffff;
+    color: var(--color-text, #ffffff);
     font-weight: 700;
     letter-spacing: -0.01em;
 }
