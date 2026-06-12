@@ -25,11 +25,6 @@ export function Hero({
     secondaryCtaLink = '#contact',
     heroImage = '/hero-image.jpg',
 }: HeroProps) {
-    // Split headline for gradient effect on first two words
-    const words = headline.split(' ');
-    const gradientWords = words.slice(0, 2).join(' ');
-    const restWords = words.slice(2).join(' ');
-
     const handlePrimaryClick = () => {
         trackClick('hero_primary_cta', true);
     };
@@ -40,89 +35,77 @@ export function Hero({
 
     return (
         <section id="home" className={styles.hero}>
-            {/* Animated Background */}
+            {/* Subtle ambient glow */}
             <div className={styles.background}>
-                <div className={styles.gradientOrb1} />
-                <div className={styles.gradientOrb2} />
-                <div className={styles.gradientOrb3} />
-                <div className={styles.gridPattern} />
+                <div className={styles.ambientGlow} />
+                <div className={styles.noiseOverlay} />
             </div>
 
             <Container>
                 <div className={styles.content}>
-                    {/* Text Content */}
-                    <div className={styles.textContent}>
-                        <div className={styles.badge}>
-                            <span className={styles.badgeDot} />
-                            Available for opportunities
-                        </div>
-
-                        <h1 className={styles.headline}>
-                            <span className={styles.headlineGradient}>{gradientWords}</span>
-                            {restWords && <br />}
-                            {restWords}
-                        </h1>
-
-                        <div className={styles.subtext} dangerouslySetInnerHTML={{ __html: subtext }} />
-
-                        <div className={styles.ctas}>
-                            <a
-                                href={primaryCtaLink}
-                                className={styles.primaryCta}
-                                onClick={handlePrimaryClick}
-                            >
-                                {primaryCtaText}
-                                <FiArrowRight size={18} />
-                            </a>
-                            <a
-                                href={secondaryCtaLink}
-                                className={styles.secondaryCta}
-                                onClick={handleSecondaryClick}
-                            >
-                                <FiDownload size={18} />
-                                {secondaryCtaText}
-                            </a>
-                        </div>
-
-                        <div className={styles.stats}>
-                            <div className={styles.stat}>
-                                <span className={styles.statNumber}>5+</span>
-                                <span className={styles.statLabel}>Years Experience</span>
-                            </div>
-                            <div className={styles.stat}>
-                                <span className={styles.statNumber}>50+</span>
-                                <span className={styles.statLabel}>Projects Completed</span>
-                            </div>
-                            <div className={styles.stat}>
-                                <span className={styles.statNumber}>30+</span>
-                                <span className={styles.statLabel}>Happy Clients</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Visual Content */}
-                    <div className={styles.visualContent}>
-                        <div className={styles.imageFrame}>
-                            <div className={styles.imageOuter}>
-                                <div className={styles.imageInner}>
+                    {/* Portrait */}
+                    <div className={styles.portraitSection}>
+                        <div className={styles.portraitWrapper}>
+                            <div className={styles.portraitRing}>
+                                <div className={styles.portraitInner}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={heroImage}
-                                        alt="Hero"
+                                        alt="Portrait"
                                         className={styles.heroImage}
                                     />
                                 </div>
                             </div>
+                            <div className={styles.statusBadge}>
+                                <span className={styles.statusDot} />
+                                Open to work
+                            </div>
+                        </div>
+                    </div>
 
-                            {/* Floating Cards */}
-                            <div className={`${styles.floatingCard} ${styles.floatingCard1}`}>
-                                <span>🚀 Latest Project</span>
-                                <strong>AI & DataScience/Analytics</strong>
-                            </div>
-                            <div className={`${styles.floatingCard} ${styles.floatingCard2}`}>
-                                <span>⚡ Tech Stack</span>
-                                <strong>FullStack/Web3</strong>
-                            </div>
+                    {/* Headline */}
+                    <h1 className={styles.headline}>
+                        {headline}
+                    </h1>
+
+                    {/* Subtext */}
+                    <div className={styles.subtext} dangerouslySetInnerHTML={{ __html: subtext }} />
+
+                    {/* CTAs */}
+                    <div className={styles.ctas}>
+                        <a
+                            href={primaryCtaLink}
+                            className={styles.primaryCta}
+                            onClick={handlePrimaryClick}
+                        >
+                            {primaryCtaText}
+                            <FiArrowRight size={16} />
+                        </a>
+                        <a
+                            href={secondaryCtaLink}
+                            className={styles.secondaryCta}
+                            onClick={handleSecondaryClick}
+                        >
+                            <FiDownload size={16} />
+                            {secondaryCtaText}
+                        </a>
+                    </div>
+
+                    {/* Stats */}
+                    <div className={styles.stats}>
+                        <div className={styles.stat}>
+                            <span className={styles.statNumber}>5+</span>
+                            <span className={styles.statLabel}>Years</span>
+                        </div>
+                        <span className={styles.statDivider} />
+                        <div className={styles.stat}>
+                            <span className={styles.statNumber}>50+</span>
+                            <span className={styles.statLabel}>Projects</span>
+                        </div>
+                        <span className={styles.statDivider} />
+                        <div className={styles.stat}>
+                            <span className={styles.statNumber}>30+</span>
+                            <span className={styles.statLabel}>Clients</span>
                         </div>
                     </div>
                 </div>
