@@ -1,12 +1,12 @@
 'use client';
-
+ 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
-import models from '../components/editor.module.css'; // Importing as models to avoid conflict if needed, or just styles
+import { RichTextEditor } from '@/app/components/molecules/rich-text-editor';
 import styles from '../components/editor.module.css';
-
+ 
 export default function AdminHeroPage() {
     const [formData, setFormData] = useState({
         headline: '',
@@ -20,7 +20,7 @@ export default function AdminHeroPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
+ 
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -42,17 +42,17 @@ export default function AdminHeroPage() {
         };
         fetchData();
     }, []);
-
+ 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
-
+ 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
         setMessage(null);
-
+ 
         try {
             await axios.put('/api/hero', formData);
             setMessage({ type: 'success', text: 'Hero section updated successfully!' });
@@ -62,21 +62,21 @@ export default function AdminHeroPage() {
             setIsSaving(false);
         }
     };
-
+ 
     if (isLoading) {
         return <Loader variant="section" />;
     }
-
+ 
     return (
         <div className={styles.editor}>
             <div className={styles.header}>
                 <h1 className={styles.title}>Edit Hero Section</h1>
             </div>
-
+ 
             <form onSubmit={handleSubmit} className={styles.form}>
-
+ 
                 <div className={styles.sectionTitle}>Main Content</div>
-
+ 
                 <div className={styles.field}>
                     <label htmlFor="headline" className={styles.label}>Headline</label>
                     <input
@@ -89,21 +89,18 @@ export default function AdminHeroPage() {
                         placeholder="e.g. Building the Future of Web"
                     />
                 </div>
-
+ 
                 <div className={styles.field}>
                     <label htmlFor="subtext" className={styles.label}>Subtext</label>
-                    <textarea
-                        id="subtext"
-                        name="subtext"
+                    <RichTextEditor
                         value={formData.subtext}
-                        onChange={handleChange}
-                        className={styles.textarea}
+                        onChange={(val) => setFormData((prev) => ({ ...prev, subtext: val }))}
                         placeholder="A brief introduction about yourself or your mission..."
                     />
                 </div>
-
-                <div className={styles.sectionTitle} style={{ marginTop: '1rem' }}>Call to Actions</div>
-
+ 
+                <div className={styles.sectionTitle}>Call to Actions</div>
+ 
                 <div className={styles.row}>
                     <div className={styles.field}>
                         <label htmlFor="primaryCtaText" className={styles.label}>Primary CTA Text</label>
@@ -130,7 +127,7 @@ export default function AdminHeroPage() {
                         />
                     </div>
                 </div>
-
+ 
                 <div className={styles.row}>
                     <div className={styles.field}>
                         <label htmlFor="secondaryCtaText" className={styles.label}>Secondary CTA Text</label>
@@ -157,22 +154,22 @@ export default function AdminHeroPage() {
                         />
                     </div>
                 </div>
-
-                <div className={styles.sectionTitle} style={{ marginTop: '1rem' }}>Visuals</div>
-
+ 
+                <div className={styles.sectionTitle}>Visuals</div>
+ 
                 <FileUpload
                     value={formData.heroImage}
                     onChange={(url) => setFormData((prev) => ({ ...prev, heroImage: url }))}
                     label="Hero Image"
                     accept="image/*"
                 />
-
+ 
                 {message && (
                     <div className={message.type === 'success' ? styles.success : styles.error}>
                         {message.text}
                     </div>
                 )}
-
+ 
                 <div className={styles.actions}>
                     <button type="submit" disabled={isSaving} className={styles.submitBtn}>
                         {isSaving ? 'Saving...' : 'Save Changes'}
