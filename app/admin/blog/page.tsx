@@ -19,6 +19,7 @@ interface BlogPostItem {
     assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
     tags: string[];
     isVisible: boolean;
+    views?: number;
     createdAt?: string;
 }
 
@@ -481,6 +482,8 @@ export default function AdminBlogPage() {
                                             ) : (
                                                 <span style={{ color: '#dc2626', display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEyeOff size={12} /> Hidden</span>
                                             )}
+                                            <span style={{ margin: '0 4px' }}>•</span>
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEye size={12} /> {blog.views || 0} views</span>
                                         </p>
                                         <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-muted)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                             {blog.excerpt}

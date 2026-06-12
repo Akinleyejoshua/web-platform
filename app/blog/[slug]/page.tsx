@@ -4,7 +4,7 @@ import React, { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { Header, Footer, Loader } from '@/app/components';
-import { FiArrowLeft, FiCalendar, FiClock, FiTag } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiClock, FiTag, FiEye } from 'react-icons/fi';
 import { usePageViewTracker } from '@/app/hooks/useAnalyticsTracker';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
@@ -18,6 +18,7 @@ interface BlogPost {
     excerpt: string;
     coverImage?: string;
     tags: string[];
+    views: number;
     createdAt: string;
 }
 
@@ -109,6 +110,10 @@ export default function BlogPostDetailPage({ params }: BlogPostDetailProps) {
                             <span className={styles.metaItem}>
                                 <FiClock size={14} />
                                 {getReadingTime(blog.content)}
+                            </span>
+                            <span className={styles.metaItem}>
+                                <FiEye size={14} />
+                                {blog.views || 0} views
                             </span>
                         </div>
                     </header>

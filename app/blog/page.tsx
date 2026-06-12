@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { Header, Footer, Loader } from '@/app/components';
-import { FiSearch, FiCalendar, FiClock, FiChevronRight, FiTag } from 'react-icons/fi';
+import { FiSearch, FiCalendar, FiClock, FiChevronRight, FiTag, FiEye } from 'react-icons/fi';
 import { usePageViewTracker } from '@/app/hooks/useAnalyticsTracker';
 import styles from './blog.module.css';
 
@@ -17,6 +17,7 @@ interface BlogPost {
     tags: string[];
     createdAt: string;
     content: string;
+    views?: number;
 }
 
 export default function BlogIndexPage() {
@@ -142,21 +143,25 @@ export default function BlogIndexPage() {
                                             </div>
                                         )}
                                     </div>
-                                    <div className={styles.cardBody}>
-                                        <div className={styles.metaRow}>
-                                            <span className={styles.metaItem}>
-                                                <FiCalendar size={13} />
-                                                {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })}
-                                            </span>
-                                            <span className={styles.metaItem}>
-                                                <FiClock size={13} />
-                                                {getReadingTime(blog.content)}
-                                            </span>
-                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <div className={styles.metaRow}>
+                                                <span className={styles.metaItem}>
+                                                    <FiCalendar size={13} />
+                                                    {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        year: 'numeric'
+                                                    })}
+                                                </span>
+                                                <span className={styles.metaItem}>
+                                                    <FiClock size={13} />
+                                                    {getReadingTime(blog.content)}
+                                                </span>
+                                                <span className={styles.metaItem}>
+                                                    <FiEye size={13} />
+                                                    {blog.views || 0} views
+                                                </span>
+                                            </div>
 
                                         <h3 className={styles.cardTitle}>
                                             <Link href={`/blog/${blog.slug}`}>

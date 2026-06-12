@@ -8,6 +8,7 @@
 
 .mainContent {
     flex: 1;
+    padding-top: 72px;
     padding-bottom: 5rem;
 }
 
