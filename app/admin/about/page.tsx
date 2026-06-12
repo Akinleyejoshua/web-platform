@@ -6,6 +6,7 @@ import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiUser } from 'react-icons/fi'
 import { Loader } from '@/app/components/atoms/loader';
 import { SocialIcon } from '@/app/components/atoms/social-icon';
 import styles from '../components/editor.module.css';
+import { RichTextEditor } from '@/app/components/molecules/rich-text-editor';
 import cardStyles from './about.module.css';
 
 interface SocialLink {
@@ -121,12 +122,9 @@ export default function AdminAboutPage() {
 
                 <div className={styles.field}>
                     <label htmlFor="bio" className={styles.label}>Your Summary</label>
-                    <textarea
-                        id="bio"
+                    <RichTextEditor
                         value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                        className={styles.textarea}
-                        style={{ minHeight: '180px' }}
+                        onChange={(val) => setBio(val)}
                         placeholder="Write a brief introduction about yourself, your skills, and what you do..."
                     />
                 </div>

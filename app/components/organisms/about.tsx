@@ -17,8 +17,8 @@ export function About({
     bio = 'A passionate developer creating innovative solutions.',
     socialLinks = [],
 }: AboutProps) {
-    // Split bio by newlines for paragraph formatting
-    const bioParagraphs = bio.split('\n').filter((p) => p.trim());
+    const isHtml = /<[a-z][\s\S]*>/i.test(bio);
+    const bioParagraphs = isHtml ? [] : bio.split('\n').filter((p) => p.trim());
 
     return (
         <Section
@@ -30,9 +30,13 @@ export function About({
         >
             <div className={styles.content}>
                 <div className={styles.bio}>
-                    {bioParagraphs.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                    ))}
+                    {isHtml ? (
+                        <div className={styles.richText} dangerouslySetInnerHTML={{ __html: bio }} />
+                    ) : (
+                        bioParagraphs.map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                        ))
+                    )}
                 </div>
 
                 {socialLinks.length > 0 && (

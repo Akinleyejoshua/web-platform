@@ -1,0 +1,297 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: var(--radius-lg, 12px);
+    border: 1px solid var(--color-border);
+    background: var(--color-card);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+}
+
+.container:focus-within {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-lg), 0 0 0 2px var(--color-accent-light);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs, 6px);
+    padding: var(--space-sm, 10px) var(--space-md, 16px);
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.toolGroup {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.divider {
+    width: 1px;
+    height: 18px;
+    background: var(--color-border);
+    margin: 0 var(--space-xs, 4px);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm, 6px);
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--color-card-hover);
+    color: var(--color-text);
+}
+
+.btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn.active {
+    background: var(--color-accent-light);
+    color: var(--color-accent);
+}
+
+.select {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm, 6px);
+    outline: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.select:hover {
+    background: var(--color-card-hover);
+    border-color: var(--color-text-secondary);
+}
+
+.colorIndicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF007A, #7928CA, #00DFD8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.colorPicker {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding: 8px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+.colorOption {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.colorOption:hover {
+    transform: scale(1.2);
+}
+
+.contentWrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.editorArea {
+    min-height: 200px;
+    padding: var(--space-md, 16px);
+    color: var(--color-text);
+    outline: none;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.6;
+    background: var(--color-card);
+}
+
+.editorArea:empty:before {
+    content: attr(data-placeholder);
+    color: var(--color-muted);
+    pointer-events: none;
+    display: block;
+}
+
+.editorArea blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--space-md, 16px);
+    margin: 1em 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    background: var(--color-bg-secondary);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.editorArea pre {
+    background: var(--color-bg-secondary);
+    padding: var(--space-md, 12px);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+}
+
+.editorArea a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: text;
+}
+
+.sourceArea {
+    width: 100%;
+    min-height: 200px;
+    padding: var(--space-md, 16px);
+    background: var(--color-bg);
+    border: none;
+    color: var(--color-accent);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    outline: none;
+    resize: vertical;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px var(--space-md, 16px);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal, 9999);
+}
+
+.modal {
+    width: 90%;
+    max-width: 400px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modalHeader h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.closeBtn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.closeBtn:hover {
+    color: var(--color-text);
+}
+
+.modalBody {
+    padding: 18px;
+}
+
+.modalInput {
+    width: 100%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    color: var(--color-text);
+    outline: none;
+}
+
+.modalInput:focus {
+    border-color: var(--color-accent);
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 18px;
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+}
+
+.cancelBtn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.saveBtn {
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color var(--transition-fast);
+}
+
+.saveBtn:hover {
+    background: var(--color-accent-hover);
+}
