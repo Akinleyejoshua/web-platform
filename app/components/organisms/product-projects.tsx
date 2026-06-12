@@ -18,7 +18,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 export function ProductProjects() {
-    const { products, isLoading, activeCategory, setActiveCategory } = useProductProjects();
+    const { products, isLoading, error, activeCategory, setActiveCategory, refetch } = useProductProjects();
 
     return (
         <Section
@@ -41,7 +41,16 @@ export function ProductProjects() {
             </div>
 
             {isLoading ? (
-                <Loader variant="section" />
+                <div className={styles.loaderWrapper}>
+                    <Loader variant="section" />
+                </div>
+            ) : error ? (
+                <div className={styles.errorState}>
+                    <p className={styles.errorText}>Something went wrong loading products.</p>
+                    <button className={styles.retryBtn} onClick={() => refetch()}>
+                        Try Again
+                    </button>
+                </div>
             ) : products.length === 0 ? (
                 <p className={styles.empty}>No products in this category yet.</p>
             ) : (

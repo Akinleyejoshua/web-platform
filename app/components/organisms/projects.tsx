@@ -10,7 +10,7 @@ import { useProjects } from '@/app/hooks/use-projects';
 import styles from './projects.module.css';
 
 export function Projects() {
-    const { projects, isLoading, activeCategory, setActiveCategory } = useProjects();
+    const { projects, isLoading, error, activeCategory, setActiveCategory, refetch } = useProjects();
 
     return (
         <Section
@@ -26,7 +26,16 @@ export function Projects() {
             />
 
             {isLoading ? (
-                <Loader variant="section" />
+                <div className={styles.loaderWrapper}>
+                    <Loader variant="section" />
+                </div>
+            ) : error ? (
+                <div className={styles.errorState}>
+                    <p className={styles.errorText}>Something went wrong loading projects.</p>
+                    <button className={styles.retryBtn} onClick={() => refetch()}>
+                        Try Again
+                    </button>
+                </div>
             ) : projects.length === 0 ? (
                 <p className={styles.empty}>No projects in this category yet.</p>
             ) : (
