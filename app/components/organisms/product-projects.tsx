@@ -19,6 +19,16 @@ const categoryLabels: Record<string, string> = {
 
 export function ProductProjects() {
     const { products, isLoading, error, activeCategory, setActiveCategory, refetch } = useProductProjects();
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const ITEMS_PER_PAGE = 4;
+
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [activeCategory]);
+
+    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const visibleProducts = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     return (
         <Section
@@ -54,21 +64,58 @@ export function ProductProjects() {
             ) : products.length === 0 ? (
                 <p className={styles.empty}>No products in this category yet.</p>
             ) : (
-                <Carousel>
-                    {products.map((product) => (
-                        <ProjectCard
-                            key={product._id as any}
-                            title={product.title}
-                            description={product.description}
-                            mediaType={product.mediaType}
-                            mediaUrl={product.mediaUrl}
-                            assets={product.assets}
-                            technologies={product.technologies}
-                            liveUrl={product.liveUrl}
-                            blogUrl={product.blogUrl}
-                        />
-                    ))}
-                </Carousel>
+                <>
+                    <Carousel key={currentPage}>
+                        {visibleProducts.map((product) => (
+                            <ProjectCard
+                                key={product._id as any}
+                                title={product.title}
+                                description={product.description}
+                                mediaType={product.mediaType}
+                                mediaUrl={product.mediaUrl}
+                                assets={product.assets}
+                                technologies={product.technologies}
+                                liveUrl={product.liveUrl}
+                                blogUrl={product.blogUrl}
+                            />
+                        ))}
+                    </Carousel>
+
+                    {totalPages > 1 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
+                            {Array.from({ length: totalPages }, (_, idx) => {
+                                const pageNum = idx + 1;
+                                const isActive = currentPage === pageNum;
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        onClick={() => setCurrentPage(pageNum)}
+                                        style={{
+                                            background: isActive ? 'linear-gradient(135deg, var(--color-accent), #8b5cf6)' : 'rgba(255, 255, 255, 0.05)',
+                                            color: '#ffffff',
+                                            border: isActive ? 'none' : '1px solid var(--color-border)',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '50%',
+                                            fontWeight: 600,
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                                        }}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                </>
             )}
         </Section>
     );
