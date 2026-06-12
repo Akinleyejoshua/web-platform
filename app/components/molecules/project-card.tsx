@@ -82,7 +82,10 @@ export function ProjectCard({
         if (projectAssets.length <= 1 || isHovered) return;
 
         const interval = setInterval(() => {
-            setActiveAssetIndex((prev) => (prev + 1) % projectAssets.length);
+            // stop autosliding when a  asset preview is clicked
+            if (!isLightboxOpen) {
+                setActiveAssetIndex((prev) => (prev + 1) % projectAssets.length);
+            }
         }, 3200); // Auto-slide transition every 3.2 seconds
 
         return () => clearInterval(interval);
