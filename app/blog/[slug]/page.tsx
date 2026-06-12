@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Header, Footer, Loader } from '@/app/components';
 import { FiArrowLeft, FiCalendar, FiClock, FiTag } from 'react-icons/fi';
 import { usePageViewTracker } from '@/app/hooks/useAnalyticsTracker';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
 import styles from '../blog.module.css';
 
 interface BlogPost {
@@ -44,6 +46,12 @@ export default function BlogPostDetailPage({ params }: BlogPostDetailProps) {
         };
         fetchBlog();
     }, [slug]);
+
+    useEffect(() => {
+        if (blog) {
+            hljs.highlightAll();
+        }
+    }, [blog]);
 
     const getReadingTime = (htmlContent: string) => {
         const text = htmlContent.replace(/<[^>]*>/g, '');

@@ -13,6 +13,7 @@ export interface IBlogPost extends Document {
     coverImage?: string;
     assets?: IBlogPostAsset[];
     tags: string[];
+    views: number;
     isVisible: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -36,6 +37,7 @@ const BlogPostSchema = new Schema<IBlogPost>(
         coverImage: { type: String, default: '' },
         assets: { type: [AssetSchema], default: [] },
         tags: { type: [String], default: [] },
+        views: { type: Number, default: 0 },
         isVisible: { type: Boolean, default: true },
     },
     { timestamps: true }

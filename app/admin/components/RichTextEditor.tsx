@@ -6,6 +6,8 @@ import {
     FiAlignRight, FiAlignJustify, FiList, FiLink, FiImage, 
     FiGrid, FiRotateCcw, FiRotateCw, FiCode, FiScissors, FiCheckCircle, FiX, FiVideo
 } from 'react-icons/fi';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
 import styles from './RichTextEditor.module.css';
 
 interface RichTextEditorProps {
@@ -43,7 +45,24 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start w
             editorRef.current.innerHTML = value || '';
         }
         updateCounts();
+        highlightCode();
     }, [value]);
+
+    // Highlight code blocks inside editor
+    const highlightCode = () => {
+        if (!isSourceMode && editorRef.current) {
+            const codeBlocks = editorRef.current.querySelectorAll('pre code, pre');
+            codeBlocks.forEach((block) => {
+                // Ensure it has class for hljs or auto-highlight
+                hljs.highlightElement(block as HTMLElement);
+            });
+        }
+    };
+
+    // Run highlight when returning to visual view
+    useEffect(() => {
+        highlightCode();
+    }, [isSourceMode]);
 
     const updateCounts = () => {
         if (!editorRef.current) return;

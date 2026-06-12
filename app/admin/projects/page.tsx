@@ -204,6 +204,55 @@ export default function AdminProjectsPage() {
                         {editingItem._id ? 'Edit Project' : 'Create New Project'}
                     </div>
 
+                    {/* Gemini AI Project Generator */}
+                    <div style={{ background: 'rgba(99, 102, 241, 0.05)', border: '1px dashed rgba(99, 102, 241, 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label className={styles.label} style={{ fontWeight: 600, color: 'var(--color-accent)', marginBottom: 0 }}>Gemini AI Project Generator</label>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Describe what project you built, and Gemini will generate a professional title, detailed summary, and technology list.</span>
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                            <input
+                                type="text"
+                                id="gemini-ai-project-prompt"
+                                placeholder="e.g. a decentralized file sharing application using IPFS and Ethereum smart contracts"
+                                className={styles.input}
+                                style={{ flex: 1 }}
+                            />
+                            <button
+                                type="button"
+                                onClick={async () => {
+                                    const promptInput = document.getElementById('gemini-ai-project-prompt') as HTMLInputElement;
+                                    if (!promptInput || !promptInput.value.trim()) {
+                                        alert('Please enter a project description.');
+                                        return;
+                                    }
+                                    setIsSaving(true);
+                                    try {
+                                        const res = await axios.post('/api/generate', { prompt: promptInput.value, type: 'project' });
+                                        if (res.data) {
+                                            setEditingItem({
+                                                ...editingItem,
+                                                title: res.data.title || editingItem.title,
+                                                description: res.data.description || editingItem.description,
+                                                technologies: res.data.technologies || editingItem.technologies
+                                            });
+                                            setTechInput(res.data.technologies ? res.data.technologies.join(', ') : '');
+                                            alert('Project details generated successfully!');
+                                        }
+                                    } catch (err: any) {
+                                        console.error(err);
+                                        alert('Failed to generate project: ' + (err.response?.data?.error || err.message));
+                                    } finally {
+                                        setIsSaving(false);
+                                    }
+                                }}
+                                className={styles.addAssetBtn}
+                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: 'var(--color-accent)' }}
+                                disabled={isSaving}
+                            >
+                                {isSaving ? 'Generating...' : 'Generate Details'}
+                            </button>
+                        </div>
+                    </div>
+
                     <div className={styles.field}>
                         <label className={styles.label}>Project Title</label>
                         <input

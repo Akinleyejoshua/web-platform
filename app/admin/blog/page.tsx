@@ -187,6 +187,56 @@ export default function AdminBlogPage() {
                         {editingItem._id ? 'Edit Blog Post' : 'Create New Blog Post'}
                     </div>
 
+                    {/* Gemini AI Writer */}
+                    <div style={{ background: 'rgba(99, 102, 241, 0.05)', border: '1px dashed rgba(99, 102, 241, 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label className={styles.label} style={{ fontWeight: 600, color: 'var(--color-accent)', marginBottom: 0 }}>Gemini AI Article Writer</label>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Type a topic below to auto-generate the title, excerpt, tags, and complete rich HTML document content.</span>
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                            <input
+                                type="text"
+                                id="gemini-ai-blog-prompt"
+                                placeholder="e.g. Comprehensive guide on Event-Driven microservices with Kafka in Node.js"
+                                className={styles.input}
+                                style={{ flex: 1 }}
+                            />
+                            <button
+                                type="button"
+                                onClick={async () => {
+                                    const promptInput = document.getElementById('gemini-ai-blog-prompt') as HTMLInputElement;
+                                    if (!promptInput || !promptInput.value.trim()) {
+                                        alert('Please enter a generation topic.');
+                                        return;
+                                    }
+                                    setIsSaving(true);
+                                    try {
+                                        const res = await axios.post('/api/generate', { prompt: promptInput.value, type: 'blog' });
+                                        if (res.data) {
+                                            setEditingItem({
+                                                ...editingItem,
+                                                title: res.data.title || editingItem.title,
+                                                excerpt: res.data.excerpt || editingItem.excerpt,
+                                                content: res.data.content || editingItem.content,
+                                                tags: res.data.tags || editingItem.tags
+                                            });
+                                            setTagsInput(res.data.tags ? res.data.tags.join(', ') : '');
+                                            alert('Blog post generated successfully! You can now refine it in the MS Word editor below.');
+                                        }
+                                    } catch (err: any) {
+                                        console.error(err);
+                                        alert('Failed to generate content: ' + (err.response?.data?.error || err.message));
+                                    } finally {
+                                        setIsSaving(false);
+                                    }
+                                }}
+                                className={styles.addAssetBtn}
+                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: 'var(--color-accent)' }}
+                                disabled={isSaving}
+                            >
+                                {isSaving ? 'Writing...' : 'Generate Draft'}
+                            </button>
+                        </div>
+                    </div>
+
                     <div className={styles.field}>
                         <label className={styles.label}>Post Title</label>
                         <input

@@ -10,7 +10,9 @@
     "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.2",
+    "highlight.js": "^11.11.1",
     "mongoose": "^9.0.2",
     "next": "16.1.1",
     "react": "19.2.3",
