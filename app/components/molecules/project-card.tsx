@@ -77,19 +77,16 @@ export function ProjectCard({
 
     const [isHovered, setIsHovered] = useState(false);
 
-    // Auto-slide functionality (pauses when hovered)
+    // Auto-slide functionality (pauses when hovered or lightbox is open)
     useEffect(() => {
-        if (projectAssets.length <= 1 || isHovered) return;
+        if (projectAssets.length <= 1 || isHovered || isLightboxOpen) return;
 
         const interval = setInterval(() => {
-            // stop autosliding when a  asset preview is clicked
-            if (!isLightboxOpen) {
-                setActiveAssetIndex((prev) => (prev + 1) % projectAssets.length);
-            }
+            setActiveAssetIndex((prev) => (prev + 1) % projectAssets.length);
         }, 3200); // Auto-slide transition every 3.2 seconds
 
         return () => clearInterval(interval);
-    }, [projectAssets, isHovered]);
+    }, [projectAssets, isHovered, isLightboxOpen]);
 
     const getYouTubeEmbedUrl = (url: string) => {
         const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);

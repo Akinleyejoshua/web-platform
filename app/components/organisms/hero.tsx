@@ -63,7 +63,7 @@ export function Hero({
                             {restWords}
                         </h1>
 
-                        <p className={styles.subtext}>{subtext}</p>
+                        <div className={styles.subtext} dangerouslySetInnerHTML={{ __html: subtext }} />
 
                         <div className={styles.ctas}>
                             <a
