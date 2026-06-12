@@ -99,13 +99,15 @@ export default function Home() {
         <Experience />
       </section>
 
+      <section ref={productsRef} id="products-section">
+        <ProductProjects />
+      </section>
+
       <section ref={projectsRef} id="projects-section">
         <Projects />
       </section>
 
-      <section ref={productsRef} id="products-section">
-        <ProductProjects />
-      </section>
+
 
       <section ref={contactRef} id="contact-section">
         <Contact
