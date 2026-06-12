@@ -11,12 +11,17 @@ export async function GET(request: NextRequest) {
         const admin = searchParams.get('admin');
 
         if (slug) {
-            const blog = await BlogPost.findOne({ slug }).lean();
-            if (!blog) {
-                return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+            let blog;
+            if (admin) {
+                blog = await BlogPost.findOne({ slug }).lean();
+            } else {
+                blog = await BlogPost.findOneAndUpdate(
+                    { slug, isVisible: true },
+                    { $inc: { views: 1 } },
+                    { new: true }
+                ).lean();
             }
-            // If not admin, check visibility
-            if (!admin && !blog.isVisible) {
+            if (!blog) {
                 return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
             }
             return NextResponse.json(blog, { status: 200 });
