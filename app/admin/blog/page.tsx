@@ -456,7 +456,7 @@ export default function AdminBlogPage() {
                         </div>
                     ) : (
                         blogs.map((blog) => (
-                            <div key={blog._id} className={styles.assetCard} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div key={blog._id} className={styles.assetCard} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '12px' }}>
                                 <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                                     {blog.coverImage ? (
                                         <img 
@@ -473,18 +473,20 @@ export default function AdminBlogPage() {
                                         <h3 style={{ margin: '0 0 6px 0', fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                             {blog.title}
                                         </h3>
-                                        <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <FiCalendar size={12} />
-                                            {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : 'Draft'}
-                                            <span style={{ margin: '0 4px' }}>•</span>
+                                        <div style={{ margin: '0 0 8px 0', fontSize: '0.85rem', color: 'var(--color-text-secondary)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px' }}>
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                                <FiCalendar size={12} />
+                                                {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : 'Draft'}
+                                            </span>
+                                            <span style={{ color: 'var(--color-muted)' }}>•</span>
                                             {blog.isVisible ? (
                                                 <span style={{ color: '#059669', display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEye size={12} /> Published</span>
                                             ) : (
                                                 <span style={{ color: '#dc2626', display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEyeOff size={12} /> Hidden</span>
                                             )}
-                                            <span style={{ margin: '0 4px' }}>•</span>
+                                            <span style={{ color: 'var(--color-muted)' }}>•</span>
                                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEye size={12} /> {blog.views || 0} views</span>
-                                        </p>
+                                        </div>
                                         <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-muted)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                             {blog.excerpt}
                                         </p>
@@ -492,7 +494,7 @@ export default function AdminBlogPage() {
                                 </div>
 
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
-                                    {blog.tags.map(tag => (
+                                    {blog.tags && blog.tags.map(tag => (
                                         <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', padding: '2px 8px', background: 'var(--color-bg-secondary)', borderRadius: '12px', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}>
                                             <FiTag size={10} />
                                             {tag}
