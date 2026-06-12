@@ -30,15 +30,60 @@ const raleway = Raleway({
   variable: '--font-raleway',
 });
 
+const siteUrl = 'https://joshuapro.netlify.app';
+
 export const metadata: Metadata = {
-  title: 'Joshua | Developer & Creator',
-  description: 'A passionate developer creating innovative digital solutions across web, machine learning, and Web3 technologies.',
-  keywords: ['portfolio', 'developer', 'web development', 'machine learning', 'web3'],
-  authors: [{ name: 'Portfolio Owner' }],
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Joshua Akinleye | Developer & Creator',
+    template: '%s | Joshua Akinleye',
+  },
+  description:
+    'A passionate developer creating innovative digital solutions across web, machine learning, and Web3 technologies.',
+  keywords: [
+    'Joshua Akinleye',
+    'portfolio',
+    'full-stack developer',
+    'web development',
+    'machine learning',
+    'web3',
+    'software engineer',
+    'React',
+    'Next.js',
+  ],
+  authors: [{ name: 'Joshua Akinleye' }],
+  creator: 'Joshua Akinleye',
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: 'Portfolio | Developer & Creator',
-    description: 'A passionate developer creating innovative digital solutions.',
+    title: 'Joshua Akinleye | Developer & Creator',
+    description:
+      'A passionate developer creating innovative digital solutions across web, machine learning, and Web3 technologies.',
+    url: siteUrl,
+    siteName: 'Joshua Akinleye Portfolio',
     type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: '/profile_pic.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Joshua Akinleye – Developer & Creator',
+        type: 'image/jpeg',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Joshua Akinleye | Developer & Creator',
+    description:
+      'A passionate developer creating innovative digital solutions across web, machine learning, and Web3 technologies.',
+    images: ['/profile_pic.jpeg'],
+  },
+  icons: {
+    icon: '/favicon.ico',
   },
 };
 
