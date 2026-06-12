@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: '%s | Joshua Akinleye',
   },
   description:
-    'A passionate developer creating innovative digital solutions across web, machine learning, and Web3 technologies.',
+    'A passionate developer creating innovative digital solutions across web, data analytics, machine learning, and Web3 technologies.',
   keywords: [
     'Joshua Akinleye',
     'portfolio',
