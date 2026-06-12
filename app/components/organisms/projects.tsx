@@ -38,6 +38,7 @@ export function Projects() {
                             description={project.description}
                             mediaType={project.mediaType}
                             mediaUrl={project.mediaUrl}
+                            assets={project.assets}
                             technologies={project.technologies}
                             githubUrl={project.githubUrl}
                             liveUrl={project.liveUrl}

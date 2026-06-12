@@ -18,6 +18,7 @@ interface ProductItem {
     category: ProductCategory;
     mediaType: MediaType;
     mediaUrl: string;
+    assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
     technologies: string[];
     liveUrl: string;
     order: number;
@@ -30,6 +31,7 @@ const emptyProduct: ProductItem = {
     category: 'saas',
     mediaType: 'image',
     mediaUrl: '',
+    assets: [],
     technologies: [],
     liveUrl: '',
     order: 0,
@@ -223,6 +225,106 @@ export default function AdminProductsPage() {
                             onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
                             label="Upload product screenshot"
                         />
+                    </div>
+
+                    {/* Product Assets List Section */}
+                    <div style={{ marginTop: '2rem', marginBottom: '2rem', padding: '1.5rem', background: 'var(--color-bg-secondary, rgba(255,255,255,0.02))', border: '1px dashed var(--color-border)', borderRadius: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <label className={styles.label} style={{ marginBottom: 0, fontWeight: 600 }}>Product Gallery / Slide Assets ({editingItem.assets?.length || 0})</label>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const currentAssets = editingItem.assets || [];
+                                    setEditingItem({
+                                        ...editingItem,
+                                        assets: [...currentAssets, { type: 'image', url: '' }]
+                                    });
+                                }}
+                                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', background: 'var(--color-accent, #6366f1)', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                            >
+                                <FiPlus size={14} /> Add Slide Asset
+                            </button>
+                        </div>
+
+                        {(!editingItem.assets || editingItem.assets.length === 0) ? (
+                            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontStyle: 'italic', margin: '0' }}>
+                                No assets added yet. Slideshow will fallback to default product image.
+                            </p>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                {editingItem.assets.map((asset, index) => (
+                                    <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', background: 'var(--color-card, rgba(0,0,0,0.15))', border: '1px solid var(--color-border)', borderRadius: '8px', position: 'relative' }}>
+                                        {/* Remove Asset Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const currentAssets = [...(editingItem.assets || [])];
+                                                currentAssets.splice(index, 1);
+                                                setEditingItem({ ...editingItem, assets: currentAssets });
+                                            }}
+                                            style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', borderRadius: '4px', padding: '4px', cursor: 'pointer' }}
+                                            title="Delete Asset"
+                                        >
+                                            <FiTrash2 size={14} style={{ display: 'block' }} />
+                                        </button>
+
+                                        <div style={{ display: 'flex', gap: '1rem' }}>
+                                            <div style={{ flex: '0 0 130px' }}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset Type</label>
+                                                <select
+                                                    value={asset.type}
+                                                    onChange={(e) => {
+                                                        const currentAssets = [...(editingItem.assets || [])];
+                                                        currentAssets[index].type = e.target.value as any;
+                                                        setEditingItem({ ...editingItem, assets: currentAssets });
+                                                    }}
+                                                    className={styles.select}
+                                                    style={{ height: '38px', padding: '4px 8px', fontSize: '0.85rem' }}
+                                                >
+                                                    <option value="image">Image</option>
+                                                    <option value="video">Direct Video (.mp4)</option>
+                                                    <option value="youtube">YouTube URL</option>
+                                                    <option value="loom">Loom Video</option>
+                                                    <option value="external">External Frame</option>
+                                                </select>
+                                            </div>
+
+                                            <div style={{ flex: 1 }}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset URL / Upload</label>
+                                                {asset.type === 'image' ? (
+                                                    <FileUpload
+                                                        value={asset.url}
+                                                        onChange={(url) => {
+                                                            const currentAssets = [...(editingItem.assets || [])];
+                                                            currentAssets[index].url = url;
+                                                            setEditingItem({ ...editingItem, assets: currentAssets });
+                                                        }}
+                                                        accept="image/*"
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        value={asset.url}
+                                                        onChange={(e) => {
+                                                            const currentAssets = [...(editingItem.assets || [])];
+                                                            currentAssets[index].url = e.target.value;
+                                                            setEditingItem({ ...editingItem, assets: currentAssets });
+                                                        }}
+                                                        className={styles.input}
+                                                        placeholder={
+                                                            asset.type === 'youtube' ? 'https://youtube.com/watch?v=...' :
+                                                            asset.type === 'loom' ? 'https://loom.com/share/...' :
+                                                            'https://...'
+                                                        }
+                                                        style={{ height: '38px', padding: '4px 12px', fontSize: '0.85rem' }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.field}>

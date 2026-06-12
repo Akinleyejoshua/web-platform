@@ -53,6 +53,7 @@ export function ProductProjects() {
                             description={product.description}
                             mediaType={product.mediaType}
                             mediaUrl={product.mediaUrl}
+                            assets={product.assets}
                             technologies={product.technologies}
                             liveUrl={product.liveUrl}
                         />

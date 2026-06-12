@@ -2,12 +2,18 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export type ProductCategory = 'saas' | 'b2b' | 'b2c' | 'tool' | 'other';
 
+export interface IAsset {
+    type: 'image' | 'video' | 'youtube' | 'loom' | 'external';
+    url: string;
+}
+
 export interface IProductProject extends Document {
     title: string;
     description: string;
     category: ProductCategory;
     mediaType: 'image' | 'video';
     mediaUrl: string;
+    assets?: IAsset[];
     technologies: string[];
     liveUrl: string;
     featured: boolean;
@@ -16,6 +22,15 @@ export interface IProductProject extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+const AssetSchema = new Schema({
+    type: {
+        type: String,
+        enum: ['image', 'video', 'youtube', 'loom', 'external'],
+        default: 'image',
+    },
+    url: { type: String, required: true },
+});
 
 const ProductProjectSchema = new Schema<IProductProject>(
     {
@@ -33,6 +48,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
             default: 'image',
         },
         mediaUrl: { type: String, default: '' },
+        assets: { type: [AssetSchema], default: [] },
         technologies: { type: [String], default: [] },
         liveUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
@@ -48,3 +64,4 @@ const ProductProject: Model<IProductProject> =
     mongoose.models.ProductProject || mongoose.model<IProductProject>('ProductProject', ProductProjectSchema);
 
 export default ProductProject;
+

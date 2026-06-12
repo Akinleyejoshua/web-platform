@@ -10,19 +10,19 @@
     left: 0;
     right: 0;
     z-index: var(--z-sticky);
-    background: rgba(var(--color-border-rgb), 0.25);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.35);
+    background: var(--color-header-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid rgba(var(--color-border-rgb), 0.25);
     transition: background var(--transition-base),
         box-shadow var(--transition-base),
         border-color var(--transition-base);
 }
 
 .header.scrolled {
-    background: rgba(var(--color-border-rgb), 0.45);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
-    border-bottom-color: rgba(var(--color-border-rgb), 0.5);
+    background: var(--color-header-bg);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    border-bottom-color: rgba(var(--color-border-rgb), 0.45);
 }
 
 .inner {

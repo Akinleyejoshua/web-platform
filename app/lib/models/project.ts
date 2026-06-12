@@ -3,12 +3,18 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export type ProjectCategory = 'web' | 'ml' | 'web3' | 'data-science' | 'others';
 export type MediaType = 'image' | 'video';
 
+export interface IAsset {
+    type: 'image' | 'video' | 'youtube' | 'loom' | 'external';
+    url: string;
+}
+
 export interface IProject extends Document {
     title: string;
     description: string;
     category: ProjectCategory;
     mediaType: MediaType;
     mediaUrl: string;
+    assets?: IAsset[];
     technologies: string[];
     githubUrl: string;
     liveUrl: string;
@@ -18,6 +24,15 @@ export interface IProject extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+const AssetSchema = new Schema({
+    type: {
+        type: String,
+        enum: ['image', 'video', 'youtube', 'loom', 'external'],
+        default: 'image',
+    },
+    url: { type: String, required: true },
+});
 
 const ProjectSchema = new Schema<IProject>(
     {
@@ -35,6 +50,7 @@ const ProjectSchema = new Schema<IProject>(
             default: 'image',
         },
         mediaUrl: { type: String, default: '' },
+        assets: { type: [AssetSchema], default: [] },
         technologies: { type: [String], default: [] },
         githubUrl: { type: String, default: '' },
         liveUrl: { type: String, default: '' },
@@ -51,3 +67,4 @@ const Project: Model<IProject> =
     mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);
 
 export default Project;
+
