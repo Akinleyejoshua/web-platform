@@ -72,9 +72,18 @@ export function AssetPreviewLightbox({
     const currentAsset = assets[currentIndex];
 
     const getYouTubeVideoId = (url: string) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
+        if (!url) return null;
+        if (url.includes('youtu.be/')) {
+            const parts = url.split('youtu.be/');
+            if (parts[1]) return parts[1].split(/[?#]/)[0];
+        }
+        if (url.includes('v=')) {
+            const parts = url.split('v=');
+            if (parts[1]) return parts[1].split(/[&?#]/)[0];
+        }
+        const embedMatch = url.match(/(?:embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+        if (embedMatch) return embedMatch[1];
+        return null;
     };
 
     const getYouTubeEmbedUrl = (url: string) => {
