@@ -179,6 +179,45 @@
     letter-spacing: 0.1em;
 }
 
+.playableThumbnailWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.playButtonCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background: rgba(10, 10, 12, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+    z-index: 4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover .playButtonCenter {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--color-accent, #6366f1);
+    border-color: var(--color-accent, #6366f1);
+}
+
+.playIcon {
+    font-size: 1.15rem;
+    margin-left: 2px; /* Visual center adjustment for play icon triangle */
+}
+
 /* Content Details */
 .content {
     display: flex;

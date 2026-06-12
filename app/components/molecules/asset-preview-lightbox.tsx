@@ -71,9 +71,15 @@ export function AssetPreviewLightbox({
 
     const currentAsset = assets[currentIndex];
 
+    const getYouTubeVideoId = (url: string) => {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
     const getYouTubeEmbedUrl = (url: string) => {
-        const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
-        return videoIdMatch ? `https://www.youtube.com/embed/${videoIdMatch[1]}?autoplay=1` : url;
+        const videoId = getYouTubeVideoId(url);
+        return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
     };
 
     const getLoomEmbedUrl = (url: string) => {

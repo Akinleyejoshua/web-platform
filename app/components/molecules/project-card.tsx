@@ -108,6 +108,12 @@ export function ProjectCard({
         setActiveAssetIndex((prev) => (prev - 1 + projectAssets.length) % projectAssets.length);
     };
 
+    const getYouTubeVideoId = (url: string) => {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
     const renderAssetSingle = (asset: IAsset, index: number) => {
         if (!asset || !asset.url) {
             return (
@@ -119,34 +125,58 @@ export function ProjectCard({
         }
 
         switch (asset.type) {
-            case 'youtube':
+            case 'youtube': {
+                const videoId = getYouTubeVideoId(asset.url);
+                const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
                 return (
-                    <iframe
-                        className={styles.video}
-                        src={getYouTubeEmbedUrl(asset.url)}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        title={title}
-                    />
+                    <div className={styles.playableThumbnailWrapper}>
+                        {thumbnailUrl ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img
+                                src={thumbnailUrl}
+                                alt={`${title} YouTube Thumbnail`}
+                                className={styles.image}
+                                onError={() => handleImageError(index)}
+                            />
+                        ) : (
+                            <div className={styles.imagePlaceholder}>
+                                <FiPlay className={styles.placeholderIcon} />
+                                <span className={styles.placeholderText}>YouTube Video</span>
+                            </div>
+                        )}
+                        <div className={styles.playButtonCenter}>
+                            <FiPlay className={styles.playIcon} />
+                        </div>
+                    </div>
                 );
+            }
             case 'loom':
                 return (
-                    <iframe
-                        className={styles.video}
-                        src={getLoomEmbedUrl(asset.url)}
-                        allowFullScreen
-                        title={title}
-                    />
+                    <div className={styles.playableThumbnailWrapper}>
+                        <div className={styles.imagePlaceholder}>
+                            <FiPlay className={styles.placeholderIcon} style={{ transform: 'scale(1.2)' }} />
+                            <span className={styles.placeholderText}>Play Loom Video</span>
+                        </div>
+                        <div className={styles.playButtonCenter}>
+                            <FiPlay className={styles.playIcon} />
+                        </div>
+                    </div>
                 );
             case 'video':
                 return (
-                    <video
-                        className={styles.image}
-                        src={asset.url}
-                        muted
-                        loop
-                        autoPlay
-                        playsInline
-                    />
+                    <div className={styles.playableThumbnailWrapper}>
+                        <video
+                            className={styles.image}
+                            src={asset.url}
+                            muted
+                            loop
+                            autoPlay
+                            playsInline
+                        />
+                        <div className={styles.playButtonCenter}>
+                            <FiPlay className={styles.playIcon} />
+                        </div>
+                    </div>
                 );
             case 'image':
             default:
