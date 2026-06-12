@@ -84,7 +84,7 @@ export function ProductProjects() {
                                         onClick={() => setPage(pageNum)}
                                         style={{
                                             background: isActive ? 'linear-gradient(135deg, var(--color-accent), #8b5cf6)' : 'rgba(255, 255, 255, 0.05)',
-                                            color: '#ffffff',
+                                            color: 'var(--color-accent)',
                                             border: isActive ? 'none' : '1px solid var(--color-border)',
                                             width: '40px',
                                             height: '40px',
