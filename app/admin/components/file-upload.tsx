@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FiUpload, FiX, FiImage } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './file-upload.module.css';
@@ -12,6 +12,8 @@ interface FileUploadProps {
     accept?: string;
     label?: string;
     placeholder?: string;
+    uploadMode?: 'storage' | 'base64';
+    onUploadModeChange?: (mode: 'storage' | 'base64') => void;
 }
 
 export function FileUpload({
@@ -20,11 +22,30 @@ export function FileUpload({
     accept = 'image/*',
     label = 'Upload Image',
     placeholder = 'Enter URL or upload file',
+    uploadMode: propsUploadMode,
+    onUploadModeChange,
 }: FileUploadProps) {
+    const [localUploadMode, setLocalUploadMode] = useState<'storage' | 'base64'>('storage');
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [preview, setPreview] = useState<string | null>(value || null);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const activeMode = propsUploadMode !== undefined ? propsUploadMode : localUploadMode;
+    const setActiveMode = (mode: 'storage' | 'base64') => {
+        if (onUploadModeChange) {
+            onUploadModeChange(mode);
+        } else {
+            setLocalUploadMode(mode);
+        }
+    };
+
+    // Auto-detect mode based on initial value format
+    useEffect(() => {
+        if (value && value.startsWith('data:')) {
+            setActiveMode('base64');
+        }
+    }, [value]);
 
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -42,8 +63,14 @@ export function FileUpload({
                 // Set preview immediately
                 setPreview(base64);
 
+                if (activeMode === 'base64') {
+                    onChange(base64);
+                    setIsUploading(false);
+                    return;
+                }
+
                 try {
-                    // Upload to server
+                    // Upload to server (Storage Mode)
                     const response = await axios.post('/api/upload', {
                         file: base64,
                         filename: file.name,
@@ -79,6 +106,7 @@ export function FileUpload({
         }
     };
 
+
     const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const url = e.target.value;
         onChange(url);
@@ -99,7 +127,27 @@ export function FileUpload({
 
     return (
         <div className={styles.container}>
-            <label className={styles.label}>{label}</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                <label className={styles.label}>{label}</label>
+                
+                {/* Upload Mode Option (Storage vs Base64) */}
+                <div className={styles.modeSelector}>
+                    <button
+                        type="button"
+                        onClick={() => setActiveMode('storage')}
+                        className={`${styles.modeBtn} ${activeMode === 'storage' ? styles.modeBtnActive : ''}`}
+                    >
+                        Storage (Server)
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setActiveMode('base64')}
+                        className={`${styles.modeBtn} ${activeMode === 'base64' ? styles.modeBtnActive : ''}`}
+                    >
+                        Base64 (DB)
+                    </button>
+                </div>
+            </div>
 
             <div className={styles.inputRow}>
                 <input
@@ -160,3 +208,4 @@ export function FileUpload({
         </div>
     );
 }
+

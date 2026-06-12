@@ -49,6 +49,7 @@ export default function AdminProjectsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
 
     const fetchProjects = async () => {
         try {
@@ -68,11 +69,17 @@ export default function AdminProjectsPage() {
     const handleAdd = () => {
         setEditingItem({ ...emptyProject, order: projects.length });
         setTechInput('');
+        setFormUploadMode('storage');
     };
 
     const handleEdit = (project: ProjectItem) => {
         setEditingItem({ ...project });
         setTechInput(project.technologies.join(', '));
+        
+        // Detect if any existing image uses base64
+        const usesBase64 = project.mediaUrl?.startsWith('data:') || 
+                           project.assets?.some(a => a.url?.startsWith('data:'));
+        setFormUploadMode(usesBase64 ? 'base64' : 'storage');
     };
 
     const handleCancel = () => {
@@ -250,6 +257,8 @@ export default function AdminProjectsPage() {
                             onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
                             label="Project Thumbnail"
                             accept="image/*"
+                            uploadMode={formUploadMode}
+                            onUploadModeChange={setFormUploadMode}
                         />
                     ) : (
                         <div className={styles.field}>
@@ -342,6 +351,8 @@ export default function AdminProjectsPage() {
                                                             setEditingItem({ ...editingItem, assets: currentAssets });
                                                         }}
                                                         accept="image/*"
+                                                        uploadMode={formUploadMode}
+                                                        onUploadModeChange={setFormUploadMode}
                                                     />
                                                 ) : (
                                                     <input

@@ -53,6 +53,7 @@ export default function AdminProductsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
 
     const fetchProducts = async () => {
         try {
@@ -72,11 +73,17 @@ export default function AdminProductsPage() {
     const handleAdd = () => {
         setEditingItem({ ...emptyProduct, order: products.length });
         setTechInput('');
+        setFormUploadMode('storage');
     };
 
     const handleEdit = (product: ProductItem) => {
         setEditingItem({ ...product });
         setTechInput(product.technologies.join(', '));
+        
+        // Detect if any existing image uses base64
+        const usesBase64 = product.mediaUrl?.startsWith('data:') || 
+                           product.assets?.some(a => a.url?.startsWith('data:'));
+        setFormUploadMode(usesBase64 ? 'base64' : 'storage');
     };
 
     const handleCancel = () => {
@@ -224,6 +231,8 @@ export default function AdminProductsPage() {
                             value={editingItem.mediaUrl}
                             onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
                             label="Upload product screenshot"
+                            uploadMode={formUploadMode}
+                            onUploadModeChange={setFormUploadMode}
                         />
                     </div>
 
@@ -300,6 +309,8 @@ export default function AdminProductsPage() {
                                                             setEditingItem({ ...editingItem, assets: currentAssets });
                                                         }}
                                                         accept="image/*"
+                                                        uploadMode={formUploadMode}
+                                                        onUploadModeChange={setFormUploadMode}
                                                     />
                                                 ) : (
                                                     <input
