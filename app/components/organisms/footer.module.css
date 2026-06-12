@@ -176,6 +176,10 @@
         gap: var(--space-md);
     }
 
+    .links {
+        align-items: center;
+    }
+
     .link {
         width: auto;
     }
