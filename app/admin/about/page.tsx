@@ -129,7 +129,7 @@ export default function AdminAboutPage() {
                     />
                 </div>
 
-                <div className={styles.sectionTitle} style={{ marginTop: 'var(--space-lg)' }}>
+                <div className={styles.sectionTitle}>
                     Social Links
                 </div>
 
@@ -170,7 +170,7 @@ export default function AdminAboutPage() {
                     </div>
                 ) : (
                     <>
-                        <div className={styles.grid} style={{ padding: 0 }}>
+                        <div className={`${styles.grid} ${styles.gridNoPadding}`}>
                             {socialLinks.length === 0 ? (
                                 <div className={styles.empty}>
                                     No social links added yet.
@@ -203,7 +203,7 @@ export default function AdminAboutPage() {
                             )}
                         </div>
 
-                        <button type="button" onClick={handleAddLink} className={styles.addBtn} style={{ alignSelf: 'flex-start' }}>
+                        <button type="button" onClick={handleAddLink} className={styles.addBtn}>
                             <FiPlus size={18} />
                             Add Social Link
                         </button>

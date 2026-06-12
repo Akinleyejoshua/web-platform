@@ -171,14 +171,14 @@ export default function AdminProjectsPage() {
             )}
 
             {!editingItem && (
-                <div style={{ marginBottom: '2rem', padding: '1rem', background: 'var(--color-surface)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
-                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--color-text)' }}>Share Portfolio by Domain</h3>
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div className={styles.shareContainer}>
+                    <h3 className={styles.shareTitle}>Share Portfolio by Domain</h3>
+                    <div className={styles.shareButtons}>
                         {['web', 'ml', 'data-science', 'web3', 'others'].map(cat => (
                             <button 
                                 key={cat} 
                                 onClick={() => copyLink(cat)}
-                                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'var(--color-background)', border: '1px solid var(--color-border)', borderRadius: '6px', cursor: 'pointer', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}
+                                className={styles.shareButton}
                                 title={`Copy link for ${cat}`}
                             >
                                 <FiCopy size={14} />
@@ -222,8 +222,7 @@ export default function AdminProjectsPage() {
                             <select
                                 value={editingItem.category}
                                 onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value as ProjectCategory })}
-                                className={styles.input} // Ensure using .input class for select
-                                style={{ height: '48px' }} // Fix height match
+                                className={styles.select}
                             >
                                 <option value="web">Web Development</option>
                                 <option value="ml">Machine Learning</option>
@@ -237,8 +236,7 @@ export default function AdminProjectsPage() {
                             <select
                                 value={editingItem.mediaType}
                                 onChange={(e) => setEditingItem({ ...editingItem, mediaType: e.target.value as MediaType })}
-                                className={styles.input}
-                                style={{ height: '48px' }}
+                                className={styles.select}
                             >
                                 <option value="image">Image</option>
                                 <option value="video">YouTube Video</option>
@@ -256,23 +254,24 @@ export default function AdminProjectsPage() {
                     ) : (
                         <div className={styles.field}>
                             <label className={styles.label}>YouTube URL</label>
-                            <div style={{ position: 'relative' }}>
+                            <div className={styles.iconInputWrapper}>
                                 <input
                                     type="text"
                                     value={editingItem.mediaUrl}
                                     onChange={(e) => setEditingItem({ ...editingItem, mediaUrl: e.target.value })}
                                     className={styles.input}
                                     placeholder="https://youtube.com/watch?v=..."
-                                    style={{ paddingLeft: '40px' }}
                                 />
-                                <FiYoutube style={{ position: 'absolute', left: '12px', top: '14px', color: '#ff0000' }} size={18} />
+                                <span className={styles.inputIcon}>
+                                    <FiYoutube style={{ color: '#ff0000' }} size={18} />
+                                </span>
                             </div>
                         </div>
                     )}
 
                     {/* Project Assets List Section */}
-                    <div style={{ marginTop: '2rem', marginBottom: '2rem', padding: '1.5rem', background: 'var(--color-bg-secondary, rgba(255,255,255,0.02))', border: '1px dashed var(--color-border)', borderRadius: '12px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <div className={styles.assetsSection}>
+                        <div className={styles.assetsHeader}>
                             <label className={styles.label} style={{ marginBottom: 0, fontWeight: 600 }}>Project Gallery / Slide Assets ({editingItem.assets?.length || 0})</label>
                             <button
                                 type="button"
@@ -283,20 +282,20 @@ export default function AdminProjectsPage() {
                                         assets: [...currentAssets, { type: 'image', url: '' }]
                                     });
                                 }}
-                                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0.4rem 0.8rem', background: 'var(--color-accent, #6366f1)', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
+                                className={styles.addAssetBtn}
                             >
                                 <FiPlus size={14} /> Add Slide Asset
                             </button>
                         </div>
 
                         {(!editingItem.assets || editingItem.assets.length === 0) ? (
-                            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontStyle: 'italic', margin: '0' }}>
+                            <p className={styles.noAssetsText}>
                                 No assets added yet. Slideshow will fallback to default thumbnail/video.
                             </p>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div className={styles.assetsList}>
                                 {editingItem.assets.map((asset, index) => (
-                                    <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', background: 'var(--color-card, rgba(0,0,0,0.15))', border: '1px solid var(--color-border)', borderRadius: '8px', position: 'relative' }}>
+                                    <div key={index} className={styles.assetCard}>
                                         {/* Remove Asset Button */}
                                         <button
                                             type="button"
@@ -305,14 +304,14 @@ export default function AdminProjectsPage() {
                                                 currentAssets.splice(index, 1);
                                                 setEditingItem({ ...editingItem, assets: currentAssets });
                                             }}
-                                            style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', borderRadius: '4px', padding: '4px', cursor: 'pointer' }}
+                                            className={styles.deleteAssetBtn}
                                             title="Delete Asset"
                                         >
                                             <FiTrash2 size={14} />
                                         </button>
 
-                                        <div style={{ display: 'flex', gap: '1rem' }}>
-                                            <div style={{ flex: '0 0 130px' }}>
+                                        <div className={styles.assetRow}>
+                                            <div className={styles.assetTypeCol}>
                                                 <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset Type</label>
                                                 <select
                                                     value={asset.type}
@@ -321,8 +320,8 @@ export default function AdminProjectsPage() {
                                                         currentAssets[index].type = e.target.value as any;
                                                         setEditingItem({ ...editingItem, assets: currentAssets });
                                                     }}
-                                                    className={styles.input}
-                                                    style={{ height: '38px', padding: '4px 8px', fontSize: '0.85rem' }}
+                                                    className={styles.select}
+                                                    style={{ height: '40px', padding: '4px 8px', fontSize: '0.85rem' }}
                                                 >
                                                     <option value="image">Image</option>
                                                     <option value="video">Direct Video (.mp4)</option>
@@ -332,7 +331,7 @@ export default function AdminProjectsPage() {
                                                 </select>
                                             </div>
 
-                                            <div style={{ flex: 1 }}>
+                                            <div className={styles.assetUrlCol}>
                                                 <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset URL / Upload</label>
                                                 {asset.type === 'image' ? (
                                                     <FileUpload
@@ -359,7 +358,7 @@ export default function AdminProjectsPage() {
                                                             asset.type === 'loom' ? 'https://loom.com/share/...' :
                                                             'https://...'
                                                         }
-                                                        style={{ height: '38px', padding: '4px 12px', fontSize: '0.85rem' }}
+                                                        style={{ height: '40px', padding: '4px 12px', fontSize: '0.85rem' }}
                                                     />
                                                 )}
                                             </div>
@@ -385,28 +384,30 @@ export default function AdminProjectsPage() {
                     <div className={styles.row}>
                         <div className={styles.field}>
                             <label className={styles.label}>GitHub Repo</label>
-                            <div style={{ position: 'relative' }}>
+                            <div className={styles.iconInputWrapper}>
                                 <input
                                     type="text"
                                     value={editingItem.githubUrl}
                                     onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
                                     className={styles.input}
-                                    style={{ paddingLeft: '40px' }}
                                 />
-                                <FiGithub style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                                <span className={styles.inputIcon}>
+                                    <FiGithub size={18} />
+                                </span>
                             </div>
                         </div>
                         <div className={styles.field}>
                             <label className={styles.label}>Live Link</label>
-                            <div style={{ position: 'relative' }}>
+                            <div className={styles.iconInputWrapper}>
                                 <input
                                     type="text"
                                     value={editingItem.liveUrl}
                                     onChange={(e) => setEditingItem({ ...editingItem, liveUrl: e.target.value })}
                                     className={styles.input}
-                                    style={{ paddingLeft: '40px' }}
                                 />
-                                <FiExternalLink style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                                <span className={styles.inputIcon}>
+                                    <FiExternalLink size={18} />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -423,12 +424,12 @@ export default function AdminProjectsPage() {
                             />
                         </div>
                         <div className={styles.field}>
-                            <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '100%', paddingTop: '32px' }}>
+                            <label className={styles.checkboxLabel}>
                                 <input
                                     type="checkbox"
                                     checked={editingItem.isVisible !== false}
                                     onChange={(e) => setEditingItem({ ...editingItem, isVisible: e.target.checked })}
-                                    style={{ width: '18px', height: '18px' }}
+                                    className={styles.checkboxInput}
                                 />
                                 Publicly Visible
                             </label>

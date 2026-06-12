@@ -85,20 +85,20 @@ export default function AdminDashboardPage() {
                     <div className={styles.statContent}>
                         <div className={styles.statLabel}>Total Page Views</div>
                         <div className={styles.statValue}>{allTimeViews.toLocaleString()}</div>
-                        <div style={{ fontSize: '0.825rem', color: 'var(--color-muted)', marginTop: '4px' }}>
+                        <div className={styles.statCardPeriodInfo}>
                             {totalViews.toLocaleString()} in last 30 days
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.statCard}>
-                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}>
+                    <div className={`${styles.statIcon} ${styles.statIconPurple}`}>
                         <FiUser size={22} />
                     </div>
                     <div className={styles.statContent}>
                         <div className={styles.statLabel}>Total Unique Visitors</div>
                         <div className={styles.statValue}>{allTimeVisitors.toLocaleString()}</div>
-                        <div style={{ fontSize: '0.825rem', color: 'var(--color-muted)', marginTop: '4px' }}>
+                        <div className={styles.statCardPeriodInfo}>
                             {totalVisitors.toLocaleString()} in last 30 days
                         </div>
                     </div>
@@ -121,7 +121,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className={styles.statCard}>
-                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
+                    <div className={`${styles.statIcon} ${styles.statIconGreen}`}>
                         <FiLayout size={22} />
                     </div>
                     <div className={styles.statContent}>
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className={styles.statCard}>
-                    <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' }}>
+                    <div className={`${styles.statIcon} ${styles.statIconYellow}`}>
                         <FiMousePointer size={22} />
                     </div>
                     <div className={styles.statContent}>
@@ -190,7 +190,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className={styles.detailsList}>
                         {Object.keys(sectionViews).length === 0 ? (
-                            <p style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '1rem' }}>
+                            <p className={styles.noDataText}>
                                 No section views recorded yet
                             </p>
                         ) : (
@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className={styles.detailsList}>
                         {Object.keys(clicks).length === 0 ? (
-                            <p style={{ color: 'var(--color-muted)', textAlign: 'center', padding: '1rem' }}>
+                            <p className={styles.noDataText}>
                                 No clicks recorded yet
                             </p>
                         ) : (
