@@ -225,20 +225,13 @@
     height: 72px;
     min-height: 72px;
     padding: 0 var(--space-2xl);
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--color-header-bg);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border);
     position: sticky;
     top: 0;
     z-index: 90;
     flex-shrink: 0;
-}
-
-/* Dark mode glassmorphism override handled by vars usually, but basic fallback */
-@media (prefers-color-scheme: dark) {
-    .topBar {
-        background: rgba(20, 20, 20, 0.8);
-    }
 }
 
 .breadcrumb {
