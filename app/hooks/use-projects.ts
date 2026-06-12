@@ -36,13 +36,13 @@ export function useProjects(): UseProjectsReturn {
             const params = activeCategory !== 'all' ? { category: activeCategory } : {};
             const response = await axios.get('/api/projects', { params, signal });
             setProjects(response.data);
+            setIsLoading(false);
         } catch (err) {
             if (axios.isCancel(err)) return;
             const message = axios.isAxiosError(err)
                 ? err.response?.data?.error || 'Failed to fetch projects'
                 : 'An unexpected error occurred';
             setError(message);
-        } finally {
             setIsLoading(false);
         }
     }, [activeCategory]);
