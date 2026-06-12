@@ -134,6 +134,8 @@
   margin: 0;
   padding: 0;
   font-family: var(--font-active, 'Bricolage Grotesque', sans-serif);
+  -webkit-tap-highlight-color: transparent;
+
 }
 
 html {
@@ -328,9 +330,23 @@ a:hover {
 }
 
 /* === FOCUS STYLES === */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* === TAP HIGHLIGHT REMOVAL === */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* === REDUCED MOTION === */
