@@ -317,8 +317,9 @@ export function ProjectCard({
                         {blogUrl && (
                             <a
                                 href={blogUrl}
-                                className={styles.link}
-                                style={{ background: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.3)' }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.blogLink}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     trackClick(`project_blog_${title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}`, true);
