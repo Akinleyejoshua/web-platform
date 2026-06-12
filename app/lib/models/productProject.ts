@@ -66,6 +66,10 @@ ProductProjectSchema.index({ category: 1, order: 1, createdAt: -1, isVisible: 1 
 // Index 2: Optimizes queries fetching all categories and sorting
 ProductProjectSchema.index({ order: 1, createdAt: -1, isVisible: 1 });
 
+if (process.env.NODE_ENV === 'development') {
+    delete mongoose.models.ProductProject;
+}
+
 const ProductProject: Model<IProductProject> =
     mongoose.models.ProductProject || mongoose.model<IProductProject>('ProductProject', ProductProjectSchema);
 

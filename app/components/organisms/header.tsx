@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { FiTrendingUp, FiMenu, FiX, FiHome, FiUser, FiBriefcase, FiCode, FiMail, FiFileText, FiChevronRight, FiBookOpen } from 'react-icons/fi';
 import { NavLink } from '@/app/components/molecules/nav-link';
 import { Button } from '@/app/components/atoms/button';
@@ -22,7 +23,13 @@ interface HeaderProps {
     investUrl?: string;
 }
 
+export default function HeaderWrapper(props: HeaderProps) {
+    return <Header {...props} />;
+}
+
 export function Header({ investUrl = '/invest' }: HeaderProps) {
+    const pathname = usePathname() || '/';
+    const isHome = pathname === '/' || pathname === '';
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -74,23 +81,26 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
         <>
             <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
                 <div className={styles.inner}>
-                    <a href="#home" className={styles.logo} onClick={() => trackClick('header_logo', true)}>
+                    <a href={isHome ? '#home' : '/'} className={styles.logo} onClick={() => trackClick('header_logo', true)}>
                         Joshua<span className={styles.logoAccent}>.Dev</span>
                     </a>
 
                     <nav className={styles.nav}>
-                        {navLinks.map((link) => (
-                            <NavLink
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => handleNavClick(link.label)}
-                                target={link.target}
-                                rel={link.rel}
-                            >
-                                <link.icon size={14} />
-                                {link.label}
-                            </NavLink>
-                        ))}
+                        {navLinks.map((link) => {
+                            const resolvedHref = (link.href.startsWith('#') && !isHome) ? '/' + link.href : link.href;
+                            return (
+                                <NavLink
+                                    key={link.href}
+                                    href={resolvedHref}
+                                    onClick={() => handleNavClick(link.label)}
+                                    target={link.target}
+                                    rel={link.rel}
+                                >
+                                    <link.icon size={14} />
+                                    {link.label}
+                                </NavLink>
+                            );
+                        })}
                     </nav>
 
                     <div className={styles.actions}>
@@ -124,6 +134,7 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
                 aria-label="Mobile navigation"
                 role="dialog"
                 aria-modal="true"
+                aria-hidden={!isMobileMenuOpen}
             >
                 {/* Sidebar header */}
                 <div className={styles.sidebarHeader}>
@@ -141,32 +152,35 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
 
                 {/* Sidebar navigation */}
                 <nav className={styles.mobileNav}>
-                    {navLinks.map((link) => (
-                        <a
-                            key={link.href}
-                            href={link.href}
-                            className={styles.mobileNavItem}
-                            onClick={(e) => {
-                                if (link.href.startsWith('#')) {
-                                    e.preventDefault();
-                                    const element = document.querySelector(link.href);
-                                    if (element) {
-                                        element.scrollIntoView({ behavior: 'smooth' });
+                    {navLinks.map((link) => {
+                        const resolvedHref = (link.href.startsWith('#') && !isHome) ? '/' + link.href : link.href;
+                        return (
+                            <a
+                                key={link.href}
+                                href={resolvedHref}
+                                className={styles.mobileNavItem}
+                                onClick={(e) => {
+                                    if (link.href.startsWith('#') && isHome) {
+                                        e.preventDefault();
+                                        const element = document.querySelector(link.href);
+                                        if (element) {
+                                            element.scrollIntoView({ behavior: 'smooth' });
+                                        }
                                     }
-                                }
-                                handleNavClick(link.label);
-                                closeMobileMenu();
-                            }}
-                            target={link.target}
-                            rel={link.rel}
-                        >
-                            <span className={styles.mobileNavIcon}>
-                                <link.icon size={18} />
-                            </span>
-                            <span className={styles.mobileNavLabel}>{link.label}</span>
-                            <FiChevronRight size={16} className={styles.mobileNavArrow} />
-                        </a>
-                    ))}
+                                    handleNavClick(link.label);
+                                    closeMobileMenu();
+                                }}
+                                target={link.target}
+                                rel={link.rel}
+                            >
+                                <span className={styles.mobileNavIcon}>
+                                    <link.icon size={18} />
+                                </span>
+                                <span className={styles.mobileNavLabel}>{link.label}</span>
+                                <FiChevronRight size={16} className={styles.mobileNavArrow} />
+                            </a>
+                        );
+                    })}
                 </nav>
 
                 {/* Sidebar footer */}

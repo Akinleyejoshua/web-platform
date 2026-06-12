@@ -44,6 +44,10 @@ const BlogPostSchema = new Schema<IBlogPost>(
 // Optimize query for listing visible blogs sorted by creation date
 BlogPostSchema.index({ isVisible: 1, createdAt: -1 });
 
+if (process.env.NODE_ENV === 'development') {
+    delete mongoose.models.BlogPost;
+}
+
 const BlogPost: Model<IBlogPost> =
     mongoose.models.BlogPost || mongoose.model<IBlogPost>('BlogPost', BlogPostSchema);
 
