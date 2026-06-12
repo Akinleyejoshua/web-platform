@@ -1,28 +1,97 @@
 .about {
     background: var(--color-bg-secondary);
+    position: relative;
+    overflow: hidden;
 }
 
-.content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-2xl);
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
 }
 
+.aboutCard {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: var(--space-2xl) var(--space-3xl);
+    position: relative;
+    /* box-shadow: var(--shadow-lg); */
+    backdrop-filter: blur(10px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aboutCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Card Decorative Header */
+.cardHeaderDecoration {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+}
+
+.accentLine {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+}
+
+.iconBadge {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    background: var(--color-bg);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease;
+}
+
+.aboutCard:hover .iconBadge {
+    transform: rotate(15deg) scale(1.05);
+}
+
+/* Bio Text & Formatting */
 .bio {
     font-size: 1.125rem;
     line-height: 1.8;
     color: var(--color-text-secondary);
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
     text-align: center;
 }
 
-.bio p {
+.paragraph {
     margin-bottom: var(--space-md);
 }
 
-.bio p:last-child {
+.paragraph:last-child {
     margin-bottom: 0;
+}
+
+/* Footer & Social Section */
+.footerSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: var(--space-xl);
+}
+
+.divider {
+    width: 40px;
+    height: 2px;
+    background-color: var(--color-border);
+    margin-bottom: var(--space-lg);
+    border-radius: var(--radius-full);
 }
 
 .socialWrapper {
@@ -33,11 +102,11 @@
 }
 
 .socialLabel {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--color-muted);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
 }
 
 .socials {
@@ -47,22 +116,7 @@
     justify-content: center;
 }
 
-/* Mobile responsive */
-@media (max-width: 640px) {
-    .bio {
-        font-size: 1rem;
-        line-height: 1.7;
-    }
-
-    .socialLabel {
-        font-size: 0.75rem;
-    }
-
-    .socials {
-        gap: var(--space-sm);
-    }
-}
-
+/* Rich text formatting */
 .richText {
     text-align: inherit;
 }
@@ -71,20 +125,25 @@
     margin-bottom: var(--space-md);
 }
 
+.richText p:last-child {
+    margin-bottom: 0;
+}
+
 .richText h2 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     color: var(--color-text);
     margin-top: var(--space-lg);
     margin-bottom: var(--space-sm);
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .richText h3 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--color-text);
     margin-top: var(--space-md);
     margin-bottom: var(--space-xs);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .richText ul, .richText ol {
@@ -113,20 +172,20 @@
     margin: var(--space-md) 0;
     color: var(--color-muted);
     font-style: italic;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(var(--color-accent-rgb), 0.03);
     padding-top: var(--space-xs);
     padding-bottom: var(--space-xs);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .richText pre {
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--color-bg-secondary);
     padding: var(--space-md);
-    border-radius: 6px;
-    font-family: monospace;
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
     font-size: 0.9rem;
     overflow-x: auto;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
     margin: var(--space-md) 0;
 }
 
@@ -134,9 +193,31 @@
     color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 3px;
+    font-weight: 500;
     transition: opacity 0.2s;
 }
 
 .richText a:hover {
     opacity: 0.8;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .aboutCard {
+        padding: var(--space-xl) var(--space-lg);
+        border-radius: 18px;
+    }
+
+    .bio {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    .socialLabel {
+        font-size: 0.7rem;
+    }
+
+    .socials {
+        gap: var(--space-sm);
+    }
 }

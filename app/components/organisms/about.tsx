@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiUser } from 'react-icons/fi';
 import { Section } from '@/app/components/layout/section';
 import { SocialLink } from '@/app/components/molecules/social-link';
 import styles from './about.module.css';
@@ -28,31 +29,47 @@ export function About({
             className={styles.about}
             alternate
         >
-            <div className={styles.content}>
-                <div className={styles.bio}>
-                    {isHtml ? (
-                        <div className={styles.richText} dangerouslySetInnerHTML={{ __html: bio }} />
-                    ) : (
-                        bioParagraphs.map((paragraph, index) => (
-                            <p key={index}>{paragraph}</p>
-                        ))
+            <div className={styles.container}>
+                <div className={styles.aboutCard}>
+                    {/* Premium Header Decoration */}
+                    <div className={styles.cardHeaderDecoration}>
+                        <span className={styles.accentLine} />
+                        <div className={styles.iconBadge}>
+                            <FiUser size={20} />
+                        </div>
+                        <span className={styles.accentLine} />
+                    </div>
+
+                    {/* Bio Paragraphs */}
+                    <div className={styles.bio}>
+                        {isHtml ? (
+                            <div className={styles.richText} dangerouslySetInnerHTML={{ __html: bio }} />
+                        ) : (
+                            bioParagraphs.map((paragraph, index) => (
+                                <p key={index} className={styles.paragraph}>{paragraph}</p>
+                            ))
+                        )}
+                    </div>
+
+                    {/* Footer Connections */}
+                    {socialLinks.length > 0 && (
+                        <div className={styles.footerSection}>
+                            <div className={styles.divider} />
+                            <div className={styles.socialWrapper}>
+                                <span className={styles.socialLabel}>Connect with me</span>
+                                <div className={styles.socials}>
+                                    {socialLinks.map((link) => (
+                                        <SocialLink
+                                            key={link.platform}
+                                            platform={link.platform}
+                                            url={link.url}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </div>
-
-                {socialLinks.length > 0 && (
-                    <div className={styles.socialWrapper}>
-                        <span className={styles.socialLabel}>Connect with me</span>
-                        <div className={styles.socials}>
-                            {socialLinks.map((link) => (
-                                <SocialLink
-                                    key={link.platform}
-                                    platform={link.platform}
-                                    url={link.url}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
         </Section>
     );

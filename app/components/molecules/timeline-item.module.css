@@ -1,7 +1,8 @@
 .item {
     position: relative;
-    display: flex;
-    gap: var(--space-lg);
+    display: grid;
+    grid-template-columns: 180px 40px 1fr;
+    gap: 0;
     padding-bottom: var(--space-2xl);
 }
 
@@ -9,122 +10,173 @@
     padding-bottom: 0;
 }
 
-.marker {
-    position: relative;
+/* Left Side: Meta Info */
+.metaSide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    padding-right: var(--space-md);
+}
+
+.dateBlock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    justify-content: flex-end;
+}
+
+.dateText {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.currentBadge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    background: var(--color-accent-light);
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+}
+
+.companyName {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: var(--space-xs);
+    transition: color 0.3s ease;
+}
+
+/* Middle: Divider dot and line */
+.dividerSide {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-shrink: 0;
+    position: relative;
 }
 
 .dot {
-    width: 16px;
-    height: 16px;
-    background: var(--color-accent);
-    border: 3px solid var(--color-bg);
+    width: 10px;
+    height: 10px;
+    background: var(--color-border);
     border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--color-accent-light);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 8px;
     z-index: 1;
 }
 
 .current .dot {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 0 3px var(--color-accent-light);
-    }
-
-    50% {
-        box-shadow: 0 0 0 8px var(--color-accent-light);
-    }
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-light);
 }
 
 .line {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    width: 2px;
-    height: calc(100% - 8px);
+    top: 18px;
+    bottom: 0;
+    width: 1px;
     background: var(--color-border);
-    transform: translateX(-50%);
 }
 
 .item:last-child .line {
     display: none;
 }
 
-.content {
-    flex: 1;
-    padding-top: 0;
+/* Right Side: Details */
+.detailsSide {
+    padding-left: var(--space-md);
+    transition: transform 0.3s ease;
 }
 
-.header {
-    margin-bottom: var(--space-sm);
-}
-
-.role {
+.roleTitle {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 var(--space-xs) 0;
-}
-
-.company {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--color-accent);
-}
-
-.date {
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    margin-top: var(--space-xs);
-}
-
-.currentBadge {
-    display: inline-block;
-    padding: var(--space-xs) var(--space-sm);
-    margin-left: var(--space-sm);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-accent);
-    background: var(--color-accent-light);
-    border-radius: var(--radius-full);
+    margin: 0 0 var(--space-sm) 0;
+    line-height: 1.3;
 }
 
 .descriptions {
     list-style: none;
     padding: 0;
-    margin: var(--space-md) 0 0 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.descriptions li {
+.descItem {
     position: relative;
-    padding-left: var(--space-lg);
-    margin-bottom: var(--space-sm);
-    font-size: 0.9375rem;
+    padding-left: var(--space-md);
+    font-size: 0.95rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
 }
 
-.descriptions li::before {
-    content: '→';
+.descItem::before {
+    content: '';
     position: absolute;
     left: 0;
+    top: 9px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+}
+
+/* Hover Animations */
+.item:hover .dot {
+    background: var(--color-accent);
+    transform: scale(1.3);
+    box-shadow: 0 0 0 4px var(--color-accent-light);
+}
+
+.item:hover .companyName {
     color: var(--color-accent);
 }
 
-/* Responsive */
-@media (max-width: 640px) {
+.item:hover .detailsSide {
+    transform: translateX(4px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
     .item {
+        grid-template-columns: 1fr;
         gap: var(--space-md);
+        padding-bottom: var(--space-xl);
     }
 
-    .role {
-        font-size: 1.125rem;
+    .metaSide {
+        align-items: flex-start;
+        text-align: left;
+        padding-right: 0;
+    }
+
+    .dateBlock {
+        justify-content: flex-start;
+    }
+
+    .companyName {
+        font-size: 1.1rem;
+        margin-top: 4px;
+    }
+
+    .dividerSide {
+        display: none;
+    }
+
+    .detailsSide {
+        padding-left: 0;
+    }
+
+    .roleTitle {
+        font-size: 1.15rem;
     }
 }
