@@ -10,6 +10,7 @@ import {
     FiEye,
     FiAlertCircle,
     FiX,
+    FiSliders,
 } from 'react-icons/fi';
 import { useSettingsStore, SiteSettings } from '@/app/store/settings-store';
 import styles from './settings.module.css';
@@ -67,6 +68,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
     fontSize: 16,
     fontWeight: 400,
     accentColor: '#3b6ef0',
+    projectsLimit: 4,
 };
 
 // ===== COMPONENT =====
@@ -127,7 +129,8 @@ export default function SettingsPage() {
         draft.fontFamily !== settings.fontFamily ||
         draft.fontSize !== settings.fontSize ||
         draft.fontWeight !== settings.fontWeight ||
-        draft.accentColor !== settings.accentColor;
+        draft.accentColor !== settings.accentColor ||
+        draft.projectsLimit !== settings.projectsLimit;
 
     return (
         <div className={styles.settings}>
@@ -336,6 +339,54 @@ export default function SettingsPage() {
                             </span>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Pagination settings Section */}
+            <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <div className={styles.sectionIcon}>
+                        <FiSliders size={22} />
+                    </div>
+                    <div>
+                        <div className={styles.sectionTitle}>Content Pagination</div>
+                        <div className={styles.sectionSubtitle}>
+                            Configure the number of projects and products displayed per page
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.controlsRow}>
+                    <div className={styles.controlGroup} style={{ maxWidth: '300px' }}>
+                        <div className={styles.controlLabel}>
+                            Items Per Page
+                            <span className={styles.controlValue}>
+                                {draft.projectsLimit || 4} items
+                            </span>
+                        </div>
+                        <input
+                            type="range"
+                            min="2"
+                            max="12"
+                            step="1"
+                            value={draft.projectsLimit || 4}
+                            onChange={(e) =>
+                                setDraft((d) => ({
+                                    ...d,
+                                    projectsLimit: parseInt(e.target.value) || 4,
+                                }))
+                            }
+                            style={{
+                                width: '100%',
+                                accentColor: draft.accentColor,
+                                height: '6px',
+                                background: 'var(--color-border)',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                marginTop: '12px'
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
 

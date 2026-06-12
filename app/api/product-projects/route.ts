@@ -8,13 +8,25 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
         const admin = searchParams.get('admin');
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '0');
 
         const query: any = {};
         if (category && category !== 'all') query.category = category;
-        if (!admin) query.isVisible = { $ne: false }; // Using $ne: false to handle older records without isVisible field
+        if (!admin) query.isVisible = { $ne: false }; 
+
+        if (limit > 0) {
+            const total = await ProductProject.countDocuments(query);
+            const skip = (page - 1) * limit;
+            const products = await ProductProject.find(query)
+                .sort({ order: 1, createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean();
+            return NextResponse.json({ data: products, total }, { status: 200 });
+        }
 
         const products = await ProductProject.find(query).sort({ order: 1, createdAt: -1 }).lean();
-
         return NextResponse.json(products, { status: 200 });
     } catch (error) {
         console.error('ProductProjects GET error:', error);

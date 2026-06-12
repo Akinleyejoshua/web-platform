@@ -5,6 +5,7 @@ export interface ISettings extends Document {
     fontSize: number;
     fontWeight: number;
     accentColor: string;
+    projectsLimit: number;
 }
 
 const SettingsSchema = new Schema<ISettings>(
@@ -29,9 +30,19 @@ const SettingsSchema = new Schema<ISettings>(
             type: String,
             default: '#3b6ef0',
         },
+        projectsLimit: {
+            type: Number,
+            default: 4,
+            min: 1,
+            max: 20,
+        },
     },
     { timestamps: true }
 );
+
+if (process.env.NODE_ENV === 'development') {
+    delete mongoose.models.Settings;
+}
 
 export default mongoose.models.Settings ||
     mongoose.model<ISettings>('Settings', SettingsSchema);

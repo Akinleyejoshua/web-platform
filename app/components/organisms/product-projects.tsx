@@ -18,17 +18,9 @@ const categoryLabels: Record<string, string> = {
 };
 
 export function ProductProjects() {
-    const { products, isLoading, error, activeCategory, setActiveCategory, refetch } = useProductProjects();
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const ITEMS_PER_PAGE = 4;
+    const { products, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProductProjects();
 
-    React.useEffect(() => {
-        setCurrentPage(1);
-    }, [activeCategory]);
-
-    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const visibleProducts = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(total / limit);
 
     return (
         <Section
@@ -65,8 +57,8 @@ export function ProductProjects() {
                 <p className={styles.empty}>No products in this category yet.</p>
             ) : (
                 <>
-                    <Carousel key={currentPage}>
-                        {visibleProducts.map((product) => (
+                    <Carousel key={page}>
+                        {products.map((product) => (
                             <ProjectCard
                                 key={product._id as any}
                                 title={product.title}
@@ -85,11 +77,11 @@ export function ProductProjects() {
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
                             {Array.from({ length: totalPages }, (_, idx) => {
                                 const pageNum = idx + 1;
-                                const isActive = currentPage === pageNum;
+                                const isActive = page === pageNum;
                                 return (
                                     <button
                                         key={pageNum}
-                                        onClick={() => setCurrentPage(pageNum)}
+                                        onClick={() => setPage(pageNum)}
                                         style={{
                                             background: isActive ? 'linear-gradient(135deg, var(--color-accent), #8b5cf6)' : 'rgba(255, 255, 255, 0.05)',
                                             color: '#ffffff',

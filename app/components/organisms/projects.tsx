@@ -10,17 +10,9 @@ import { useProjects } from '@/app/hooks/use-projects';
 import styles from './projects.module.css';
 
 export function Projects() {
-    const { projects, isLoading, error, activeCategory, setActiveCategory, refetch } = useProjects();
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const ITEMS_PER_PAGE = 4;
+    const { projects, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProjects();
 
-    React.useEffect(() => {
-        setCurrentPage(1);
-    }, [activeCategory]);
-
-    const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const visibleProjects = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(total / limit);
 
     return (
         <Section
@@ -50,8 +42,8 @@ export function Projects() {
                 <p className={styles.empty}>No projects in this category yet.</p>
             ) : (
                 <>
-                    <Carousel key={currentPage}>
-                        {visibleProjects.map((project) => (
+                    <Carousel key={page}>
+                        {projects.map((project) => (
                             <ProjectCard
                                 key={project._id as any}
                                 title={project.title}
@@ -71,11 +63,11 @@ export function Projects() {
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
                             {Array.from({ length: totalPages }, (_, idx) => {
                                 const pageNum = idx + 1;
-                                const isActive = currentPage === pageNum;
+                                const isActive = page === pageNum;
                                 return (
                                     <button
                                         key={pageNum}
-                                        onClick={() => setCurrentPage(pageNum)}
+                                        onClick={() => setPage(pageNum)}
                                         style={{
                                             background: isActive ? 'linear-gradient(135deg, var(--color-accent), #8b5cf6)' : 'rgba(255, 255, 255, 0.05)',
                                             color: '#ffffff',

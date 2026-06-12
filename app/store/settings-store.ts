@@ -6,6 +6,7 @@ export interface SiteSettings {
     fontSize: number;
     fontWeight: number;
     accentColor: string;
+    projectsLimit: number;
 }
 
 interface SettingsState {
@@ -23,6 +24,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
     fontSize: 16,
     fontWeight: 400,
     accentColor: '#3b6ef0',
+    projectsLimit: 4,
 };
 
 // Map font family names to their CSS variable name on <body>
@@ -92,6 +94,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
                 fontSize: response.data.fontSize || DEFAULT_SETTINGS.fontSize,
                 fontWeight: response.data.fontWeight || DEFAULT_SETTINGS.fontWeight,
                 accentColor: response.data.accentColor || DEFAULT_SETTINGS.accentColor,
+                projectsLimit: response.data.projectsLimit !== undefined ? response.data.projectsLimit : DEFAULT_SETTINGS.projectsLimit,
             };
             set({ settings: fetched, isLoaded: true, isLoading: false });
             get().applySettings(fetched);
