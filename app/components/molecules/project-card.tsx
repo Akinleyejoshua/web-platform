@@ -40,14 +40,36 @@ export function ProjectCard({
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const hoverIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    const isYouTubeUrl = (url: string) => {
+        return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+    };
+
+    const isLoomUrl = (url: string) => {
+        return url && url.includes('loom.com');
+    };
+
     // Combine original image/media and slide assets, filtering out duplicate urls
     const projectAssets: IAsset[] = React.useMemo(() => {
         const list: IAsset[] = [];
         if (mediaUrl) {
-            list.push({ type: (mediaType || 'image') as any, url: mediaUrl });
+            let type: IAsset['type'] = (mediaType || 'image') as any;
+            if (isYouTubeUrl(mediaUrl)) {
+                type = 'youtube';
+            } else if (isLoomUrl(mediaUrl)) {
+                type = 'loom';
+            }
+            list.push({ type, url: mediaUrl });
         }
         if (assets && assets.length > 0) {
-            const filtered = assets.filter(a => a.url !== mediaUrl);
+            const filtered = assets.filter(a => a.url !== mediaUrl).map(a => {
+                let type = a.type;
+                if (isYouTubeUrl(a.url)) {
+                    type = 'youtube';
+                } else if (isLoomUrl(a.url)) {
+                    type = 'loom';
+                }
+                return { ...a, type };
+            });
             list.push(...filtered);
         }
         return list;

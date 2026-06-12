@@ -97,31 +97,38 @@ export function AssetPreviewLightbox({
     };
 
     const renderAssetContent = (asset: IAsset) => {
+        const isYouTube = asset.type === 'youtube' || (asset.url && (asset.url.includes('youtube.com') || asset.url.includes('youtu.be')));
+        const isLoom = asset.type === 'loom' || (asset.url && asset.url.includes('loom.com'));
+
+        if (isYouTube) {
+            return (
+                <div className={styles.videoWrapper}>
+                    <iframe
+                        src={getYouTubeEmbedUrl(asset.url)}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        title={`${title} - YouTube Video`}
+                        className={styles.iframe}
+                    />
+                </div>
+            );
+        }
+
+        if (isLoom) {
+            return (
+                <div className={styles.videoWrapper}>
+                    <iframe
+                        src={getLoomEmbedUrl(asset.url)}
+                        allow="fullscreen"
+                        allowFullScreen
+                        title={`${title} - Loom Video`}
+                        className={styles.iframe}
+                    />
+                </div>
+            );
+        }
+
         switch (asset.type) {
-            case 'youtube':
-                return (
-                    <div className={styles.videoWrapper}>
-                        <iframe
-                            src={getYouTubeEmbedUrl(asset.url)}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            title={`${title} - YouTube Video`}
-                            className={styles.iframe}
-                        />
-                    </div>
-                );
-            case 'loom':
-                return (
-                    <div className={styles.videoWrapper}>
-                        <iframe
-                            src={getLoomEmbedUrl(asset.url)}
-                            allow="fullscreen"
-                            allowFullScreen
-                            title={`${title} - Loom Video`}
-                            className={styles.iframe}
-                        />
-                    </div>
-                );
             case 'video':
             case 'external':
                 if (asset.url.endsWith('.mp4') || asset.url.endsWith('.webm') || asset.url.endsWith('.ogg') || asset.type === 'video') {
