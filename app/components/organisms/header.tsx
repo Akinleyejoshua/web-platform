@@ -30,8 +30,17 @@ export default function HeaderWrapper(props: HeaderProps) {
 export function Header({ investUrl = '/invest' }: HeaderProps) {
     const pathname = usePathname() || '/';
     const isHome = pathname === '/' || pathname === '';
+    const isBlogRoute = pathname.startsWith('/blog');
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const filteredNavLinks = navLinks.filter(link => {
+        if (isBlogRoute) {
+            const toRemove = ['About', 'Experience', 'Projects', 'Contact'];
+            return !toRemove.includes(link.label);
+        }
+        return true;
+    });
 
     useEffect(() => {
         const handleScroll = () => {
@@ -86,7 +95,7 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
                     </a>
 
                     <nav className={styles.nav}>
-                        {navLinks.map((link) => {
+                        {filteredNavLinks.map((link) => {
                             const resolvedHref = (link.href.startsWith('#') && !isHome) ? '/' + link.href : link.href;
                             return (
                                 <NavLink
@@ -152,7 +161,7 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
 
                 {/* Sidebar navigation */}
                 <nav className={styles.mobileNav}>
-                    {navLinks.map((link) => {
+                    {filteredNavLinks.map((link) => {
                         const resolvedHref = (link.href.startsWith('#') && !isHome) ? '/' + link.href : link.href;
                         return (
                             <a

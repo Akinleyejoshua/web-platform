@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
 
         if (slug) {
             let blog;
-            if (admin) {
+            const noinc = searchParams.get('noinc');
+            if (admin || noinc === 'true') {
                 blog = await BlogPost.findOne({ slug }).lean();
             } else {
                 blog = await BlogPost.findOneAndUpdate(

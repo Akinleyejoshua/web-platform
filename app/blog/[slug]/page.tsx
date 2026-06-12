@@ -36,8 +36,30 @@ export default function BlogPostDetailPage({ params }: BlogPostDetailProps) {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await axios.get(`/api/blog?slug=${slug}`);
+                let hasViewed = false;
+                let viewedBlogs: string[] = [];
+
+                if (typeof window !== 'undefined') {
+                    try {
+                        viewedBlogs = JSON.parse(localStorage.getItem('viewed_blogs') || '[]');
+                        hasViewed = viewedBlogs.includes(slug);
+                    } catch (e) {
+                        console.error('Error reading localStorage:', e);
+                    }
+                }
+
+                const url = `/api/blog?slug=${slug}${hasViewed ? '&noinc=true' : ''}`;
+                const response = await axios.get(url);
                 setBlog(response.data);
+
+                if (typeof window !== 'undefined' && !hasViewed && response.data) {
+                    try {
+                        viewedBlogs.push(slug);
+                        localStorage.setItem('viewed_blogs', JSON.stringify(viewedBlogs));
+                    } catch (e) {
+                        console.error('Error writing localStorage:', e);
+                    }
+                }
             } catch (err: any) {
                 console.error('Failed to load article:', err);
                 setError(err.response?.data?.error || 'Article not found');
