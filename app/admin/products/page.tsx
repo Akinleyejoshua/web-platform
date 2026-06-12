@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown, FiBookOpen } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -21,6 +21,7 @@ interface ProductItem {
     assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
     technologies: string[];
     liveUrl: string;
+    blogUrl?: string;
     order: number;
     isVisible: boolean;
 }
@@ -34,6 +35,7 @@ const emptyProduct: ProductItem = {
     assets: [],
     technologies: [],
     liveUrl: '',
+    blogUrl: '',
     order: 0,
     isVisible: true,
 };
@@ -350,6 +352,21 @@ export default function AdminProductsPage() {
                                 placeholder="https://..."
                             />
                             <FiExternalLink style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Blog Post Link / URL (Optional)</label>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type="text"
+                                value={editingItem.blogUrl || ''}
+                                onChange={(e) => setEditingItem({ ...editingItem, blogUrl: e.target.value })}
+                                className={styles.input}
+                                style={{ paddingLeft: '40px' }}
+                                placeholder="e.g. /blog/my-product-writeup or https://..."
+                            />
+                            <FiBookOpen style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
                         </div>
                     </div>
 

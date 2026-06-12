@@ -65,6 +65,7 @@ export function ProductProjects() {
                             assets={product.assets}
                             technologies={product.technologies}
                             liveUrl={product.liveUrl}
+                            blogUrl={product.blogUrl}
                         />
                     ))}
                 </Carousel>

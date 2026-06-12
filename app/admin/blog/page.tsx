@@ -1,0 +1,473 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { 
+    FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiImage, FiEye, FiEyeOff, FiCalendar, FiTag
+} from 'react-icons/fi';
+import { FileUpload, RichTextEditor } from '../components';
+import { Loader } from '@/app/components/atoms/loader';
+import styles from '../components/editor.module.css';
+
+interface BlogPostItem {
+    _id?: string;
+    title: string;
+    slug: string;
+    content: string;
+    excerpt: string;
+    coverImage?: string;
+    assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
+    tags: string[];
+    isVisible: boolean;
+    createdAt?: string;
+}
+
+const emptyBlog: BlogPostItem = {
+    title: '',
+    slug: '',
+    content: '',
+    excerpt: '',
+    coverImage: '',
+    assets: [],
+    tags: [],
+    isVisible: true,
+};
+
+export default function AdminBlogPage() {
+    const [blogs, setBlogs] = useState<BlogPostItem[]>([]);
+    const [editingItem, setEditingItem] = useState<BlogPostItem | null>(null);
+    const [tagsInput, setTagsInput] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
+
+    const fetchBlogs = async () => {
+        try {
+            const response = await axios.get('/api/blog?admin=true');
+            setBlogs(response.data);
+        } catch (error) {
+            console.error('Failed to fetch blog posts:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchBlogs();
+    }, []);
+
+    const handleAdd = () => {
+        setEditingItem({ ...emptyBlog });
+        setTagsInput('');
+        setFormUploadMode('storage');
+    };
+
+    const handleEdit = (blog: BlogPostItem) => {
+        setEditingItem({ ...blog, assets: blog.assets || [] });
+        setTagsInput(blog.tags.join(', '));
+        setFormUploadMode(blog.coverImage?.startsWith('data:') ? 'base64' : 'storage');
+    };
+
+    const handleCancel = () => {
+        setEditingItem(null);
+    };
+
+    const handleSave = async () => {
+        if (!editingItem) return;
+        if (!editingItem.title.trim() || !editingItem.content.trim()) {
+            setMessage({ type: 'error', text: 'Title and content are required.' });
+            return;
+        }
+
+        setIsSaving(true);
+        setMessage(null);
+
+        try {
+            if (editingItem._id) {
+                await axios.put('/api/blog', editingItem);
+            } else {
+                await axios.post('/api/blog', editingItem);
+            }
+            await fetchBlogs();
+            setEditingItem(null);
+            setMessage({ type: 'success', text: 'Blog post saved successfully!' });
+        } catch (error: any) {
+            console.error('Failed to save blog:', error);
+            const errMsg = error.response?.data?.error || 'Failed to save blog post.';
+            setMessage({ type: 'error', text: errMsg });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this blog post?')) return;
+
+        try {
+            await axios.delete(`/api/blog?id=${id}`);
+            await fetchBlogs();
+            setMessage({ type: 'success', text: 'Blog post deleted successfully!' });
+        } catch (error) {
+            setMessage({ type: 'error', text: 'Failed to delete blog post.' });
+        }
+    };
+
+    const handleTagsBlur = () => {
+        if (!editingItem) return;
+        const tags = tagsInput.split(',').map((t) => t.trim()).filter((t) => t);
+        setEditingItem({ ...editingItem, tags });
+    };
+
+    const getAssetHTML = (type: string, url: string) => {
+        if (!url) return '';
+        if (type === 'image') {
+            return `<img src="${url}" alt="Blog Image" style="max-width:100%; border-radius:6px; margin:15px 0; display:block;" />`;
+        }
+        if (type === 'video') {
+            return `<video src="${url}" controls style="max-width:100%; border-radius:6px; margin:15px 0; display:block;"></video>`;
+        }
+        if (type === 'youtube') {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            const id = (match && match[2].length === 11) ? match[2] : null;
+            const embedUrl = id ? `https://www.youtube.com/embed/${id}` : url;
+            return `<iframe src="${embedUrl}" width="100%" height="450" frameborder="0" allowfullscreen style="border-radius:6px; margin:15px 0; border:none;"></iframe>`;
+        }
+        if (type === 'loom') {
+            const loomId = url.split('/').pop()?.split('?')[0];
+            const embedUrl = `https://www.loom.com/embed/${loomId}`;
+            return `<iframe src="${embedUrl}" width="100%" height="450" frameborder="0" allowfullscreen style="border-radius:6px; margin:15px 0; border:none;"></iframe>`;
+        }
+        return `<iframe src="${url}" width="100%" height="450" frameborder="0" allowfullscreen style="border-radius:6px; margin:15px 0; border:none;"></iframe>`;
+    };
+
+    const copyToClipboard = (type: string, url: string) => {
+        const html = getAssetHTML(type, url);
+        if (!html) return;
+        navigator.clipboard.writeText(html);
+        alert('HTML Embed Code copied to clipboard! You can paste (Ctrl+V or Cmd+V) it anywhere in your document or in HTML Source view.');
+    };
+
+    const appendToArticle = (type: string, url: string) => {
+        const html = getAssetHTML(type, url);
+        if (!html || !editingItem) return;
+        setEditingItem({
+            ...editingItem,
+            content: editingItem.content + html
+        });
+        alert('Media asset appended to the end of the article content. You can rearrange it in the editor.');
+    };
+
+    if (isLoading) {
+        return <Loader variant="section" />;
+    }
+
+    return (
+        <div className={styles.editor}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Manage Technical Blog Posts</h1>
+                {!editingItem && (
+                    <button onClick={handleAdd} className={styles.addBtn}>
+                        <FiPlus size={18} />
+                        New Blog Post
+                    </button>
+                )}
+            </div>
+
+            {message && (
+                <div className={message.type === 'success' ? styles.success : styles.error}>
+                    {message.text}
+                </div>
+            )}
+
+            {editingItem ? (
+                <div className={styles.form}>
+                    <div className={styles.sectionTitle}>
+                        {editingItem._id ? 'Edit Blog Post' : 'Create New Blog Post'}
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Post Title</label>
+                        <input
+                            type="text"
+                            value={editingItem.title}
+                            onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
+                            className={styles.input}
+                            placeholder="e.g. Building an Event-Driven System with RabbitMQ"
+                        />
+                    </div>
+
+                    <div className={styles.row}>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Custom Slug (Optional - auto-generated if blank)</label>
+                            <input
+                                type="text"
+                                value={editingItem.slug}
+                                onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
+                                className={styles.input}
+                                placeholder="e.g. event-driven-rabbitmq"
+                            />
+                        </div>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Tags (comma-separated)</label>
+                            <input
+                                type="text"
+                                value={tagsInput}
+                                onChange={(e) => setTagsInput(e.target.value)}
+                                onBlur={handleTagsBlur}
+                                className={styles.input}
+                                placeholder="backend, architecture, rabbitmq"
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Brief Excerpt/Summary</label>
+                        <textarea
+                            value={editingItem.excerpt}
+                            onChange={(e) => setEditingItem({ ...editingItem, excerpt: e.target.value })}
+                            className={styles.textarea}
+                            placeholder="Short overview shown in listings..."
+                            style={{ minHeight: '60px' }}
+                        />
+                    </div>
+
+                    <FileUpload
+                        value={editingItem.coverImage || ''}
+                        onChange={(url) => setEditingItem({ ...editingItem, coverImage: url })}
+                        label="Cover Image"
+                        accept="image/*"
+                        uploadMode={formUploadMode}
+                        onUploadModeChange={setFormUploadMode}
+                    />
+
+                    {/* Blog Assets Management Block */}
+                    <div className={styles.assetsSection}>
+                        <div className={styles.assetsHeader}>
+                            <label className={styles.label} style={{ marginBottom: 0, fontWeight: 600 }}>Blog Post Media Assets & Video Uploads ({editingItem.assets?.length || 0})</label>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const currentAssets = editingItem.assets || [];
+                                    setEditingItem({
+                                        ...editingItem,
+                                        assets: [...currentAssets, { type: 'image', url: '' }]
+                                    });
+                                }}
+                                className={styles.addAssetBtn}
+                            >
+                                <FiPlus size={14} /> Add Media Asset
+                            </button>
+                        </div>
+
+                        {(!editingItem.assets || editingItem.assets.length === 0) ? (
+                            <p className={styles.noAssetsText}>
+                                No custom assets uploaded for this post yet. You can upload images or link Loom/YouTube videos below.
+                            </p>
+                        ) : (
+                            <div className={styles.assetsList}>
+                                {editingItem.assets.map((asset, index) => (
+                                    <div key={index} className={styles.assetCard}>
+                                        {/* Remove Asset Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const currentAssets = [...(editingItem.assets || [])];
+                                                currentAssets.splice(index, 1);
+                                                setEditingItem({ ...editingItem, assets: currentAssets });
+                                            }}
+                                            className={styles.deleteAssetBtn}
+                                            title="Delete Asset"
+                                        >
+                                            <FiTrash2 size={14} />
+                                        </button>
+
+                                        <div className={styles.assetRow}>
+                                            <div className={styles.assetTypeCol}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset Type</label>
+                                                <select
+                                                    value={asset.type}
+                                                    onChange={(e) => {
+                                                        const currentAssets = [...(editingItem.assets || [])];
+                                                        currentAssets[index].type = e.target.value as any;
+                                                        setEditingItem({ ...editingItem, assets: currentAssets });
+                                                    }}
+                                                    className={styles.select}
+                                                    style={{ height: '40px', padding: '4px 8px', fontSize: '0.85rem' }}
+                                                >
+                                                    <option value="image">Image Upload</option>
+                                                    <option value="video">Direct Video (.mp4)</option>
+                                                    <option value="youtube">YouTube URL</option>
+                                                    <option value="loom">Loom Video</option>
+                                                    <option value="external">External Frame</option>
+                                                </select>
+                                            </div>
+
+                                            <div className={styles.assetUrlCol}>
+                                                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--color-text-secondary)' }}>Asset URL / Upload</label>
+                                                {asset.type === 'image' ? (
+                                                    <FileUpload
+                                                        value={asset.url}
+                                                        onChange={(url) => {
+                                                            const currentAssets = [...(editingItem.assets || [])];
+                                                            currentAssets[index].url = url;
+                                                            setEditingItem({ ...editingItem, assets: currentAssets });
+                                                        }}
+                                                        accept="image/*"
+                                                        uploadMode={formUploadMode}
+                                                        onUploadModeChange={setFormUploadMode}
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="text"
+                                                        value={asset.url}
+                                                        onChange={(e) => {
+                                                            const currentAssets = [...(editingItem.assets || [])];
+                                                            currentAssets[index].url = e.target.value;
+                                                            setEditingItem({ ...editingItem, assets: currentAssets });
+                                                        }}
+                                                        className={styles.input}
+                                                        placeholder={
+                                                            asset.type === 'youtube' ? 'https://youtube.com/watch?v=...' :
+                                                            asset.type === 'loom' ? 'https://loom.com/share/...' :
+                                                            'https://...'
+                                                        }
+                                                        style={{ height: '40px', padding: '4px 12px', fontSize: '0.85rem' }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {asset.url && (
+                                            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => copyToClipboard(asset.type, asset.url)}
+                                                    className={styles.cancelBtn}
+                                                    style={{ padding: '6px 12px', fontSize: '0.8rem', height: 'auto' }}
+                                                >
+                                                    Copy Embed HTML
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => appendToArticle(asset.type, asset.url)}
+                                                    className={styles.addAssetBtn}
+                                                    style={{ padding: '6px 12px', fontSize: '0.8rem', height: 'auto', background: '#107c41' }}
+                                                >
+                                                    Append to Article
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Word-style Rich Text Editor */}
+                    <div className={styles.field}>
+                        <label className={styles.label}>Technical Write-Up Content (MS Office Ribbon Editor)</label>
+                        <RichTextEditor
+                            value={editingItem.content}
+                            onChange={(content) => setEditingItem({ ...editingItem, content })}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.checkboxLabel} style={{ paddingTop: '10px' }}>
+                            <input
+                                type="checkbox"
+                                checked={editingItem.isVisible}
+                                onChange={(e) => setEditingItem({ ...editingItem, isVisible: e.target.checked })}
+                                className={styles.checkboxInput}
+                            />
+                            Publicly Published
+                        </label>
+                    </div>
+
+                    <div className={styles.actions}>
+                        <button onClick={handleSave} disabled={isSaving} className={styles.submitBtn}>
+                            <FiCheck size={18} />
+                            {isSaving ? 'Saving...' : 'Save Blog Post'}
+                        </button>
+                        <button onClick={handleCancel} className={styles.cancelBtn}>
+                            <FiX size={18} />
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className={styles.grid}>
+                    {blogs.length === 0 ? (
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem', color: 'var(--color-muted)' }}>
+                            No technical blog posts found. Write your first one!
+                        </div>
+                    ) : (
+                        blogs.map((blog) => (
+                            <div key={blog._id} className={styles.assetCard} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                                    {blog.coverImage ? (
+                                        <img 
+                                            src={blog.coverImage} 
+                                            alt={blog.title} 
+                                            style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--color-border)' }} 
+                                        />
+                                    ) : (
+                                        <div style={{ width: '80px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-bg-secondary)', borderRadius: '6px', border: '1px solid var(--color-border)' }}>
+                                            <FiImage size={24} style={{ color: 'var(--color-muted)' }} />
+                                        </div>
+                                    )}
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <h3 style={{ margin: '0 0 6px 0', fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {blog.title}
+                                        </h3>
+                                        <p style={{ margin: '0 0 8px 0', fontSize: '0.85rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <FiCalendar size={12} />
+                                            {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : 'Draft'}
+                                            <span style={{ margin: '0 4px' }}>•</span>
+                                            {blog.isVisible ? (
+                                                <span style={{ color: '#059669', display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEye size={12} /> Published</span>
+                                            ) : (
+                                                <span style={{ color: '#dc2626', display: 'inline-flex', alignItems: 'center', gap: '3px' }}><FiEyeOff size={12} /> Hidden</span>
+                                            )}
+                                        </p>
+                                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-muted)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                            {blog.excerpt}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
+                                    {blog.tags.map(tag => (
+                                        <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', padding: '2px 8px', background: 'var(--color-bg-secondary)', borderRadius: '12px', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}>
+                                            <FiTag size={10} />
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', borderTop: '1px solid var(--color-border)', paddingTop: '12px', marginTop: '6px' }}>
+                                    <button 
+                                        onClick={() => handleEdit(blog)} 
+                                        className={styles.cancelBtn} 
+                                        style={{ padding: '6px 12px', fontSize: '0.85rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    >
+                                        <FiEdit2 size={12} /> Edit
+                                    </button>
+                                    <button 
+                                        onClick={() => handleDelete(blog._id!)} 
+                                        className={styles.cancelBtn} 
+                                        style={{ padding: '6px 12px', fontSize: '0.85rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px', borderColor: '#fee2e2', color: '#dc2626' }}
+                                    >
+                                        <FiTrash2 size={12} /> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}

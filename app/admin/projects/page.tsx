@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy, FiBookOpen } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -24,6 +24,7 @@ interface ProjectItem {
     technologies: string[];
     githubUrl: string;
     liveUrl: string;
+    blogUrl?: string;
     order: number;
     isVisible: boolean;
 }
@@ -38,6 +39,7 @@ const emptyProject: ProjectItem = {
     technologies: [],
     githubUrl: '',
     liveUrl: '',
+    blogUrl: '',
     order: 0,
     isVisible: true,
 };
@@ -420,6 +422,22 @@ export default function AdminProjectsPage() {
                                     <FiExternalLink size={18} />
                                 </span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Blog Post Link / URL (Optional)</label>
+                        <div className={styles.iconInputWrapper}>
+                            <input
+                                type="text"
+                                value={editingItem.blogUrl || ''}
+                                onChange={(e) => setEditingItem({ ...editingItem, blogUrl: e.target.value })}
+                                className={styles.input}
+                                placeholder="e.g. /blog/my-project-writeup or https://..."
+                            />
+                            <span className={styles.inputIcon}>
+                                <FiBookOpen size={18} />
+                            </span>
                         </div>
                     </div>
 

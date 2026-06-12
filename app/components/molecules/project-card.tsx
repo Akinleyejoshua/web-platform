@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FiGithub, FiExternalLink, FiCode, FiMaximize2, FiChevronLeft, FiChevronRight, FiPlay } from 'react-icons/fi';
+import { FiGithub, FiExternalLink, FiCode, FiMaximize2, FiChevronLeft, FiChevronRight, FiPlay, FiBookOpen } from 'react-icons/fi';
 import { Badge } from '@/app/components/atoms/badge';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import { AssetPreviewLightbox } from './asset-preview-lightbox';
@@ -21,6 +21,7 @@ interface ProjectCardProps {
     technologies: string[];
     githubUrl?: string;
     liveUrl?: string;
+    blogUrl?: string;
     className?: string;
 }
 
@@ -33,6 +34,7 @@ export function ProjectCard({
     technologies,
     githubUrl,
     liveUrl,
+    blogUrl,
     className = '',
 }: ProjectCardProps) {
     const [imageError, setImageError] = useState<Record<number, boolean>>({});
@@ -301,7 +303,7 @@ export function ProjectCard({
                     )}
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.description}>{description}</p>
- 
+
                     {technologies && technologies.length > 0 && (
                         <div className={styles.technologies}>
                             {technologies.map((tech) => (
@@ -309,9 +311,23 @@ export function ProjectCard({
                             ))}
                         </div>
                     )}
- 
+
                     {/* Actions */}
                     <div className={styles.links}>
+                        {blogUrl && (
+                            <a
+                                href={blogUrl}
+                                className={styles.link}
+                                style={{ background: 'rgba(99, 102, 241, 0.15)', borderColor: 'rgba(99, 102, 241, 0.3)' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    trackClick(`project_blog_${title.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}`, true);
+                                }}
+                            >
+                                <span>Write-up</span>
+                                <FiBookOpen className={styles.linkIcon} />
+                            </a>
+                        )}
                         {githubUrl && (
                             <a
                                 href={githubUrl}

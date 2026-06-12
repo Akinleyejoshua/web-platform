@@ -18,6 +18,7 @@ export interface IProject extends Document {
     technologies: string[];
     githubUrl: string;
     liveUrl: string;
+    blogUrl?: string;
     featured: boolean;
     isVisible: boolean;
     order: number;
@@ -54,6 +55,7 @@ const ProjectSchema = new Schema<IProject>(
         technologies: { type: [String], default: [] },
         githubUrl: { type: String, default: '' },
         liveUrl: { type: String, default: '' },
+        blogUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
         isVisible: { type: Boolean, default: true },
         order: { type: Number, default: 0 },

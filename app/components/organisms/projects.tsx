@@ -51,6 +51,7 @@ export function Projects() {
                             technologies={project.technologies}
                             githubUrl={project.githubUrl}
                             liveUrl={project.liveUrl}
+                            blogUrl={project.blogUrl}
                         />
                     ))}
                 </Carousel>

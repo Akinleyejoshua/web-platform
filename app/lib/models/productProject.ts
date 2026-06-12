@@ -16,6 +16,7 @@ export interface IProductProject extends Document {
     assets?: IAsset[];
     technologies: string[];
     liveUrl: string;
+    blogUrl?: string;
     featured: boolean;
     isVisible: boolean;
     order: number;
@@ -51,6 +52,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
         assets: { type: [AssetSchema], default: [] },
         technologies: { type: [String], default: [] },
         liveUrl: { type: String, default: '' },
+        blogUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
         isVisible: { type: Boolean, default: true },
         order: { type: Number, default: 0 },
