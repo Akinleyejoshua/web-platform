@@ -61,7 +61,11 @@ const ProjectSchema = new Schema<IProject>(
     { timestamps: true }
 );
 
-ProjectSchema.index({ isVisible: 1, category: 1, order: 1, createdAt: -1 });
+// Optimized compound indexes following MongoDB ESR (Equality, Sort, Range) rules:
+// Index 1: Optimizes queries filtering by category and sorting
+ProjectSchema.index({ category: 1, order: 1, createdAt: -1, isVisible: 1 });
+// Index 2: Optimizes queries fetching all categories and sorting
+ProjectSchema.index({ order: 1, createdAt: -1, isVisible: 1 });
 
 const Project: Model<IProject> =
     mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);

@@ -58,7 +58,11 @@ const ProductProjectSchema = new Schema<IProductProject>(
     { timestamps: true }
 );
 
-ProductProjectSchema.index({ isVisible: 1, category: 1, order: 1, createdAt: -1 });
+// Optimized compound indexes following MongoDB ESR (Equality, Sort, Range) rules:
+// Index 1: Optimizes queries filtering by category and sorting
+ProductProjectSchema.index({ category: 1, order: 1, createdAt: -1, isVisible: 1 });
+// Index 2: Optimizes queries fetching all categories and sorting
+ProductProjectSchema.index({ order: 1, createdAt: -1, isVisible: 1 });
 
 const ProductProject: Model<IProductProject> =
     mongoose.models.ProductProject || mongoose.model<IProductProject>('ProductProject', ProductProjectSchema);
