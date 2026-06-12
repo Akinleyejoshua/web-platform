@@ -235,17 +235,20 @@ export function ProjectCard({
 
                 {/* Content Section */}
                 <div className={styles.content}>
+                    {technologies && technologies.length > 0 && (
+                        <span className={styles.categoryTag}>{technologies[0]}</span>
+                    )}
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.description}>{description}</p>
-
+ 
                     {technologies && technologies.length > 0 && (
                         <div className={styles.technologies}>
                             {technologies.map((tech) => (
-                                <Badge key={tech}>{tech}</Badge>
+                                <Badge key={tech} variant="outline">{tech}</Badge>
                             ))}
                         </div>
                     )}
-
+ 
                     {/* Actions */}
                     <div className={styles.links}>
                         {githubUrl && (
@@ -253,11 +256,11 @@ export function ProjectCard({
                                 href={githubUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.linkButton}
+                                className={styles.link}
                                 onClick={handleGithubClick}
                             >
-                                <FiGithub size={16} />
                                 <span>Code</span>
+                                <FiGithub className={styles.linkIcon} />
                             </a>
                         )}
                         {liveUrl && (
@@ -265,11 +268,11 @@ export function ProjectCard({
                                 href={liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.linkButton}
+                                className={styles.link}
                                 onClick={handleLiveDemoClick}
                             >
-                                <FiExternalLink size={16} />
                                 <span>Demo</span>
+                                <FiExternalLink className={styles.linkIcon} />
                             </a>
                         )}
                     </div>
