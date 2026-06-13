@@ -270,22 +270,28 @@
         size: letter;
     }
 
-    .coverLetterContainer {
-        background: #ffffff !important;
-        padding: 0 !important;
-        min-height: auto !important;
+    /* Hide everything except the cover letter document */
+    :global(body *) {
+        visibility: hidden;
+    }
+
+    .coverLetterDocument, .coverLetterDocument :global(*) {
+        visibility: visible;
+    }
+
+    .coverLetterDocument {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
     }
 
     .actions {
         display: none !important;
-    }
-
-    .coverLetterDocument {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        max-width: 100% !important;
-        width: 100% !important;
     }
 
     .domainTag {
