@@ -141,7 +141,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .skillGrid {
-        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
         gap: var(--space-md);
     }
 
