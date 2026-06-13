@@ -349,7 +349,7 @@ export function ProjectCard({
                                 className={styles.link}
                                 onClick={handleLiveDemoClick}
                             >
-                                <span>Demo</span>
+                                <span>Live</span>
                                 <FiExternalLink className={styles.linkIcon} />
                             </a>
                         )}
