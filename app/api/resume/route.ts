@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import Resume from '@/app/lib/models/resume';
 
@@ -25,6 +26,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const data = await request.json();
@@ -56,6 +59,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const data = await request.json();
@@ -96,6 +101,8 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const { searchParams } = new URL(request.url);

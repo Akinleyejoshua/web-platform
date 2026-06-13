@@ -286,6 +286,24 @@
     margin: 0 auto;
 }
 
+/* Read-Only Banner */
+.readOnlyBanner {
+    padding: 12px var(--space-2xl);
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+    color: #92400e;
+    font-size: 0.875rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+@media (max-width: 640px) {
+    .readOnlyBanner {
+        padding: 10px var(--space-md);
+        font-size: 0.8rem;
+    }
+}
+
 /* ===== Mobile ===== */
 .mobileMenuBtn {
     display: none;

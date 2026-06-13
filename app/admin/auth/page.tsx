@@ -36,6 +36,18 @@ export default function AdminAuthPage() {
         }
     };
 
+    const handleReadOnlyAccess = async () => {
+        setIsLoading(true);
+        try {
+            await axios.post('/api/auth/read-only').then(() => {
+                router.push('/admin');
+            });
+        } catch (err) {
+            setError('Failed to enable read-only access');
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className={styles.authPage}>
             <div className={styles.authCard}>
@@ -108,6 +120,17 @@ export default function AdminAuthPage() {
                         )}
                     </button>
                 </form>
+
+                <div className={styles.cardFooter}>
+                    <button
+                        type="button"
+                        className={styles.readOnlyButton}
+                        onClick={handleReadOnlyAccess}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader variant="inline" /> : 'Read-Only Access (Recruiters)'}
+                    </button>
+                </div>
 
                 <div className={styles.cardFooter}>
                     <a href="/" className={styles.backLink}>

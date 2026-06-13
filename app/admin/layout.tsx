@@ -26,6 +26,7 @@ import {
 } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './layout.module.css';
+import { useReadOnly } from '@/app/hooks/use-read-only';
 
 const navGroups = [
     {
@@ -65,6 +66,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const isReadOnly = useReadOnly();
 
     // Show auth page without sidebar layout
     if (pathname === '/admin/auth') {
@@ -174,6 +176,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         </a>
                     </div>
                 </div>
+
+                {/* Read-Only Banner */}
+                {isReadOnly && (
+                    <div className={styles.readOnlyBanner}>
+                        <strong>Read-Only Mode</strong> - You are viewing as a recruiter. Write operations are disabled.
+                    </div>
+                )}
 
                 {/* Page Content */}
                 <div className={styles.content}>

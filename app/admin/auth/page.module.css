@@ -199,6 +199,35 @@
     border-top: 1px solid var(--color-border);
 }
 
+.readOnlyButton {
+    width: 100%;
+    padding: var(--space-md);
+    background: transparent;
+    color: var(--color-accent);
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.readOnlyButton:hover:not(:disabled) {
+    background: rgba(var(--color-accent-rgb), 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(var(--color-accent-rgb), 0.2);
+}
+
+.readOnlyButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .backLink {
     display: inline-flex;
     align-items: center;

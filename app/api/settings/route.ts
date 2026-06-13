@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import Settings from '@/app/lib/models/settings';
 
@@ -24,6 +25,8 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const data = await request.json();

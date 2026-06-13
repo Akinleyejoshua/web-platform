@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import BlogPost from '@/app/lib/models/blogPost';
 
@@ -61,6 +62,8 @@ async function generateUniqueSlug(title: string): Promise<string> {
 
 // POST: create a new blog post
 export async function POST(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const data = await request.json();
@@ -98,6 +101,8 @@ export async function POST(request: NextRequest) {
 
 // PUT: update an existing blog post
 export async function PUT(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const data = await request.json();
@@ -130,6 +135,8 @@ export async function PUT(request: NextRequest) {
 
 // DELETE: remove a blog post
 export async function DELETE(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         await connectDB();
         const { searchParams } = new URL(request.url);

@@ -32,6 +32,9 @@ export async function POST(request: NextRequest) {
                 path: '/',
             });
 
+            // Remove read-only flag if present
+            response.cookies.delete('admin_read_only');
+
             return response;
         }
 
@@ -55,6 +58,7 @@ export async function DELETE() {
     );
 
     response.cookies.delete('admin_token');
+    response.cookies.delete('admin_read_only');
 
     return response;
 }

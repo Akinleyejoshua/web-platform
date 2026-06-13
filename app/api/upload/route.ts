@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import fs from 'fs';
 import path from 'path';
 
@@ -6,6 +7,8 @@ import path from 'path';
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         const data = await request.json();
         const { file, filename, type } = data;
@@ -75,6 +78,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+    const guard = denyIfReadOnly(request);
+    if (guard) return guard;
     try {
         const { searchParams } = new URL(request.url);
         const filename = searchParams.get('filename');
