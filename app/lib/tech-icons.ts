@@ -1,5 +1,119 @@
 import type { ComponentType } from 'react';
 
+// Import Simple Icons (brand-accurate logos) from react-icons/si
+import {
+    // Programming Languages
+    SiJavascript,
+    SiTypescript,
+    SiPython,
+    // SiJava,
+    SiCplusplus,
+    // SiCsharp,
+    SiGo,
+    SiRust,
+    SiPhp,
+    SiRuby,
+    SiKotlin,
+    SiSwift,
+    SiDart,
+    SiScala,
+    SiR,
+    // SiMatlab,
+    // Frontend
+    SiReact,
+    SiVuedotjs,
+    SiAngular,
+    SiSvelte,
+    SiHtml5,
+    SiCss3,
+    SiSass,
+    SiTailwindcss,
+    SiBootstrap,
+    SiMui,
+    SiNextdotjs,
+    // Backend & Frameworks
+    SiNodedotjs,
+    SiExpress,
+    SiFlask,
+    SiDjango,
+    SiSpring,
+    SiLaravel,
+    SiRubyonrails,
+    SiFastapi,
+    SiNestjs,
+    // Databases
+    SiMongodb,
+    SiPostgresql,
+    SiMysql,
+    SiSqlite,
+    SiRedis,
+    SiFirebase,
+    SiOracle,
+    SiElasticsearch,
+    // DevOps & Cloud
+    SiAmazonwebservices,
+    // SiMicrosoftazure,
+    SiGooglecloud,
+    SiDocker,
+    SiKubernetes,
+    SiTerraform,
+    SiJenkins,
+    SiGit,
+    SiGithub,
+    SiGitlab,
+    SiCircleci,
+    SiTravisci,
+    // Mobile
+    SiApple,
+    SiAndroid,
+    SiFlutter,
+    // Design & Tools
+    SiFigma,
+    SiSketch,
+    SiAdobe,
+    SiAdobephotoshop,
+    SiAdobeillustrator,
+    SiAdobexd,
+    SiBlender,
+    SiCanva,
+    // AI/ML
+    SiTensorflow,
+    SiPytorch,
+    SiKeras,
+    SiOpenai,
+    SiScikitlearn,
+    SiPandas,
+    SiNumpy,
+    // Other
+    SiGraphql,
+    // SiWeb3,
+    SiLinux,
+    SiUbuntu,
+} from 'react-icons/si';
+
+// Import Font Awesome for fallbacks and techs without Simple Icons
+import {
+    FaCode,
+    FaServer,
+    FaDatabase,
+    FaCloud,
+    FaMobileAlt,
+    FaPalette,
+    FaWrench,
+    FaBrain,
+    FaCube,
+    FaDesktop,
+    FaNetworkWired,
+    FaPlug,
+    FaShieldAlt,
+    FaVial,
+    FaTasks,
+    FaSpider,
+    FaSquare,
+    FaMicrosoft,
+    // FaBracketsCurly,
+} from 'react-icons/fa';
+
 /**
  * Official brand colors for technologies.
  * These colors are the official/recognized brand colors for each technology.
@@ -36,6 +150,7 @@ export const techBrandColors: Record<string, string> = {
     rails: '#CC0000',
     python: '#3776AB',
     fastapi: '#009688',
+    nestjs: '#E0234E',
     dotnet: '#512BD4',
     'c#': '#512BD4',
 
@@ -83,6 +198,10 @@ export const techBrandColors: Record<string, string> = {
     pytorch: '#EE4C2C',
     keras: '#D00000',
     openai: '#412991',
+    'scikit-learn': '#F8981D',
+    scikitlearn: '#F8981D',
+    pandas: '#150458',
+    numpy: '#013243',
 
     // Other
     java: '#007396',
@@ -116,136 +235,142 @@ export const techBrandColors: Record<string, string> = {
 };
 
 /**
- * Mapping of technology names to Simple Icons (Si) component imports.
- * This mapping allows accurate icon/logo representation for skills/technologies.
+ * Mapping of technology names to icon components.
+ * Uses Simple Icons (Si) for brand-accurate logos where available, falls back to Font Awesome (Fa).
  *
  * The iconName field in the Skill model should match one of these keys.
- * If a technology is not listed, a fallback icon will be used.
- *
- * Source: https://react-icons.github.io/react-icons/fa?query=si
+ * If a technology is not listed, a generic FaCode icon will be used.
  */
-
 export const techIconMap: Record<string, ComponentType<{ size?: number; color?: string }>> = {
     // Programming Languages
-    javascript: require('react-icons/fa').FaJs,
-    typescript: require('react-icons/fa').FaTypescript,
-    python: require('react-icons/fa').FaPython,
-    java: require('react-icons/fa').FaJava,
-    'c++': require('react-icons/fa').FaC,
-    csharp: require('react-icons/fa').FaCsharp,
-    go: require('react-icons/fa').FaGolang, // If available, else custom
-    rust: require('react-icons/fa').FaRust, // Check availability
-    php: require('react-icons/fa').FaPhp,
-    ruby: require('react-icons/fa').FaRuby,
-    kotlin: require('react-icons/fa').FaKotlin,
-    swift: require('react-icons/fa').FaSwift,
-    dart: require('react-icons/fa').FaDart,
-    scala: require('react-icons/fa').FaScala,
-    r: require('react-icons/fa').FaRProject,
-    matlab: require('react-icons/fa').FaMath,
+    javascript: SiJavascript,
+    typescript: SiTypescript,
+    python: SiPython,
+    // java: SiJava,
+    'c++': SiCplusplus,
+    // csharp: SiCsharp,
+    go: SiGo,
+    rust: SiRust,
+    php: SiPhp,
+    ruby: SiRuby,
+    kotlin: SiKotlin,
+    swift: SiSwift,
+    dart: SiDart,
+    scala: SiScala,
+    r: SiR,
+    // matlab: SiMatlab,
 
     // Frontend
-    react: require('react-icons/fa').FaReact,
-    'react-native': require('react-icons/fa').FaReact,
-    vue: require('react-icons/fa').FaVuejs,
-    angular: require('react-icons/fa').FaAngular,
-    svelte: require('react-icons/fa').FaSvelte,
-    html5: require('react-icons/fa').FaHtml5,
-    css3: require('react-icons/fa').FaCss3Alt,
-    'scss': require('react-icons/fa').FaSass,
-    tailwind: require('react-icons/fa').FaWind, // Custom or FaCloud
-    bootstrap: require('react-icons/fa').FaBootstrap,
-    materialui: require('react-icons/fa').FaMaterialDesign,
-    semanticui: require('react-icons/fa').FaSmoving, // Placeholder
-    nextjs: require('react-icons/fa').FaNextjs, // Approximation
+    react: SiReact,
+    'react-native': SiReact,
+    vue: SiVuedotjs,
+    angular: SiAngular,
+    svelte: SiSvelte,
+    html5: SiHtml5,
+    css3: SiCss3,
+    scss: SiSass,
+    sass: SiSass,
+    tailwind: SiTailwindcss,
+    bootstrap: SiBootstrap,
+    materialui: SiMui,
+    semanticui: FaSquare, // Placeholder (no Simple Icon)
+    nextjs: SiNextdotjs,
+    next: SiNextdotjs,
 
     // Backend & Frameworks
-    nodejs: require('react-icons/fa').FaNode,
-    express: require('react-icons/fa').FaNode,
-    flask: require('react-icons/fa').FaFlask,
-    django: require('react-icons/fa').FaDjango,
-    spring: require('react-icons/fa').FaSeedling, // Approximation
-    laravel: require('react-icons/fa').FaLaravel,
-    rails: require('react-icons/fa').FaRuby,
-    fastapi: require('react-icons/fa').FaBolt, // Custom/approximation
-    dotnet: require('react-icons/fa').FaMicrosoft,
+    nodejs: SiNodedotjs,
+    express: SiExpress,
+    flask: SiFlask,
+    django: SiDjango,
+    spring: SiSpring,
+    laravel: SiLaravel,
+    rails: SiRubyonrails,
+    fastapi: SiFastapi,
+    nestjs: SiNestjs,
+    dotnet: FaMicrosoft, // No SiDotnet, use Microsoft as proxy
+    'c#': FaMicrosoft,
 
     // Databases
-    mongodb: require('react-icons/fa').FaMongodb, // Note: react-icons/fa has FaMongodb
-    postgresql: require('react-icons/fa').FaPostgresql,
-    mysql: require('react-icons/fa'). FaMysql,
-    sqlite: require('react-icons/fa'). FaSqlite,
-    redis: require('react-icons/fa'). FaRedis,
-    firebase: require('react-icons/fa').FaFire,
-    oracle: require('react-icons/fa').FaDatabase, // Approximation
-    elasticsearch: require('react-icons/fa').FaSearch, // Approximation
+    mongodb: SiMongodb,
+    postgresql: SiPostgresql,
+    mysql: SiMysql,
+    sqlite: SiSqlite,
+    redis: SiRedis,
+    firebase: SiFirebase,
+    oracle: SiOracle,
+    elasticsearch: SiElasticsearch,
 
     // DevOps & Cloud
-    aws: require('react-icons/fa').FaAws,
-    azure: require('react-icons/fa').FaMicrosoft,
-    gcp: require('react-icons/fa').FaGoogle,
-    docker: require('react-icons/fa').FaDocker,
-    kubernetes: require('react-icons/fa').FaKubernetes,
-    terraform: require('react-icons/fa'). FaHashicorp, // Approximation
-    jenkins: require('react-icons/fa').FaJenkins, // Check availability
-    git: require('react-icons/fa').FaGit,
-    github: require('react-icons/fa').FaGitSquare,
-    gitlab: require('react-icons/fa').FaGitlab,
-    circleci: require('react-icons/fa'). FaCircle, // Approximation
-    travisci: require('react-icons/fa'). FaTravis, // Check
+    aws: SiAmazonwebservices,
+    // azure: SiMicrosoftazure,
+    gcp: SiGooglecloud,
+    docker: SiDocker,
+    kubernetes: SiKubernetes,
+    terraform: SiTerraform,
+    jenkins: SiJenkins,
+    git: SiGit,
+    github: SiGithub,
+    gitlab: SiGitlab,
+    circleci: SiCircleci,
+    travisci: SiTravisci,
 
     // Mobile
-    ios: require('react-icons/fa').FaApple,
-    android: require('react-icons/fa').FaAndroid,
-    flutter: require('react-icons/fa').FaFlutter, // Check FaFlutter availability
+    ios: SiApple,
+    android: SiAndroid,
+    flutter: SiFlutter,
 
     // Design & Tools
-    figma: require('react-icons/fa').FaFigma,
-    sketch: require('react-icons/fa').FaSketch, // Check
-    adobe: require('react-icons/fa').FaAdobe,
-    photoshop: require('react-icons/fa').FaPhotoshop,
-    illustrator: require('react-icons/fa').FaIllustrator,
-    xd: require('react-icons/fa').FaAdobeXd,
-    blender: require('react-icons/fa').FaBlender, // Check
-    canva: require('react-icons/fa'). FaPalette, // Approximation
+    figma: SiFigma,
+    sketch: SiSketch,
+    adobe: SiAdobe,
+    photoshop: SiAdobephotoshop,
+    illustrator: SiAdobeillustrator,
+    xd: SiAdobexd,
+    blender: SiBlender,
+    canva: SiCanva,
 
     // AI/ML
-    tensorflow: require('react-icons/fa').FaTensorflow,
-    pytorch: require('react-icons/fa').FaPyTorch, // Check
-    keras: require('react-icons/fa'). FaBrain, // Approximation
-    openai: require('react-icons/fa').FaOpenai, // Check availability
+    tensorflow: SiTensorflow,
+    pytorch: SiPytorch,
+    keras: SiKeras,
+    openai: SiOpenai,
+    'scikit-learn': SiScikitlearn,
+    scikitlearn: SiScikitlearn,
+    pandas: SiPandas,
+    numpy: SiNumpy,
 
     // Other
-    api: require('react-icons/fa').FaPlugs,
-    rest: require('react-icons/fa').FaNetworkWired, // Approximation
-    graphql: require('react-icons/fa').FaGraphql, // Check
-    json: require('react-icons/fa'). FaBracketsCurly, // Approximation
-    sql: require('react-icons/fa'). FaDatabase,
-    nosql: require('react-icons/fa'). FaDatabase,
-    linux: require('react-icons/fa'). FaLinux,
-    ubuntu: require('react-icons/fa').FaUbuntu,
-    // aws: require('react-icons/fa'). FaAws,
-    serverless: require('react-icons/fa'). FaCloud, // Approximation
-    blockchain: require('react-icons/fa'). FaCube, // Approximation
-    web3: require('react-icons/fa'). FaEthereum, // Approximation
-    cybersecurity: require('react-icons/fa').FaShieldAlt, // Approximation
-    testing: require('react-icons/fa').FaVial, // Approximation
-    agile: require('react-icons/fa'). FaTasks, // Approximation
-    scraping: require('react-icons/fa'). FaSpider, // Approximation
+    api: FaPlug,
+    rest: FaNetworkWired,
+    graphql: SiGraphql,
+    // json: FaBracketsCurly,
+    sql: FaDatabase,
+    nosql: FaDatabase,
+    linux: SiLinux,
+    ubuntu: SiUbuntu,
+    serverless: FaCloud,
+    blockchain: FaCube,
+    // web3: SiWeb3,
+    cybersecurity: FaShieldAlt,
+    testing: FaVial,
+    agile: FaTasks,
+    scraping: FaSpider,
+    // fallback generic
+    code: FaCode,
 };
 
 /**
  * Get the icon component for a given technology name.
- * Falls back to a generic icon if not found.
+ * Normalizes the name and returns the mapped icon, or FaCode if not found.
  */
 export function getTechIcon(techName: string): ComponentType<{ size?: number; color?: string }> {
     const normalized = techName.toLowerCase().trim();
-    return techIconMap[normalized] || techIconMap['code'] || require('react-icons/fa').FaCode;
+    return techIconMap[normalized] || FaCode;
 }
 
 /**
  * Get the official brand color for a technology.
- * Returns the color from techBrandColors if available, otherwise a fallback gradient or accent color.
+ * Returns the color from techBrandColors if available, otherwise the fallback.
  */
 export function getTechBrandColor(techName: string, fallback?: string): string | undefined {
     const normalized = techName.toLowerCase().trim();
@@ -253,16 +378,16 @@ export function getTechBrandColor(techName: string, fallback?: string): string |
 }
 
 /**
- * Optional: Map skill categories to icons if needed
+ * Category icons (for admin or other UI)
  */
 export const categoryIconMap: Record<string, ComponentType<{ size?: number; color?: string }>> = {
-    frontend: require('react-icons/fa').FaDesktop,
-    backend: require('react-icons/fa').FaServer,
-    database: require('react-icons/fa').FaDatabase,
-    devops: require('react-icons/fa').FaCloud,
-    mobile: require('react-icons/fa').FaMobileAlt,
-    design: require('react-icons/fa').FaPalette,
-    tools: require('react-icons/fa').FaWrench,
-    'ai-ml': require('react-icons/fa').FaBrain,
-    other: require('react-icons/fa').FaCube,
+    frontend: FaDesktop,
+    backend: FaServer,
+    database: FaDatabase,
+    devops: FaCloud,
+    mobile: FaMobileAlt,
+    design: FaPalette,
+    tools: FaWrench,
+    'ai-ml': FaBrain,
+    other: FaCube,
 };

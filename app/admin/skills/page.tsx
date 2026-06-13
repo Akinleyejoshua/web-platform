@@ -27,14 +27,24 @@ const emptySkill: SkillItem = {
 };
 
 const COMMON_ICONS = [
-    'react', 'typescript', 'javascript', 'python', 'java', 'go', 'rust', 'php', 'ruby', 'kotlin', 'swift', 'dart',
-    'nodejs', 'express', 'flask', 'django', 'spring', 'laravel', 'rails', 'dotnet', 'nextjs',
-    'mongodb', 'postgresql', 'mysql', 'sqlite', 'redis', 'firebase', 'elasticsearch',
-    'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform', 'git', 'github', 'gitlab',
-    'html5', 'css3', 'scss', 'tailwind', 'bootstrap', 'materialui', 'vue', 'angular', 'svelte',
-    'figma', 'sketch', 'adobe', 'photoshop', 'illustrator', 'xd', 'blender',
-    'tensorflow', 'pytorch', 'openai',
-    'linux', 'ubuntu', 'serverless', 'graphql', 'rest', 'api',
+    // Programming Languages
+    'javascript', 'typescript', 'python', 'java', 'c++', 'csharp', 'go', 'rust', 'php', 'ruby', 'kotlin', 'swift', 'dart', 'scala', 'r', 'matlab',
+    // Frontend
+    'react', 'vue', 'angular', 'svelte', 'nextjs', 'html5', 'css3', 'scss', 'sass', 'tailwind', 'bootstrap', 'materialui', 'semanticui',
+    // Backend & Frameworks
+    'nodejs', 'express', 'flask', 'django', 'spring', 'laravel', 'rails', 'fastapi', 'nestjs', 'dotnet',
+    // Databases
+    'mongodb', 'postgresql', 'mysql', 'sqlite', 'redis', 'firebase', 'oracle', 'elasticsearch',
+    // DevOps & Cloud
+    'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform', 'jenkins', 'git', 'github', 'gitlab', 'circleci', 'travisci',
+    // Mobile
+    'ios', 'android', 'flutter',
+    // Design & Tools
+    'figma', 'sketch', 'adobe', 'photoshop', 'illustrator', 'xd', 'blender', 'canva',
+    // AI/ML
+    'tensorflow', 'pytorch', 'keras', 'openai', 'scikit-learn', 'pandas', 'numpy',
+    // Other
+    'graphql', 'api', 'rest', 'json', 'sql', 'nosql', 'linux', 'ubuntu', 'serverless', 'blockchain', 'web3', 'cybersecurity', 'testing', 'agile', 'scraping',
 ];
 
 const CATEGORIES: { value: SkillCategory; label: string }[] = [
