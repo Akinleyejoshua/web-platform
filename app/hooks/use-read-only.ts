@@ -12,7 +12,7 @@ export function useReadOnly() {
             return !!match;
         };
         setIsReadOnly(checkReadOnly());
-    }, []);
+    }, [window.location.pathname]); // Re-run when the pathname changes
 
     return isReadOnly;
 }
