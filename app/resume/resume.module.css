@@ -105,6 +105,15 @@
     color: #333;
 }
 
+/* Ensure proper paragraph spacing if summary contains HTML */
+.summary :global(p) {
+    margin: 0 0 1rem 0;
+}
+
+.summary :global(p:last-child) {
+    margin-bottom: 0;
+}
+
 /* Skills Grid */
 .skillsGrid {
     display: flex;

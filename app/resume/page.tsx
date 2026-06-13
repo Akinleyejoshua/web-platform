@@ -207,9 +207,10 @@ function ResumeContent() {
                 {summary && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Professional Summary</h2>
-                        <div className={styles.summary}>
-                            {summary}
-                        </div>
+                        <div 
+                            className={styles.summary}
+                            dangerouslySetInnerHTML={{ __html: summary }} 
+                        />
                     </section>
                 )}
 
