@@ -7,6 +7,7 @@ import { Header, Footer } from '@/app/components';
 import { FiArrowLeft, FiCalendar, FiClock, FiTag, FiEye, FiShare2 } from 'react-icons/fi';
 import { usePageViewTracker } from '@/app/hooks/useAnalyticsTracker';
 import hljs from 'highlight.js';
+import 'highlight.js/styles/github-dark.css';
 import styles from '../blog.module.css';
 import { siteUrl } from '@/app/lib/site.config';
 
