@@ -89,6 +89,8 @@ import {
     // SiWeb3,
     SiLinux,
     SiUbuntu,
+    SiSolidity
+    
 } from 'react-icons/si';
 
 // Import Font Awesome for fallbacks and techs without Simple Icons
@@ -112,6 +114,7 @@ import {
     FaSquare,
     FaMicrosoft,
     // FaBracketsCurly,
+    
 } from 'react-icons/fa';
 
 /**
@@ -232,6 +235,7 @@ export const techBrandColors: Record<string, string> = {
     testing: '#E87D0D',
     agile: '#0052CC',
     scraping: '#FF6B6B',
+    solidity: '#363636',
 };
 
 /**
@@ -350,6 +354,7 @@ export const techIconMap: Record<string, ComponentType<{ size?: number; color?: 
     ubuntu: SiUbuntu,
     serverless: FaCloud,
     blockchain: FaCube,
+    solidity: SiSolidity,
     // web3: SiWeb3,
     cybersecurity: FaShieldAlt,
     testing: FaVial,

@@ -28,7 +28,7 @@ const emptySkill: SkillItem = {
 
 const COMMON_ICONS = [
     // Programming Languages
-    'javascript', 'typescript', 'python', 'java', 'c++', 'csharp', 'go', 'rust', 'php', 'ruby', 'kotlin', 'swift', 'dart', 'scala', 'r', 'matlab',
+    'javascript', 'solidity', 'typescript', 'python', 'java', 'c++', 'csharp', 'go', 'rust', 'php', 'ruby', 'kotlin', 'swift', 'dart', 'scala', 'r', 'matlab',
     // Frontend
     'react', 'vue', 'angular', 'svelte', 'nextjs', 'html5', 'css3', 'scss', 'sass', 'tailwind', 'bootstrap', 'materialui', 'semanticui',
     // Backend & Frameworks

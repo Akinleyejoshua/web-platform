@@ -30,17 +30,17 @@
 .skillGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: var(--space-sm);
+    gap: 1px;
 }
 
 .skillCard {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
+    /* background: var(--color-card); */
+    /* border: 1px solid var(--color-border); */
     border-radius: var(--radius-md);
-    padding: var(--space-md);
+    /* padding: var(--space-md); */
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
     gap: var(--space-sm);
     transition: all 0.2s ease;
     position: relative;
@@ -50,7 +50,7 @@
 
 .skillCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+    /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04); */
 }
 
 /* Automatic brand color styling */
@@ -60,7 +60,7 @@
 
 .skillCard[data-has-color="true"]:hover {
     border-color: var(--skill-color);
-    box-shadow: 0 8px 24px var(--skill-color-tint);
+    /* box-shadow: 0 8px 24px var(--skill-color-tint); */
 }
 
 .iconWrapper {
