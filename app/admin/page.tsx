@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
     FiEye,
@@ -30,6 +30,9 @@ const quickActions = [
 export default function AdminDashboardPage() {
     const { analytics, isLoading, refetch } = useAnalytics();
 
+    // Time range state: '1d' | '7d' | '30d' | '1y'
+    const [timeRange, setTimeRange] = useState<'1d' | '7d' | '30d' | '1y'>('7d');
+
     if (isLoading) {
         return (
             <div className={styles.loading}>
@@ -56,9 +59,26 @@ export default function AdminDashboardPage() {
     const totalSectionViews = Object.values(sectionViews).reduce((a, b) => a + b, 0);
     const totalClicks = Object.values(clicks).reduce((a, b) => a + b, 0);
 
-    // Get last 7 days for chart
-    const last7Days = dailyStats.slice(0, 7).reverse();
-    const maxViews = Math.max(...last7Days.map((d) => d.views), 1);
+    // Determine chart data based on timeRange
+    const getChartData = () => {
+        const maxPossible = Math.max(...dailyStats.map(d => d.views), 1);
+        switch (timeRange) {
+            case '1d':
+                // Show hourly breakdown - for demo we'll show just today's data
+                // In a real app you'd need hourly aggregates
+                return { data: dailyStats.slice(0, 1), maxViews: maxPossible, label: 'Today' };
+            case '7d':
+                return { data: dailyStats.slice(0, 7).reverse(), maxViews: Math.max(...dailyStats.slice(0, 7).map(d => d.views), 1), label: 'Last 7 days' };
+            case '30d':
+                return { data: dailyStats.slice(0, 30).reverse(), maxViews: Math.max(...dailyStats.slice(0, 30).map(d => d.views), 1), label: 'Last 30 days (1 month)' };
+            case '1y':
+                return { data: dailyStats.slice(0, 365).reverse(), maxViews: Math.max(...dailyStats.slice(0, 365).map(d => d.views), 1), label: 'Last 365 days (1 year)' };
+            default:
+                return { data: dailyStats.slice(0, 7).reverse(), maxViews: Math.max(...dailyStats.slice(0, 7).map(d => d.views), 1), label: 'Last 7 days' };
+        }
+    };
+
+    const { data: chartData, maxViews, chartLabel } = getChartData();
 
     return (
         <div className={styles.dashboard}>
@@ -145,19 +165,61 @@ export default function AdminDashboardPage() {
             <div className={styles.chartSection}>
                 <div className={styles.chartCard}>
                     <div className={styles.chartHeader}>
-                        <h2 className={styles.chartTitle}>Views Overview</h2>
-                        <span className={styles.chartPeriod}>Last 7 days</span>
+                        <div className={styles.chartTitleGroup}>
+                            <h2 className={styles.chartTitle}>Views Overview</h2>
+                            <div className={styles.timeRangeSelector}>
+                                <button
+                                    className={`${styles.timeRangeBtn} ${timeRange === '1d' ? styles.timeRangeBtnActive : ''}`}
+                                    onClick={() => setTimeRange('1d')}
+                                    title="Last 24 hours"
+                                >
+                                    1d
+                                </button>
+                                <button
+                                    className={`${styles.timeRangeBtn} ${timeRange === '7d' ? styles.timeRangeBtnActive : ''}`}
+                                    onClick={() => setTimeRange('7d')}
+                                    title="Last 7 days"
+                                >
+                                    7d
+                                </button>
+                                <button
+                                    className={`${styles.timeRangeBtn} ${timeRange === '30d' ? styles.timeRangeBtnActive : ''}`}
+                                    onClick={() => setTimeRange('30d')}
+                                    title="Last 30 days"
+                                >
+                                    1mon
+                                </button>
+                                <button
+                                    className={`${styles.timeRangeBtn} ${timeRange === '1y' ? styles.timeRangeBtnActive : ''}`}
+                                    onClick={() => setTimeRange('1y')}
+                                    title="Last 365 days"
+                                >
+                                    1y
+                                </button>
+                            </div>
+                        </div>
+                        <span className={styles.chartPeriod}>{chartLabel}</span>
                     </div>
 
                     <div className={styles.bars}>
-                        {last7Days.map((day) => (
+                        {chartData.map((day) => (
                             <div key={day.date} className={styles.barWrapper}>
-                                <div
-                                    className={styles.bar}
-                                    style={{ height: `${Math.max((day.views / maxViews) * 100, 5)}%` }}
-                                />
+                                <div className={styles.barContainer}>
+                                    <div
+                                        className={styles.bar}
+                                        style={{ height: `${Math.max((day.views / maxViews) * 100, 5)}%` }}
+                                    />
+                                    <span className={styles.barCount}>
+                                        {day.views.toLocaleString()}
+                                    </span>
+                                </div>
                                 <span className={styles.barLabel}>
-                                    {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                                    {timeRange === '1d'
+                                        ? new Date(day.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                                        : new Date(day.date).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric'
+                                        })}
                                 </span>
                             </div>
                         ))}

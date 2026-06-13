@@ -239,12 +239,53 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.chartTitleGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
 }
 
 .chartTitle {
     font-size: 1.125rem;
     font-weight: 700;
     color: var(--color-text);
+}
+
+.timeRangeSelector {
+    display: flex;
+    gap: 4px;
+    background: var(--color-bg);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+}
+
+.timeRangeBtn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.timeRangeBtn:hover {
+    color: var(--color-text);
+    background: rgba(var(--color-accent-rgb), 0.1);
+}
+
+.timeRangeBtnActive {
+    color: white;
+    background: var(--color-accent);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chartPeriod {
@@ -276,6 +317,16 @@
     cursor: default;
 }
 
+.barContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+}
+
 .bar {
     width: 100%;
     max-width: 48px;
@@ -298,10 +349,28 @@
     background: linear-gradient(180deg, var(--color-accent) 0%, #667eea 100%);
 }
 
+.barCount {
+    position: absolute;
+    top: -32px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-text);
+    background: var(--color-card);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .barLabel {
     font-size: 0.75rem;
     color: var(--color-muted);
     font-weight: 600;
+    text-align: center;
 }
 
 /* Quick Actions */
