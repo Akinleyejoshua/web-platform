@@ -3,6 +3,7 @@ import { Inter, Poppins, Raleway } from 'next/font/google';
 import { Bricolage_Grotesque } from 'next/font/google';
 import { ThemeProvider } from '@/app/components/providers/theme-provider';
 import './globals.css';
+import { siteUrl } from '@/app/lib/site.config';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,8 +30,6 @@ const raleway = Raleway({
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-raleway',
 });
-
-const siteUrl = 'https://joshuapro.netlify.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
