@@ -135,7 +135,7 @@ export default function AdminDashboardPage() {
                     </div>
                 </div>
 
-                <div className={styles.statCard}>
+                {/* <div className={styles.statCard}>
                     <div className={`${styles.statIcon} ${styles.statIconPurple}`}>
                         <FiUser size={22} />
                     </div>
@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
                             {totalVisitors.toLocaleString()} in last 30 days
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className={styles.statCard}>
                     <div className={styles.statIcon}>
