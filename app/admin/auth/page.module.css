@@ -1,247 +1,88 @@
-/* ===== Auth Page - Premium Modern Design ===== */
+/* Auth Page - Minimal & Colorful Design */
 .authPage {
     min-height: 100vh;
-    height: 100%;
-    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--space-lg);
+    background: var(--color-bg-secondary);
     position: relative;
     overflow: hidden;
 }
 
-/* Animated background elements */
+/* Subtle gradient accent at top */
 .authPage::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: 
-        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 60% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 30%);
-    animation: backgroundPulse 15s ease-in-out infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: linear-gradient(180deg,
+        rgba(var(--color-accent-rgb), 0.08) 0%,
+        rgba(var(--color-accent-rgb), 0.02) 50%,
+        transparent 100%);
     pointer-events: none;
 }
 
-@keyframes backgroundPulse {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        transform: translate(-2%, -2%) rotate(1deg);
-        opacity: 0.8;
-    }
-}
-
-/* Main Auth Container */
-.authContainer {
-    display: flex;
+.authCard {
     width: 100%;
-    max-width: 1100px;
-    min-height: 650px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    max-width: 420px;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-lg);
     position: relative;
     z-index: 1;
 }
 
-@media (max-width: 968px) {
-    .authContainer {
-        flex-direction: column;
-        min-height: auto;
-        max-width: 480px;
-    }
-
-    .brandingSide {
-        display: none;
-    }
-}
-
-/* ===== Branding Side ===== */
-.brandingSide {
-    position: relative;
-    flex: 1.1;
-    background: linear-gradient(160deg, #6366f1 0%, #8b5cf6 40%, #a855f7 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-3xl);
-    overflow: hidden;
-}
-
-.brandingContent {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: white;
-    max-width: 380px;
-}
-
-.brandLogo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin-bottom: var(--space-3xl);
-    padding: var(--space-sm) var(--space-lg);
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    letter-spacing: -0.02em;
-}
-
-.brandLogo span {
-    opacity: 0.7;
-    font-weight: 600;
-}
-
-.brandTitle {
-    font-size: 2.75rem;
-    font-weight: 800;
-    margin-bottom: var(--space-lg);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-}
-
-.brandSubtitle {
-    font-size: 1.1rem;
-    opacity: 0.85;
-    line-height: 1.7;
-    font-weight: 400;
-}
-
-/* Decorative Elements */
-.brandDecoration {
+/* Accent top border */
+.authCard::before {
+    content: '';
     position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--color-accent);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.decorCircle1,
-.decorCircle2,
-.decorCircle3 {
-    position: absolute;
-    border-radius: 50%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.decorCircle1 {
-    width: 450px;
-    height: 450px;
-    top: -180px;
-    right: -150px;
-    animation: floatSlow 12s ease-in-out infinite;
-}
-
-.decorCircle2 {
-    width: 350px;
-    height: 350px;
-    bottom: -100px;
-    left: -100px;
-    animation: floatSlow 15s ease-in-out infinite reverse;
-}
-
-.decorCircle3 {
-    width: 180px;
-    height: 180px;
-    top: 45%;
-    left: 30%;
-    transform: translate(-50%, -50%);
-    animation: pulseSoft 6s ease-in-out infinite;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-@keyframes floatSlow {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg) scale(1);
-    }
-    50% {
-        transform: translateY(-30px) rotate(8deg) scale(1.02);
-    }
-}
-
-@keyframes pulseSoft {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.15);
-        opacity: 0.3;
-    }
-}
-
-/* ===== Form Side ===== */
-.formSide {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-3xl);
-    background: linear-gradient(180deg, rgba(15, 15, 26, 0.95) 0%, rgba(26, 26, 46, 0.98) 100%);
-}
-
-.formContainer {
-    width: 100%;
-    max-width: 380px;
-}
-
-.formHeader {
+.cardHeader {
     text-align: center;
     margin-bottom: var(--space-2xl);
 }
 
-.lockIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 72px;
-    height: 72px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
-    color: #a78bfa;
-    border-radius: 20px;
-    margin-bottom: var(--space-xl);
-    border: 1px solid rgba(167, 139, 250, 0.2);
-    box-shadow: 
-        0 8px 32px rgba(99, 102, 241, 0.15),
-        0 0 0 1px rgba(167, 139, 250, 0.1) inset;
+.logo {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    display: inline-block;
 }
 
-.formHeader h2 {
-    font-size: 1.875rem;
+.logo span {
+    color: var(--color-accent);
+}
+
+.title {
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #ffffff;
-    margin-bottom: var(--space-sm);
-    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0 0 var(--space-sm) 0;
 }
 
-.formHeader p {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.5;
+.subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
 }
 
-/* Form Styles */
 .form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
 }
 
 .inputGroup {
@@ -253,8 +94,7 @@
 .inputGroup label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 0.01em;
+    color: var(--color-text);
 }
 
 .inputWrapper {
@@ -265,30 +105,144 @@
 
 .inputIcon {
     position: absolute;
-    left: var(--space-lg);
-    color: rgba(255, 255, 255, 0.35);
+    left: var(--space-md);
+    color: var(--color-muted);
     pointer-events: none;
-    transition: color 0.3s ease;
+    transition: color var(--transition-fast);
 }
 
 .inputWrapper input {
     width: 100%;
-    padding: 16px 16px 16px 52px;
-    font-size: 1rem;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    transition: all 0.3s ease;
+    padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) * 2.5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .inputWrapper input:focus {
     outline: none;
-    border-color: rgba(99, 102, 241, 0.6);
-    background: rgba(99, 102, 241, 0.08);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.inputWrapper input:focus .inputIcon {
+    color: var(--color-accent);
+}
+
+.inputWrapper input::placeholder {
+    color: var(--color-muted);
+}
+
+.togglePassword {
+    position: absolute;
+    right: var(--space-md);
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    cursor: pointer;
+    padding: var(--space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+}
+
+.togglePassword:hover {
+    color: var(--color-accent);
+}
+
+.errorMessage {
+    padding: var(--space-md);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-md);
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.submitButton {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--color-accent-rgb), 0.4);
+}
+
+.submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.cardFooter {
+    margin-top: var(--space-2xl);
+    text-align: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+    color: var(--color-accent);
+}
+
+/* Lock Icon */
+.lockIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.15) 0%, rgba(var(--color-accent-rgb), 0.05) 100%);
+    color: var(--color-accent);
+    border-radius: 20px;
+    margin-bottom: var(--space-xl);
+    border: 1px solid rgba(var(--color-accent-rgb), 0.15);
     box-shadow: 
-        0 0 0 4px rgba(99, 102, 241, 0.15),
-        0 8px 24px rgba(99, 102, 241, 0.1);
+        0 8px 32px rgba(var(--color-accent-rgb), 0.12),
+        0 0 0 1px rgba(var(--color-accent-rgb), 0.08) inset;
+}
+
+/* Form Header (reusing cardHeader without duplicate class) */
+.cardHeader h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+.cardHeader p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
 }
 
 .inputWrapper:focus-within .inputIcon {
