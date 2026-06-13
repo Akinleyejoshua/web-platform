@@ -120,6 +120,10 @@ export default function Home() {
         <Experience />
       </section>
 
+       <section ref={skillsRef} id="skills-section">
+        <Skills />
+      </section>
+
       <section ref={productsRef} id="products-section">
         <ProductProjects />
       </section>
@@ -128,9 +132,7 @@ export default function Home() {
         <Projects />
       </section>
 
-      <section ref={skillsRef} id="skills-section">
-        <Skills />
-      </section>
+     
 
       {latestBlogs.length > 0 && (
         <section ref={blogsRef} id="latest-blogs-section" style={{ padding: '6rem 0', borderBottom: '1px solid var(--color-border)' }}>
