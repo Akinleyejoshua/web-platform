@@ -6,4 +6,5 @@ export { default as Contact, type IContact } from './contact';
 export { default as Analytics, type IAnalytics } from './analytics';
 export { default as Settings, type ISettings } from './settings';
 export { default as BlogPost, type IBlogPost } from './blogPost';
+export { default as CoverLetter, type ICoverLetter, type CoverLetterDomain } from './coverLetter';
 
