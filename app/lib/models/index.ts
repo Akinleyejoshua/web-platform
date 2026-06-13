@@ -7,4 +7,5 @@ export { default as Analytics, type IAnalytics } from './analytics';
 export { default as Settings, type ISettings } from './settings';
 export { default as BlogPost, type IBlogPost } from './blogPost';
 export { default as CoverLetter, type ICoverLetter, type CoverLetterDomain } from './coverLetter';
+export { default as Resume, type IResume, type ResumeDomain } from './resume';
 

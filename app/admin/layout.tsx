@@ -20,7 +20,8 @@ import {
     FiChevronRight,
     FiPackage,
     FiBookOpen,
-    FiFileText
+    FiFileText,
+    FiDownload
 } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './layout.module.css';
@@ -43,6 +44,7 @@ const navGroups = [
             { href: '/admin/blog', label: 'Blog Posts', icon: FiBookOpen },
             { href: '/admin/contact', label: 'Contact', icon: FiMail },
             { href: '/admin/cover-letter', label: 'Cover Letter', icon: FiFileText },
+{ href: '/admin/resume', label: 'Resume Templates', icon: FiDownload },
         ]
     },
     {

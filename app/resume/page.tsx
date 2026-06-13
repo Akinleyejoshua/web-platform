@@ -11,6 +11,7 @@ import { IContact } from '@/app/lib/models/contact';
 import { IExperience } from '@/app/lib/models/experience';
 import { IProject } from '@/app/lib/models/project';
 import { IHero } from '@/app/lib/models/hero';
+import { IResume } from '@/app/lib/models/resume';
 
 interface ResumeData {
     hero: IHero | null;
@@ -18,6 +19,7 @@ interface ResumeData {
     contact: IContact | null;
     experience: IExperience[];
     projects: IProject[];
+    resumeTemplate?: IResume | null;
 }
 
 // Map friendly domain names to actual DB category values
@@ -49,21 +51,28 @@ function ResumeContent() {
                 // If domain exists, fetch specific category, otherwise fetch all
                 const projectUrl = domain ? `/api/projects?category=${domain}` : '/api/projects?category=all';
 
-                const [heroRes, aboutRes, contactRes, expRes, projRes] = await Promise.all([
+                const [heroRes, aboutRes, contactRes, expRes, projRes, resumeRes] = await Promise.all([
                     axios.get('/api/hero'),
                     axios.get('/api/about'),
                     axios.get('/api/contact'),
                     axios.get('/api/experience'),
-                    axios.get(projectUrl)
+                    axios.get(projectUrl),
+                    domain ? axios.get(`/api/resume?domain=${domain}`) : Promise.resolve(null)
                 ]);
+
+                let resumeTemplate: IResume | null = null;
+                if (resumeRes && resumeRes.data) {
+                    resumeTemplate = resumeRes.data;
+                }
 
                 setData({
                     hero: heroRes.data,
                     about: aboutRes.data,
                     contact: contactRes.data,
                     experience: expRes.data || [],
-                    // Only get visible projects, limit to top 5 for resume
-                    projects: (projRes.data || []).filter((p: IProject) => p.isVisible !== false).slice(0, 8)
+                    // Only get visible projects, limit to top 8 for resume
+                    projects: (projRes.data || []).filter((p: IProject) => p.isVisible !== false).slice(0, 8),
+                    resumeTemplate
                 });
             } catch (error) {
                 console.error("Failed to load resume data:", error);
@@ -87,7 +96,12 @@ function ResumeContent() {
         return <div>Error loading resume data.</div>;
     }
 
-    const { hero, about, contact, experience, projects } = data;
+    const { hero, about, contact, experience, projects, resumeTemplate } = data;
+
+    // Use template summary if available, otherwise fall back to about.bio
+    const summary = resumeTemplate?.summary && resumeTemplate.summary.trim() !== ''
+        ? resumeTemplate.summary
+        : about?.bio || '';
 
     // Date and Duration formatting helpers
     const formatDate = (dateStr: string | Date | null) => {
@@ -190,12 +204,36 @@ function ResumeContent() {
                 </header>
 
                 {/* Professional Summary */}
-                {about?.bio && (
+                {summary && (
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Professional Summary</h2>
                         <div className={styles.summary}>
-                            {about.bio}
+                            {summary}
                         </div>
+                    </section>
+                )}
+
+                {/* Key Skills (from template) */}
+                {resumeTemplate?.skills && resumeTemplate.skills.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Key Skills</h2>
+                        <div className={styles.skillsGrid}>
+                            {resumeTemplate.skills.map((skill, idx) => (
+                                <div key={idx} className={styles.skillTag}>{skill}</div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Key Highlights (from template) */}
+                {resumeTemplate?.highlights && resumeTemplate.highlights.length > 0 && (
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>Key Highlights</h2>
+                        <ul className={styles.highlightsList}>
+                            {resumeTemplate.highlights.map((highlight, idx) => (
+                                <li key={idx}>{highlight}</li>
+                            ))}
+                        </ul>
                     </section>
                 )}
 

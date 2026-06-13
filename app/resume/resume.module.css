@@ -105,6 +105,46 @@
     color: #333;
 }
 
+/* Skills Grid */
+.skillsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skillTag {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Highlights */
+.highlightsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.highlightsList li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+.highlightsList li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent, #6366f1);
+    font-weight: bold;
+}
+
 .experienceItem {
     margin-bottom: 1.5rem;
 }
