@@ -62,17 +62,41 @@ export default function AdminDashboardPage() {
     // Determine chart data based on timeRange
     const getChartData = () => {
         const maxPossible = Math.max(...dailyStats.map(d => d.views), 1);
+
+        const aggregateByWeek = (data: typeof dailyStats) => {
+            const weeks: { week: string; views: number; date: string }[] = [];
+            data.forEach((day, idx) => {
+                const weekNum = Math.floor(idx / 7);
+                if (!weeks[weekNum]) {
+                    weeks[weekNum] = { week: `Week ${weekNum + 1}`, views: 0, date: day.date };
+                }
+                weeks[weekNum].views += day.views;
+            });
+            return weeks.reverse();
+        };
+
+        const aggregateByMonth = (data: typeof dailyStats) => {
+            const months: Map<string, { views: number; date: string }> = new Map();
+            data.forEach((day) => {
+                const date = new Date(day.date);
+                const monthKey = `${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
+                const existing = months.get(monthKey) || { views: 0, date: day.date };
+                months.set(monthKey, { views: existing.views + day.views, date: day.date });
+            });
+            return Array.from(months.entries()).map(([label, data]) => ({ week: label, views: data.views, date: data.date })).reverse();
+        };
+
         switch (timeRange) {
             case '1d':
-                // Show hourly breakdown - for demo we'll show just today's data
-                // In a real app you'd need hourly aggregates
                 return { data: dailyStats.slice(0, 1), maxViews: maxPossible, label: 'Today' };
             case '7d':
                 return { data: dailyStats.slice(0, 7).reverse(), maxViews: Math.max(...dailyStats.slice(0, 7).map(d => d.views), 1), label: 'Last 7 days' };
             case '30d':
-                return { data: dailyStats.slice(0, 30).reverse(), maxViews: Math.max(...dailyStats.slice(0, 30).map(d => d.views), 1), label: 'Last 30 days (1 month)' };
+                const weeklyData = aggregateByWeek(dailyStats.slice(0, 30));
+                return { data: weeklyData, maxViews: Math.max(...weeklyData.map(d => d.views), 1), label: 'Last 4 weeks (1 month)' };
             case '1y':
-                return { data: dailyStats.slice(0, 365).reverse(), maxViews: Math.max(...dailyStats.slice(0, 365).map(d => d.views), 1), label: 'Last 365 days (1 year)' };
+                const monthlyData = aggregateByMonth(dailyStats.slice(0, 365));
+                return { data: monthlyData, maxViews: Math.max(...monthlyData.map(d => d.views), 1), label: 'Last 12 months (1 year)' };
             default:
                 return { data: dailyStats.slice(0, 7).reverse(), maxViews: Math.max(...dailyStats.slice(0, 7).map(d => d.views), 1), label: 'Last 7 days' };
         }
@@ -202,24 +226,22 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className={styles.bars}>
-                        {chartData.map((day) => (
-                            <div key={day.date} className={styles.barWrapper}>
+                        {chartData.map((item) => (
+                            <div key={item.date} className={styles.barWrapper}>
                                 <div className={styles.barContainer}>
                                     <div
                                         className={styles.bar}
-                                        style={{ height: `${Math.max((day.views / maxViews) * 100, 5)}%` }}
+                                        style={{ height: `${Math.max((item.views / maxViews) * 100, 5)}%` }}
                                     />
                                     <span className={styles.barCount}>
-                                        {day.views.toLocaleString()}
+                                        {item.views.toLocaleString()}
                                     </span>
                                 </div>
                                 <span className={styles.barLabel}>
-                                    {timeRange === '1d'
-                                        ? new Date(day.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-                                        : new Date(day.date).toLocaleDateString('en-US', {
-                                            month: 'short',
-                                            day: 'numeric'
-                                        })}
+                                    {'week' in item ? item.week : new Date(item.date).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    })}
                                 </span>
                             </div>
                         ))}
