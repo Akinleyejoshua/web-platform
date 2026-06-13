@@ -102,7 +102,7 @@ export default function AdminDashboardPage() {
         }
     };
 
-    const { data: chartData, maxViews, chartLabel } = getChartData();
+    const { data: chartData, maxViews, label: chartLabel } = getChartData();
 
     return (
         <div className={styles.dashboard}>
