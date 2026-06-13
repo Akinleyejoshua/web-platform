@@ -9,6 +9,7 @@ export type SkillCategory =
     | 'design'
     | 'tools'
     | 'ai-ml'
+    | 'data-analytics'
     | 'other';
 
 export interface ISkill extends Document {
@@ -40,6 +41,7 @@ const SkillSchema = new Schema<ISkill>(
                 'design',
                 'tools',
                 'ai-ml',
+                'data-analytics',
                 'other',
             ],
             default: 'other',

@@ -89,8 +89,7 @@ import {
     // SiWeb3,
     SiLinux,
     SiUbuntu,
-    SiSolidity
-    
+    SiSolidity,
 } from 'react-icons/si';
 
 // Import Font Awesome for fallbacks and techs without Simple Icons
@@ -113,9 +112,15 @@ import {
     FaSpider,
     FaSquare,
     FaMicrosoft,
-    // FaBracketsCurly,
-    
+    // Data Analytics icons
+    FaBolt,
+    FaChartBar,
+    FaTachometerAlt,
+    FaBook,
+    FaEye,
+    FaFileExcel,
 } from 'react-icons/fa';
+import { FaTableCells } from 'react-icons/fa6';
 
 /**
  * Official brand colors for technologies.
@@ -195,6 +200,23 @@ export const techBrandColors: Record<string, string> = {
     xd: '#FF61F6',
     blender: '#E87D0D',
     canva: '#00C4CC',
+
+    // Data Analytics
+    tableau: '#E97627',
+    powerbi: '#F2C811',
+    sas: '#008578',
+    spss: '#006BB6',
+    excel: '#217346',
+    apachespark: '#E25A1C',
+    hadoop: '#66CCFF',
+    kafka: '#231F20',
+    d3: '#F9A03C',
+    grafana: '#7BBF5E',
+    kaggle: '#21A68F',
+    jupyter: '#F37626',
+    metabase: '#509EE3',
+    looker: '#0089FF',
+    quicksight: '#FF9900',
 
     // AI/ML
     tensorflow: '#FF6F00',
@@ -332,6 +354,23 @@ export const techIconMap: Record<string, ComponentType<{ size?: number; color?: 
     xd: SiAdobexd,
     blender: SiBlender,
     canva: SiCanva,
+
+    // Data Analytics (using Fa icons for those without Si)
+    tableau: FaTableCells, // Use a placeholder
+    powerbi: FaSquare, // Use a placeholder
+    sas: FaSquare, // Placeholder
+    spss: FaSquare, // Placeholder
+    excel: FaFileExcel, // Placeholder
+    apachespark: FaBolt,
+    hadoop: FaSquare, // Placeholder
+    kafka: FaSquare, // Placeholder
+    d3: FaChartBar,
+    grafana: FaTachometerAlt,
+    kaggle: FaSquare, // Placeholder
+    jupyter: FaBook,
+    metabase: FaDatabase,
+    looker: FaEye,
+    quicksight: FaSquare, // Placeholder (AWS)
 
     // AI/ML
     tensorflow: SiTensorflow,

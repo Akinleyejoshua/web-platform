@@ -43,6 +43,8 @@ const COMMON_ICONS = [
     'figma', 'sketch', 'adobe', 'photoshop', 'illustrator', 'xd', 'blender', 'canva',
     // AI/ML
     'tensorflow', 'pytorch', 'keras', 'openai', 'scikit-learn', 'pandas', 'numpy',
+    // Data Analytics
+    'tableau', 'powerbi', 'sas', 'spss', 'excel', 'apachespark', 'hadoop', 'kafka', 'd3', 'grafana', 'kaggle', 'jupyter', 'metabase', 'looker', 'quicksight',
     // Other
     'graphql', 'api', 'rest', 'json', 'sql', 'nosql', 'linux', 'ubuntu', 'serverless', 'blockchain', 'web3', 'cybersecurity', 'testing', 'agile', 'scraping',
 ];
@@ -56,6 +58,7 @@ const CATEGORIES: { value: SkillCategory; label: string }[] = [
     { value: 'design', label: 'Design' },
     { value: 'tools', label: 'Tools' },
     { value: 'ai-ml', label: 'AI / ML' },
+    { value: 'data-analytics', label: 'Data Analytics' },
     { value: 'other', label: 'Other' },
 ];
 

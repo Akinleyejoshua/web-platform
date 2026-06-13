@@ -8,7 +8,7 @@ import { useSkills } from '@/app/hooks/use-skills';
 import { getTechIcon, getTechBrandColor } from '@/app/lib/tech-icons';
 import styles from './skills.module.css';
 
-type SkillCategory = 'frontend' | 'backend' | 'database' | 'devops' | 'mobile' | 'design' | 'tools' | 'ai-ml' | 'other';
+type SkillCategory = 'frontend' | 'backend' | 'database' | 'devops' | 'mobile' | 'design' | 'tools' | 'ai-ml' | 'data-analytics' | 'other' ;
 
 const CATEGORY_LABELS: Record<SkillCategory, string> = {
     frontend: 'Frontend',
@@ -19,18 +19,20 @@ const CATEGORY_LABELS: Record<SkillCategory, string> = {
     design: 'Design & Creative',
     tools: 'Tools & Others',
     'ai-ml': 'AI / Machine Learning',
+    'data-analytics': 'Data Analytics',
     other: 'Other',
 };
 
 const CATEGORY_ORDER: SkillCategory[] = [
     'frontend',
     'backend',
-    'devops',
     'database',
+    'devops',
     'mobile',
     'design',
     'tools',
     'ai-ml',
+    'data-analytics',
     'other',
 ];
 
