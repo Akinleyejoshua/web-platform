@@ -27,4 +27,5 @@ export { Projects } from './organisms/projects';
 export { ProductProjects } from './organisms/product-projects';
 export { Contact } from './organisms/contact';
 export { Footer } from './organisms/footer';
+export { Skills } from './organisms/skills';
 

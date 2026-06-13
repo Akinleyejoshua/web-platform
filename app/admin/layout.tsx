@@ -21,7 +21,8 @@ import {
     FiPackage,
     FiBookOpen,
     FiFileText,
-    FiDownload
+    FiDownload,
+    FiAward
 } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './layout.module.css';
@@ -40,6 +41,7 @@ const navGroups = [
             { href: '/admin/about', label: 'About', icon: FiUser },
             { href: '/admin/experience', label: 'Experience', icon: FiBriefcase },
             { href: '/admin/projects', label: 'Projects', icon: FiFolder },
+            { href: '/admin/skills', label: 'Skills', icon: FiAward },
             { href: '/admin/products', label: 'Products', icon: FiPackage },
             { href: '/admin/blog', label: 'Blog Posts', icon: FiBookOpen },
             { href: '/admin/contact', label: 'Contact', icon: FiMail },

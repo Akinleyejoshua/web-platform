@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { FiCalendar, FiClock, FiEye, FiChevronRight } from 'react-icons/fi';
-import { Header, Hero, About, Experience, Projects, ProductProjects, Contact, Footer, Loader } from '@/app/components';
+import { Header, Hero, About, Experience, Projects, ProductProjects, Skills, Contact, Footer, Loader } from '@/app/components';
 import { IHero } from '@/app/lib/models/hero';
 import { IAbout } from '@/app/lib/models/about';
 import { IContact } from '@/app/lib/models/contact';
@@ -45,8 +45,7 @@ export default function Home() {
   const aboutRef = useRef<HTMLElement>(null);
   const experienceRef = useRef<HTMLElement>(null);
   const projectsRef = useRef<HTMLElement>(null);
-  const productsRef = useRef<HTMLElement>(null);
-  const blogsRef = useRef<HTMLElement>(null);
+  const productsRef = useRef<HTMLElement>(null);  const skillsRef = useRef<HTMLElement>(null);  const blogsRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
 
   // Track page view (with localStorage deduplication)
@@ -58,6 +57,7 @@ export default function Home() {
   useSectionViewTracker('experience', experienceRef);
   useSectionViewTracker('products', productsRef);
   useSectionViewTracker('projects', projectsRef);
+  useSectionViewTracker('skills', skillsRef);
   useSectionViewTracker('latest-blogs', blogsRef);
   useSectionViewTracker('contact', contactRef);
 
@@ -126,6 +126,10 @@ export default function Home() {
 
       <section ref={projectsRef} id="projects-section">
         <Projects />
+      </section>
+
+      <section ref={skillsRef} id="skills-section">
+        <Skills />
       </section>
 
       {latestBlogs.length > 0 && (
