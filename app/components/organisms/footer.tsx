@@ -68,6 +68,8 @@ export function Footer({ className = '', socialLinks = [] }: FooterProps) {
                             <a href="#experience" className={styles.link} onClick={() => handleNavClick('experience')}>Experience</a>
                             <a href="#projects" className={styles.link} onClick={() => handleNavClick('projects')}>Projects</a>
                             <a href="#contact" className={styles.link} onClick={() => handleNavClick('contact')}>Contact</a>
+                            <a href="/admin" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('admin')}>Admin</a>
+                        
                         </div>
                     </div>
 
@@ -95,7 +97,6 @@ export function Footer({ className = '', socialLinks = [] }: FooterProps) {
                             <a href="https://matching.turing.com/developer-resume-preview/94fcd098ef28063a611a36b6c211b83394302204b3221e" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('turing_profile')}>Turing Profile</a>
                             <a href="/resume" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('resume')}>Resume</a>
                             <a href="/cover-letter" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('cover_letter')}>Cover Letter</a>
-                            <a href="/admin" target="_blank" rel="noopener noreferrer" className={styles.link} onClick={() => handleResourceClick('admin')}>Admin</a>
                         </div>
                     </div>
                 </div>
