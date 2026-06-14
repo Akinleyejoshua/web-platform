@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         if (!admin && !category) {
             const cached = await getCachedSection('projects');
             if (cached) {
-                console.log('Returning cached projects data:', cached);
+                console.log('Returning cached projects data:');
 
                 return NextResponse.json({data: Object.values(cached)}, { status: 200 });
             }
