@@ -14,11 +14,16 @@ export async function GET(request: NextRequest) {
 
         // Check for cached data (non-admin requests only, no pagination/category filters)
         if (!admin && !category) {
-            const cached = await getCachedSection('projects');
-            if (cached) {
+            const cached = await getCachedSection<unknown[]>('projects');
+            if (cached && Array.isArray(cached)) {
                 console.log('Returning cached projects data:');
-
-                return NextResponse.json({data: Object.values(cached)}, { status: 200 });
+                // If paginated, match the DB response format { data, total }
+                if (limit > 0) {
+                    const start = (page - 1) * limit;
+                    const paginated = cached.slice(start, start + limit);
+                    return NextResponse.json({ data: paginated, total: cached.length }, { status: 200 });
+                }
+                return NextResponse.json(cached, { status: 200 });
             }
         }
 

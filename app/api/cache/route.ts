@@ -4,10 +4,10 @@ import {
     CacheableSection,
     CACHEABLE_SECTIONS,
     readCache,
-    writeCache,
     clearCacheSection,
     clearAllCache,
     listCachedSections,
+    setCachedSection,
 } from '@/app/lib/cache';
 import Hero from '@/app/lib/models/hero';
 import About from '@/app/lib/models/about';
@@ -48,16 +48,14 @@ async function fetchSectionData(section: CacheableSection): Promise<unknown> {
             return await Experience.find().sort({ order: 1, startDate: -1 }).lean();
         }
         case 'projects': {
-            const projects = await Project.find({ isVisible: { $ne: false } })
+            return await Project.find({ isVisible: { $ne: false } })
                 .sort({ order: 1, createdAt: -1 })
                 .lean();
-            return { data: projects, total: projects.length };
         }
         case 'product-projects': {
-            const products = await ProductProject.find({ isVisible: { $ne: false } })
+            return await ProductProject.find({ isVisible: { $ne: false } })
                 .sort({ order: 1, createdAt: -1 })
                 .lean();
-            return { data: products, total: products.length };
         }
         case 'blog': {
             return await BlogPost.find({ isVisible: true })
@@ -88,11 +86,14 @@ export async function GET() {
         const cache = await readCache();
         const cachedSections = await listCachedSections();
 
-        const sections = CACHEABLE_SECTIONS.map((s) => ({
-            ...s,
-            isCached: cachedSections.includes(s.value),
-            cachedAt: (cache as Record<string, any>)[s.value]?._cachedAt || null,
-        }));
+        const sections = CACHEABLE_SECTIONS.map((s) => {
+            const entry = (cache as Record<string, any>)[s.value];
+            return {
+                ...s,
+                isCached: cachedSections.includes(s.value),
+                cachedAt: entry?._cachedAt || null,
+            };
+        });
 
         return NextResponse.json({ sections }, { status: 200 });
     } catch (error) {
@@ -132,25 +133,18 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        const cache = await readCache();
         const results: Record<string, string> = {};
 
         for (const section of sections) {
             try {
                 const data = await fetchSectionData(section);
-                const dataWithMeta = {
-                    ...(data as object),
-                    _cachedAt: new Date().toISOString(),
-                };
-                cache[section] = dataWithMeta;
+                await setCachedSection(section, data);
                 results[section] = 'cached';
             } catch (err) {
                 console.error(`Failed to cache section ${section}:`, err);
                 results[section] = 'failed';
             }
         }
-
-        await writeCache(cache);
 
         return NextResponse.json(
             { message: 'Cache updated', results },

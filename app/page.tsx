@@ -75,7 +75,7 @@ export default function Home() {
           hero: heroRes.data,
           about: aboutRes.data,
           contact: contactRes.data,
-          latestBlogs: blogRes.data ? blogRes.data.slice(0, 3) : [],
+          latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
         });
       } catch (error) {
         console.error('Failed to fetch portfolio data:', error);

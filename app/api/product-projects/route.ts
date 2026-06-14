@@ -13,12 +13,17 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '0');
 
         // Check for cached data (non-admin requests only, no pagination/category filters)
-        if (!admin && !category){
-            const cached = await getCachedSection('product-projects');
-            if (cached) {
+        if (!admin && !category) {
+            const cached = await getCachedSection<unknown[]>('product-projects');
+            if (cached && Array.isArray(cached)) {
                 console.log('Returning cached products data:');
-
-                return NextResponse.json({data: Object.values(cached)}, { status: 200 });
+                // If paginated, match the DB response format { data, total }
+                if (limit > 0) {
+                    const start = (page - 1) * limit;
+                    const paginated = cached.slice(start, start + limit);
+                    return NextResponse.json({ data: paginated, total: cached.length }, { status: 200 });
+                }
+                return NextResponse.json(cached, { status: 200 });
             }
         }
 

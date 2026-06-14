@@ -51,14 +51,35 @@ export async function writeCache(data: Record<string, unknown>): Promise<void> {
     await fs.writeFile(CACHE_FILE, JSON.stringify(data, null, 2), 'utf-8');
 }
 
+interface CacheWrapper<T> {
+    data: T;
+    _cachedAt: string;
+    _type: 'array' | 'object';
+}
+
 /**
  * Get the cached data for a specific section.
- * Returns null if not found.
+ * Returns the actual data (unwrapped from the CacheWrapper) or null if not found.
+ * Handles both the new wrapper format and legacy raw data format.
  */
 export async function getCachedSection<T>(section: CacheableSection): Promise<T | null> {
     try {
         const cache = await readCache();
-        return (cache[section] as T) ?? null;
+        const entry = cache[section];
+        if (entry === null || entry === undefined) return null;
+
+        // New wrapper format: { data, _cachedAt, _type }
+        if (
+            typeof entry === 'object' &&
+            entry !== null &&
+            'data' in (entry as object) &&
+            '_cachedAt' in (entry as object)
+        ) {
+            return (entry as CacheWrapper<T>).data ?? null;
+        }
+
+        // Legacy fallback: return raw entry as-is
+        return entry as T;
     } catch {
         return null;
     }
@@ -66,10 +87,17 @@ export async function getCachedSection<T>(section: CacheableSection): Promise<T 
 
 /**
  * Set cache data for a specific section.
+ * Wraps the data in a CacheWrapper with metadata.
  */
 export async function setCachedSection<T>(section: CacheableSection, data: T): Promise<void> {
+    if (data === null || data === undefined) return;
     const cache = await readCache();
-    cache[section] = data as unknown;
+    const isArray = Array.isArray(data);
+    cache[section] = {
+        data,
+        _cachedAt: new Date().toISOString(),
+        _type: isArray ? 'array' : 'object',
+    } as unknown;
     await writeCache(cache);
 }
 
