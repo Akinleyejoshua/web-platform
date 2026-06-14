@@ -48,14 +48,16 @@ async function fetchSectionData(section: CacheableSection): Promise<unknown> {
             return await Experience.find().sort({ order: 1, startDate: -1 }).lean();
         }
         case 'projects': {
-            return await Project.find({ isVisible: { $ne: false } })
+            const projects = await Project.find({ isVisible: { $ne: false } })
                 .sort({ order: 1, createdAt: -1 })
                 .lean();
+            return { data: projects, total: projects.length };
         }
         case 'product-projects': {
-            return await ProductProject.find({ isVisible: { $ne: false } })
+            const products = await ProductProject.find({ isVisible: { $ne: false } })
                 .sort({ order: 1, createdAt: -1 })
                 .lean();
+            return { data: products, total: products.length };
         }
         case 'blog': {
             return await BlogPost.find({ isVisible: true })
