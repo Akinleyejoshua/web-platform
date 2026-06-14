@@ -1,5 +1,5 @@
-import connectDB from '@/app/lib/db';
-import CacheModel, { ICache } from '@/app/lib/models/cache';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export type CacheableSection =
     | 'hero'
@@ -28,53 +28,59 @@ export const CACHEABLE_SECTIONS: { value: CacheableSection; label: string }[] = 
     { value: 'cover-letter', label: 'Cover Letter' },
 ];
 
+const CACHE_FILE = path.resolve(process.cwd(), 'cache.json');
+
 /**
- * Get the cached data for a specific section from MongoDB.
+ * Read the cache file and return its contents.
+ * Returns empty object if the file doesn't exist or on error.
+ */
+export async function readCache(): Promise<Record<string, unknown>> {
+    try {
+        const data = await fs.readFile(CACHE_FILE, 'utf-8');
+        return JSON.parse(data) || {};
+    } catch {
+        // File doesn't exist or is invalid, return empty cache
+        return {};
+    }
+}
+
+/**
+ * Write the cache file with the provided data.
+ */
+export async function writeCache(data: Record<string, unknown>): Promise<void> {
+    await fs.writeFile(CACHE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+}
+
+/**
+ * Get the cached data for a specific section.
  * Returns null if not found.
  */
 export async function getCachedSection<T>(section: CacheableSection): Promise<T | null> {
     try {
-        await connectDB();
-        const entry = await CacheModel.findOne({ section }).lean<ICache>();
-        if (!entry) return null;
-        return entry.data as T;
-    } catch (error) {
-        console.error(`Cache get error for ${section}:`, error);
+        const cache = await readCache();
+        return (cache[section] as T) ?? null;
+    } catch {
         return null;
     }
 }
 
 /**
- * Set cache data for a specific section in MongoDB.
+ * Set cache data for a specific section.
  */
 export async function setCachedSection<T>(section: CacheableSection, data: T): Promise<void> {
-    try {
-        await connectDB();
-        await CacheModel.updateOne(
-            { section },
-            {
-                $set: {
-                    data: data as object,
-                    cachedAt: new Date(),
-                },
-            },
-            { upsert: true }
-        );
-    } catch (error) {
-        console.error(`Cache set error for ${section}:`, error);
-        throw error;
-    }
+    const cache = await readCache();
+    cache[section] = data as unknown;
+    await writeCache(cache);
 }
 
 /**
  * Clear a specific section from the cache.
  */
 export async function clearCacheSection(section: CacheableSection): Promise<void> {
-    try {
-        await connectDB();
-        await CacheModel.deleteOne({ section });
-    } catch (error) {
-        console.error(`Cache delete error for ${section}:`, error);
+    const cache = await readCache();
+    if (section in cache) {
+        delete cache[section];
+        await writeCache(cache);
     }
 }
 
@@ -82,41 +88,14 @@ export async function clearCacheSection(section: CacheableSection): Promise<void
  * Clear all cache.
  */
 export async function clearAllCache(): Promise<void> {
-    try {
-        await connectDB();
-        await CacheModel.deleteMany({});
-    } catch (error) {
-        console.error('Cache delete all error:', error);
-    }
+    await writeCache({});
 }
 
 /**
- * List all currently cached sections from MongoDB.
+ * List all currently cached sections.
  */
 export async function listCachedSections(): Promise<CacheableSection[]> {
-    try {
-        await connectDB();
-        const entries = await CacheModel.find({}).lean<ICache>();
-        return entries.map((e) => e.section as CacheableSection);
-    } catch (error) {
-        console.error('Cache list error:', error);
-        return [];
-    }
+    const cache = await readCache();
+    return Object.keys(cache) as CacheableSection[];
 }
 
-/**
- * Get cache metadata for all sections (used by admin UI).
- */
-export async function getCacheMetadata(): Promise<Array<{ section: CacheableSection; cachedAt: string | null }>> {
-    try {
-        await connectDB();
-        const entries = await CacheModel.find({}).lean<ICache>();
-        return entries.map((e) => ({
-            section: e.section as CacheableSection,
-            cachedAt: e.cachedAt?.toISOString() || null,
-        }));
-    } catch (error) {
-        console.error('Cache metadata error:', error);
-        return [];
-    }
-}
