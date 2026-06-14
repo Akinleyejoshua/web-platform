@@ -3,11 +3,11 @@ import connectDB from '@/app/lib/db';
 import {
     CacheableSection,
     CACHEABLE_SECTIONS,
-    readCache,
-    writeCache,
     clearCacheSection,
     clearAllCache,
     listCachedSections,
+    setCachedSection,
+    getCacheMetadata,
 } from '@/app/lib/cache';
 import Hero from '@/app/lib/models/hero';
 import About from '@/app/lib/models/about';
@@ -83,14 +83,18 @@ async function fetchSectionData(section: CacheableSection): Promise<unknown> {
  */
 export async function GET() {
     try {
-        const cache = await readCache();
+        await connectDB();
         const cachedSections = await listCachedSections();
+        const metadata = await getCacheMetadata();
 
-        const sections = CACHEABLE_SECTIONS.map((s) => ({
-            ...s,
-            isCached: cachedSections.includes(s.value),
-            cachedAt: (cache as Record<string, any>)[s.value]?._cachedAt || null,
-        }));
+        const sections = CACHEABLE_SECTIONS.map((s) => {
+            const meta = metadata.find((m) => m.section === s.value);
+            return {
+                ...s,
+                isCached: cachedSections.includes(s.value),
+                cachedAt: meta?.cachedAt || null,
+            };
+        });
 
         return NextResponse.json({ sections }, { status: 200 });
     } catch (error) {
@@ -130,25 +134,18 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        const cache = await readCache();
         const results: Record<string, string> = {};
 
         for (const section of sections) {
             try {
                 const data = await fetchSectionData(section);
-                const dataWithMeta = {
-                    ...(data as object),
-                    _cachedAt: new Date().toISOString(),
-                };
-                cache[section] = dataWithMeta;
+                await setCachedSection(section, data as never);
                 results[section] = 'cached';
             } catch (err) {
                 console.error(`Failed to cache section ${section}:`, err);
                 results[section] = 'failed';
             }
         }
-
-        await writeCache(cache);
 
         return NextResponse.json(
             { message: 'Cache updated', results },
