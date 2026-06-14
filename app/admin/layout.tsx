@@ -22,7 +22,8 @@ import {
     FiBookOpen,
     FiFileText,
     FiDownload,
-    FiAward
+    FiAward,
+    FiDatabase
 } from 'react-icons/fi';
 import axios from 'axios';
 import styles from './layout.module.css';
@@ -53,6 +54,7 @@ const navGroups = [
     {
         label: 'System',
         items: [
+            { href: '/admin/cache', label: 'Cache Manager', icon: FiDatabase },
             { href: '/admin/settings', label: 'Settings', icon: FiSettings },
         ]
     },

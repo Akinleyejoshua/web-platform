@@ -2,12 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import Resume from '@/app/lib/models/resume';
+import { getCachedSection } from '@/app/lib/cache';
 
 export async function GET(request: NextRequest) {
     try {
-        await connectDB();
         const { searchParams } = new URL(request.url);
         const domain = searchParams.get('domain');
+        const isAdmin = searchParams.get('admin') === 'true';
+
+        // Check for cached data (non-admin, non-domain-specific list requests only)
+        if (!isAdmin && !domain) {
+            const cached = await getCachedSection('resume');
+            if (cached) {
+                return NextResponse.json(cached, { status: 200 });
+            }
+        }
+
+        await connectDB();
 
         if (domain) {
             const resume = await Resume.findOne({ domain }).lean();

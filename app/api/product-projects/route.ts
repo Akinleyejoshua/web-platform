@@ -2,15 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import ProductProject from '@/app/lib/models/productProject';
+import { getCachedSection } from '@/app/lib/cache';
 
 export async function GET(request: NextRequest) {
     try {
-        await connectDB();
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
         const admin = searchParams.get('admin');
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '0');
+
+        // Check for cached data (non-admin requests only, no pagination/category filters)
+        if (!admin && !category && limit === 0) {
+            const cached = await getCachedSection('product-projects');
+            if (cached) {
+                return NextResponse.json(cached, { status: 200 });
+            }
+        }
+
+        await connectDB();
 
         const query: any = {};
         if (category && category !== 'all') query.category = category;

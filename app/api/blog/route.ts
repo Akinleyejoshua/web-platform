@@ -2,14 +2,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import BlogPost from '@/app/lib/models/blogPost';
+import { getCachedSection } from '@/app/lib/cache';
 
 // GET: fetch all blog posts, or filter by isVisible/slug
 export async function GET(request: NextRequest) {
     try {
-        await connectDB();
         const { searchParams } = new URL(request.url);
         const slug = searchParams.get('slug');
         const admin = searchParams.get('admin');
+
+        // Check for cached data (non-admin, non-slug list requests only)
+        if (!admin && !slug) {
+            const cached = await getCachedSection('blog');
+            if (cached) {
+                return NextResponse.json(cached, { status: 200 });
+            }
+        }
+
+        await connectDB();
 
         if (slug) {
             let blog;

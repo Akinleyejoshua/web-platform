@@ -2,9 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import About from '@/app/lib/models/about';
+import { getCachedSection } from '@/app/lib/cache';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        // Check for cached data (non-admin requests only)
+        const { searchParams } = new URL(request.url);
+        const isAdmin = searchParams.get('admin') === 'true';
+
+        if (!isAdmin) {
+            const cached = await getCachedSection('about');
+            if (cached) {
+                return NextResponse.json(cached, { status: 200 });
+            }
+        }
+
         await connectDB();
         let about = await About.findOne();
 
