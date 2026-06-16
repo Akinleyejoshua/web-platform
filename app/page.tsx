@@ -158,7 +158,7 @@ export default function Home() {
 
      
 
-      {latestBlogs.length > 0 && (
+       {(isLoading || latestBlogs.length > 0) && (
         <section ref={blogsRef} id="latest-blogs-section" style={{ padding: '6rem 0', borderBottom: '1px solid var(--color-border)' }}>
           <div className={blogStyles.container}>
             <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
@@ -170,68 +170,89 @@ export default function Home() {
             </div>
 
             <div className={blogStyles.blogGrid}>
-              {latestBlogs.map((blog) => (
-                <article key={blog._id} className={blogStyles.blogCard}>
-                  <div className={blogStyles.cardHeader}>
-                    {blog.coverImage ? (
-                      <img
-                        src={optimizeImageUrl(blog.coverImage, 640)}
-                        alt={blog.title}
-                        className={blogStyles.coverImage}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className={blogStyles.coverFallback}>
-                        {blog.title.charAt(0)}
+              {isLoading ? (
+                Array.from({ length: 3 }).map((_, idx) => (
+                  <article key={idx} className={blogStyles.blogCard} style={{ pointerEvents: 'none' }}>
+                    <div className={`${blogStyles.cardHeader} skeleton`} style={{ height: '200px', width: '100%' }} />
+                    <div className={blogStyles.cardBody}>
+                      <div className={blogStyles.metaRow} style={{ gap: '12px' }}>
+                        <div className="skeleton" style={{ width: '80px', height: '14px' }} />
+                        <div className="skeleton" style={{ width: '50px', height: '14px' }} />
                       </div>
-                    )}
-                  </div>
-
-                  <div className={blogStyles.cardBody}>
-                    <div className={blogStyles.metaRow}>
-                      <span className={blogStyles.metaItem}>
-                        <FiCalendar size={14} />
-                        {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </span>
-                      <span className={blogStyles.metaItem}>
-                        <FiClock size={14} />
-                        {(() => {
-                          const words = blog.content.replace(/<[^>]*>/g, '').trim().split(/\s+/).length;
-                          return `${Math.ceil(words / 200)} min`;
-                        })()}
-                      </span>
-                      <span className={blogStyles.metaItem}>
-                        <FiEye size={14} />
-                        {blog.views || 0}
-                      </span>
+                      <div className="skeleton" style={{ width: '85%', height: '1.5rem', margin: '15px 0' }} />
+                      <div className="skeleton" style={{ width: '100%', height: '14px', marginBottom: '8px' }} />
+                      <div className="skeleton" style={{ width: '90%', height: '14px', marginBottom: '20px' }} />
+                      <div className={blogStyles.tagsRow} style={{ gap: '8px', display: 'flex' }}>
+                        <div className="skeleton" style={{ width: '50px', height: '20px', borderRadius: '10px' }} />
+                        <div className="skeleton" style={{ width: '50px', height: '20px', borderRadius: '10px' }} />
+                      </div>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                latestBlogs.map((blog) => (
+                  <article key={blog._id} className={blogStyles.blogCard}>
+                    <div className={blogStyles.cardHeader}>
+                      {blog.coverImage ? (
+                        <img
+                          src={optimizeImageUrl(blog.coverImage, 640)}
+                          alt={blog.title}
+                          className={blogStyles.coverImage}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className={blogStyles.coverFallback}>
+                          {blog.title.charAt(0)}
+                        </div>
+                      )}
                     </div>
 
-                    <h3 className={blogStyles.cardTitle}>
-                      <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
-                    </h3>
-
-                    <p className={blogStyles.cardExcerpt}>{blog.excerpt}</p>
-
-                    <div className={blogStyles.tagsRow}>
-                      {blog.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className={blogStyles.cardTag}>
-                          #{tag}
+                    <div className={blogStyles.cardBody}>
+                      <div className={blogStyles.metaRow}>
+                        <span className={blogStyles.metaItem}>
+                          <FiCalendar size={14} />
+                          {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
                         </span>
-                      ))}
-                    </div>
+                        <span className={blogStyles.metaItem}>
+                          <FiClock size={14} />
+                          {(() => {
+                            const words = blog.content.replace(/<[^>]*>/g, '').trim().split(/\s+/).length;
+                            return `${Math.ceil(words / 200)} min`;
+                          })()}
+                        </span>
+                        <span className={blogStyles.metaItem}>
+                          <FiEye size={14} />
+                          {blog.views || 0}
+                        </span>
+                      </div>
 
-                    <div className={blogStyles.cardFooter}>
-                      <Link href={`/blog/${blog.slug}`} className={blogStyles.readMoreLink}>
-                        Read Article <FiChevronRight />
-                      </Link>
+                      <h3 className={blogStyles.cardTitle}>
+                        <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
+                      </h3>
+
+                      <p className={blogStyles.cardExcerpt}>{blog.excerpt}</p>
+
+                      <div className={blogStyles.tagsRow}>
+                        {blog.tags.slice(0, 3).map((tag) => (
+                          <span key={tag} className={blogStyles.cardTag}>
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className={blogStyles.cardFooter}>
+                        <Link href={`/blog/${blog.slug}`} className={blogStyles.readMoreLink}>
+                          Read Article <FiChevronRight />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))
+              )}
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '3rem' }}>
