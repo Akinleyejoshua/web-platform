@@ -59,9 +59,9 @@ const defaultContact: IContact = {
 
 export default function Home() {
   const [data, setData] = useState<PortfolioData>({
-    hero: defaultHero,
-    about: defaultAbout,
-    contact: defaultContact,
+    hero: null,
+    about: null,
+    contact: null,
     latestBlogs: [],
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -128,6 +128,7 @@ export default function Home() {
           secondaryCtaText={hero?.secondaryCtaText}
           secondaryCtaLink={hero?.secondaryCtaLink}
           heroImage={hero?.heroImage}
+          isLoading={isLoading}
         />
       </section>
 
@@ -135,6 +136,7 @@ export default function Home() {
         <About
           bio={about?.bio}
           socialLinks={about?.socialLinks}
+          isLoading={isLoading}
         />
       </section>
 
@@ -271,6 +273,7 @@ export default function Home() {
           email={contact?.email}
           phone={contact?.phone}
           socialLinks={about?.socialLinks}
+          isLoading={isLoading}
         />
       </section>
 

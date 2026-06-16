@@ -16,12 +16,14 @@ interface ContactProps {
     email?: string;
     phone?: string;
     socialLinks?: SocialLinkData[];
+    isLoading?: boolean;
 }
 
 export function Contact({
     email = 'akinleyejoshua.dev@gmail.com',
     phone = '+234 08131519518',
     socialLinks = [],
+    isLoading = false,
 }: ContactProps) {
     return (
         <Section
@@ -39,28 +41,53 @@ export function Contact({
                     </p>
 
                     <div className={styles.contactItems}>
-                        {email && (
-                            <a href={`mailto:${email}`} className={styles.contactItem} onClick={() => trackClick('contact_email', true)}>
-                                <div className={styles.contactIcon}>
-                                    <FiMail size={20} />
+                        {isLoading ? (
+                            <>
+                                <div className={styles.contactItem}>
+                                    <div className={styles.contactIcon}>
+                                        <FiMail size={20} />
+                                    </div>
+                                    <div className={styles.contactText}>
+                                        <span className={styles.contactLabel}>Email</span>
+                                        <div className="skeleton" style={{ width: '180px', height: '1.25rem', marginTop: '4px' }} />
+                                    </div>
                                 </div>
-                                <div className={styles.contactText}>
-                                    <span className={styles.contactLabel}>Email</span>
-                                    <span className={styles.contactValue}>{email}</span>
+                                <div className={styles.contactItem}>
+                                    <div className={styles.contactIcon}>
+                                        <FiPhone size={20} />
+                                    </div>
+                                    <div className={styles.contactText}>
+                                        <span className={styles.contactLabel}>Phone</span>
+                                        <div className="skeleton" style={{ width: '140px', height: '1.25rem', marginTop: '4px' }} />
+                                    </div>
                                 </div>
-                            </a>
-                        )}
+                            </>
+                        ) : (
+                            <>
+                                {email && (
+                                    <a href={`mailto:${email}`} className={styles.contactItem} onClick={() => trackClick('contact_email', true)}>
+                                        <div className={styles.contactIcon}>
+                                            <FiMail size={20} />
+                                        </div>
+                                        <div className={styles.contactText}>
+                                            <span className={styles.contactLabel}>Email</span>
+                                            <span className={styles.contactValue}>{email}</span>
+                                        </div>
+                                    </a>
+                                )}
 
-                        {phone && (
-                            <a href={`tel:${phone}`} className={styles.contactItem} onClick={() => trackClick('contact_phone', true)}>
-                                <div className={styles.contactIcon}>
-                                    <FiPhone size={20} />
-                                </div>
-                                <div className={styles.contactText}>
-                                    <span className={styles.contactLabel}>Phone</span>
-                                    <span className={styles.contactValue}>{phone}</span>
-                                </div>
-                            </a>
+                                {phone && (
+                                    <a href={`tel:${phone}`} className={styles.contactItem} onClick={() => trackClick('contact_phone', true)}>
+                                        <div className={styles.contactIcon}>
+                                            <FiPhone size={20} />
+                                        </div>
+                                        <div className={styles.contactText}>
+                                            <span className={styles.contactLabel}>Phone</span>
+                                            <span className={styles.contactValue}>{phone}</span>
+                                        </div>
+                                    </a>
+                                )}
+                            </>
                         )}
 
                         <div className={styles.contactItem}>
@@ -74,7 +101,16 @@ export function Contact({
                         </div>
                     </div>
 
-                    {socialLinks.length > 0 && (
+                    {isLoading ? (
+                        <div className={styles.socialSection}>
+                            <p className={styles.socialLabel}>Connect with me</p>
+                            <div className={styles.socialLinks}>
+                                <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                                <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                                <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                            </div>
+                        </div>
+                    ) : socialLinks.length > 0 && (
                         <div className={styles.socialSection}>
                             <p className={styles.socialLabel}>Connect with me</p>
                             <div className={styles.socialLinks}>
