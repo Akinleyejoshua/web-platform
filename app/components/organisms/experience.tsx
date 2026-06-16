@@ -5,10 +5,15 @@ import { Section } from '@/app/components/layout/section';
 import { TimelineItem } from '@/app/components/molecules/timeline-item';
 import { Loader } from '@/app/components/atoms/loader';
 import { useExperience } from '@/app/hooks/use-experience';
+import { IExperience } from '@/app/lib/models/experience';
 import styles from './experience.module.css';
 
-export function Experience() {
-    const { experiences, isLoading, error } = useExperience();
+interface ExperienceProps {
+    initialData?: IExperience[];
+}
+
+export function Experience({ initialData }: ExperienceProps = {}) {
+    const { experiences, isLoading, error } = useExperience(initialData);
 
     return (
         <Section

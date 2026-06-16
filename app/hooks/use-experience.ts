@@ -11,9 +11,9 @@ interface UseExperienceReturn {
     refetch: () => Promise<void>;
 }
 
-export function useExperience(): UseExperienceReturn {
-    const [experiences, setExperiences] = useState<IExperience[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+export function useExperience(initialData?: IExperience[]): UseExperienceReturn {
+    const [experiences, setExperiences] = useState<IExperience[]>(initialData || []);
+    const [isLoading, setIsLoading] = useState(!initialData);
     const [error, setError] = useState<string | null>(null);
 
     const fetchExperiences = useCallback(async () => {
@@ -33,8 +33,13 @@ export function useExperience(): UseExperienceReturn {
     }, []);
 
     useEffect(() => {
+        if (initialData) {
+            setExperiences(initialData);
+            setIsLoading(false);
+            return;
+        }
         fetchExperiences();
-    }, [fetchExperiences]);
+    }, [fetchExperiences, initialData]);
 
     return {
         experiences,

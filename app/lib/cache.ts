@@ -28,7 +28,7 @@ export const CACHEABLE_SECTIONS: { value: CacheableSection; label: string }[] = 
     { value: 'cover-letter', label: 'Cover Letter' },
 ];
 
-const CACHE_FILE = path.resolve(process.cwd(), 'cache.json');
+const CACHE_FILE = path.resolve(process.cwd(), 'public/cache.json');
 
 /**
  * Read the cache file and return its contents.

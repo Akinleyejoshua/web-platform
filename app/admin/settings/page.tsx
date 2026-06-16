@@ -11,6 +11,7 @@ import {
     FiAlertCircle,
     FiX,
     FiSliders,
+    FiZap,
 } from 'react-icons/fi';
 import { useSettingsStore, SiteSettings } from '@/app/store/settings-store';
 import styles from './settings.module.css';
@@ -69,6 +70,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
     fontWeight: 400,
     accentColor: '#3b6ef0',
     projectsLimit: 4,
+    enableCache: false,
 };
 
 // ===== COMPONENT =====
@@ -130,7 +132,8 @@ export default function SettingsPage() {
         draft.fontSize !== settings.fontSize ||
         draft.fontWeight !== settings.fontWeight ||
         draft.accentColor !== settings.accentColor ||
-        draft.projectsLimit !== settings.projectsLimit;
+        draft.projectsLimit !== settings.projectsLimit ||
+        draft.enableCache !== settings.enableCache;
 
     return (
         <div className={styles.settings}>
@@ -386,6 +389,67 @@ export default function SettingsPage() {
                                 marginTop: '12px'
                             }}
                         />
+                    </div>
+                </div>
+            </div>
+
+            {/* Performance & Caching Section */}
+            <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <div className={styles.sectionIcon}>
+                        <FiZap size={22} style={{ color: draft.enableCache ? 'var(--color-accent)' : 'inherit' }} />
+                    </div>
+                    <div>
+                        <div className={styles.sectionTitle}>Performance & Caching</div>
+                        <div className={styles.sectionSubtitle}>
+                            Enable client-side caching to make the landing page load instantly
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.controlsRow}>
+                    <div className={styles.controlGroup}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
+                            <button
+                                onClick={() => setDraft((d) => ({ ...d, enableCache: !d.enableCache }))}
+                                style={{
+                                    position: 'relative',
+                                    width: '56px',
+                                    height: '28px',
+                                    borderRadius: '14px',
+                                    background: draft.enableCache ? 'var(--color-accent)' : 'rgba(255, 255, 255, 0.1)',
+                                    border: '1px solid var(--color-border)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    padding: '2px',
+                                    boxShadow: draft.enableCache ? '0 0 12px rgba(99, 102, 241, 0.4)' : 'none',
+                                }}
+                                type="button"
+                                id="settings-cache-toggle"
+                            >
+                                <div
+                                    style={{
+                                        width: '22px',
+                                        height: '22px',
+                                        borderRadius: '50%',
+                                        background: '#ffffff',
+                                        transform: draft.enableCache ? 'translateX(26px)' : 'translateX(0)',
+                                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                    }}
+                                />
+                            </button>
+                            <div>
+                                <div style={{ fontWeight: 600, color: '#ffffff' }}>
+                                    {draft.enableCache ? 'Cache Enabled' : 'Cache Disabled'}
+                                </div>
+                                <div style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginTop: '2px' }}>
+                                    {draft.enableCache
+                                        ? 'Landing page retrieves cached data directly from public/cache.json.'
+                                        : 'Landing page queries the backend APIs and database in real-time.'}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

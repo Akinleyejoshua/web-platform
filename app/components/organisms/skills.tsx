@@ -6,6 +6,7 @@ import { Loader } from '@/app/components/atoms/loader';
 import { IconWrapper } from '@/app/components/atoms/icon-wrapper';
 import { useSkills } from '@/app/hooks/use-skills';
 import { getTechIcon, getTechBrandColor } from '@/app/lib/tech-icons';
+import { ISkill } from '@/app/lib/models/skill';
 import styles from './skills.module.css';
 
 type SkillCategory = 'frontend' | 'backend' | 'database' | 'devops' | 'mobile' | 'design' | 'tools' | 'ai-ml' | 'data-analytics' | 'other' ;
@@ -36,8 +37,12 @@ const CATEGORY_ORDER: SkillCategory[] = [
     'other',
 ];
 
-export function Skills() {
-    const { skills, isLoading, error, refetch } = useSkills();
+interface SkillsProps {
+    initialData?: ISkill[];
+}
+
+export function Skills({ initialData }: SkillsProps = {}) {
+    const { skills, isLoading, error, refetch } = useSkills(initialData);
 
     // Group visible skills by category, sorted by order
     const groupedSkills = skills

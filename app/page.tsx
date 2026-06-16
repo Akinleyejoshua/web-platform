@@ -8,6 +8,10 @@ import { Header, Hero, About, Experience, Projects, ProductProjects, Skills, Con
 import { IHero } from '@/app/lib/models/hero';
 import { IAbout } from '@/app/lib/models/about';
 import { IContact } from '@/app/lib/models/contact';
+import { ISkill } from '@/app/lib/models/skill';
+import { IExperience } from '@/app/lib/models/experience';
+import { IProject } from '@/app/lib/models/project';
+import { IProductProject } from '@/app/lib/models/productProject';
 import { usePageViewTracker, useSectionViewTracker } from '@/app/hooks/useAnalyticsTracker';
 import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './page.module.css';
@@ -30,6 +34,12 @@ interface PortfolioData {
   about: IAbout | null;
   contact: IContact | null;
   latestBlogs: BlogPost[];
+  skills: ISkill[] | undefined;
+  experience: IExperience[] | undefined;
+  projects: IProject[] | undefined;
+  projectsTotal: number;
+  productProjects: IProductProject[] | undefined;
+  productProjectsTotal: number;
 }
 
 const defaultHero: IHero = {
@@ -63,6 +73,12 @@ export default function Home() {
     about: null,
     contact: null,
     latestBlogs: [],
+    skills: undefined,
+    experience: undefined,
+    projects: undefined,
+    projectsTotal: 0,
+    productProjects: undefined,
+    productProjectsTotal: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -90,18 +106,107 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [heroRes, aboutRes, contactRes, blogRes] = await Promise.all([
-          axios.get('/api/hero'),
-          axios.get('/api/about'),
-          axios.get('/api/contact'),
-          axios.get('/api/blog'),
+        setIsLoading(true);
+        // Step 1: Check cache config and load settings
+        const [configRes, settingsRes] = await Promise.all([
+          axios.get('/api/cache-config'),
+          axios.get('/api/settings')
         ]);
+
+        const enableCache = configRes.data?.enableCache;
+        const currentSettings = settingsRes.data;
+        const limit = currentSettings?.projectsLimit || 4;
+
+        let cache: any = {};
+        let cacheLoaded = false;
+
+        if (enableCache) {
+          try {
+            // Step 2a: Fetch cache.json directly from the client (public static file)
+            const cacheRes = await axios.get('/cache.json');
+            cache = cacheRes.data || {};
+            cacheLoaded = true;
+          } catch (cacheError) {
+            console.warn('Failed to fetch cache.json, will query database for all sections:', cacheError);
+          }
+        }
+
+        // Helper to check if a section is cached
+        const isCached = (section: string) => {
+          return cacheLoaded && cache[section] !== undefined && cache[section] !== null;
+        };
+
+        // Helper to extract data from wrapped cache structure
+        function getSectionData<T>(section: string, fallback: T): T {
+          const entry = cache[section];
+          if (entry && typeof entry === 'object' && entry !== null && 'data' in entry) {
+            return (entry as any).data as T;
+          }
+          return (entry as T) || fallback;
+        }
+
+        // Prepare the promises: resolve from cache if exists, otherwise fetch from DB
+        const heroPromise = isCached('hero') 
+          ? Promise.resolve({ data: getSectionData('hero', defaultHero) }) 
+          : axios.get('/api/hero');
+
+        const aboutPromise = isCached('about') 
+          ? Promise.resolve({ data: getSectionData('about', defaultAbout) }) 
+          : axios.get('/api/about');
+
+        const contactPromise = isCached('contact') 
+          ? Promise.resolve({ data: getSectionData('contact', defaultContact) }) 
+          : axios.get('/api/contact');
+
+        const blogPromise = isCached('blog') 
+          ? Promise.resolve({ data: getSectionData('blog', []) }) 
+          : axios.get('/api/blog');
+
+        const skillsPromise = isCached('skills') 
+          ? Promise.resolve({ data: getSectionData('skills', []) }) 
+          : axios.get('/api/skills');
+
+        const experiencePromise = isCached('experience') 
+          ? Promise.resolve({ data: getSectionData('experience', []) }) 
+          : axios.get('/api/experience');
+
+        const projectsPromise = isCached('projects') 
+          ? Promise.resolve({ data: { data: getSectionData('projects', []), total: getSectionData('projects', []).length } }) 
+          : axios.get('/api/projects', { params: { page: 1, limit } });
+
+        const productsPromise = isCached('product-projects') 
+          ? Promise.resolve({ data: { data: getSectionData('product-projects', []), total: getSectionData('product-projects', []).length } }) 
+          : axios.get('/api/product-projects', { params: { page: 1, limit } });
+
+        // Query database endpoints in parallel ONLY for the uncached sections
+        const [heroRes, aboutRes, contactRes, blogRes, skillsRes, experienceRes, projectsRes, productsRes] = await Promise.all([
+          heroPromise,
+          aboutPromise,
+          contactPromise,
+          blogPromise,
+          skillsPromise,
+          experiencePromise,
+          projectsPromise,
+          productsPromise
+        ]);
+
+        const projectsData = projectsRes.data?.data ?? projectsRes.data ?? [];
+        const projectsTotal = projectsRes.data?.total ?? (Array.isArray(projectsRes.data) ? projectsRes.data.length : 0);
+        
+        const productsData = productsRes.data?.data ?? productsRes.data ?? [];
+        const productsTotal = productsRes.data?.total ?? (Array.isArray(productsRes.data) ? productsRes.data.length : 0);
 
         setData({
           hero: heroRes.data || defaultHero,
           about: aboutRes.data || defaultAbout,
           contact: contactRes.data || defaultContact,
           latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
+          skills: skillsRes.data || [],
+          experience: experienceRes.data || [],
+          projects: Array.isArray(projectsData) ? projectsData.slice(0, limit) : [],
+          projectsTotal,
+          productProjects: Array.isArray(productsData) ? productsData.slice(0, limit) : [],
+          productProjectsTotal: productsTotal,
         });
       } catch (error) {
         console.error('Failed to fetch portfolio data:', error);
@@ -141,24 +246,24 @@ export default function Home() {
       </section>
 
       <section ref={experienceRef} id="experience-section">
-        <Experience />
+        <Experience initialData={data.experience} />
       </section>
 
        <section ref={skillsRef} id="skills-section">
-        <Skills />
+        <Skills initialData={data.skills} />
       </section>
 
       <section ref={productsRef} id="products-section">
-        <ProductProjects />
+        <ProductProjects initialData={data.productProjects} initialTotal={data.productProjectsTotal} />
       </section>
 
       <section ref={projectsRef} id="projects-section">
-        <Projects />
+        <Projects initialData={data.projects} initialTotal={data.projectsTotal} />
       </section>
 
      
 
-       {(isLoading || latestBlogs.length > 0) && (
+        {(isLoading || latestBlogs.length > 0) && (
         <section ref={blogsRef} id="latest-blogs-section" style={{ padding: '6rem 0', borderBottom: '1px solid var(--color-border)' }}>
           <div className={blogStyles.container}>
             <div style={{ textAlign: 'center', marginBottom: '4rem' }}>

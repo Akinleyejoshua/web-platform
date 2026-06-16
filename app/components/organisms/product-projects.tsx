@@ -6,6 +6,7 @@ import { ProjectCard } from '@/app/components/molecules/project-card';
 import { Carousel } from './carousel';
 import { Loader } from '@/app/components/atoms/loader';
 import { useProductProjects } from '@/app/hooks/use-product-projects';
+import { IProductProject } from '@/app/lib/models/productProject';
 import styles from './projects.module.css';
 
 const categoryLabels: Record<string, string> = {
@@ -17,8 +18,13 @@ const categoryLabels: Record<string, string> = {
     other: 'Other',
 };
 
-export function ProductProjects() {
-    const { products, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProductProjects();
+interface ProductProjectsProps {
+    initialData?: IProductProject[];
+    initialTotal?: number;
+}
+
+export function ProductProjects({ initialData, initialTotal }: ProductProjectsProps = {}) {
+    const { products, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProductProjects({ initialData, initialTotal });
 
     const totalPages = Math.ceil(total / limit);
 

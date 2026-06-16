@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { IProductProject, ProductCategory } from '@/app/lib/models/productProject';
 import { useSettingsStore } from '@/app/store/settings-store';
@@ -18,14 +18,16 @@ interface UseProductProjectsReturn {
     refetch: () => Promise<void>;
 }
 
-export function useProductProjects(options?: { admin?: boolean }): UseProductProjectsReturn {
+export function useProductProjects(options?: { admin?: boolean; initialData?: IProductProject[]; initialTotal?: number }): UseProductProjectsReturn {
     const isAdmin = options?.admin || false;
-    const [products, setProducts] = useState<IProductProject[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [products, setProducts] = useState<IProductProject[]>(options?.initialData || []);
+    const [isLoading, setIsLoading] = useState(!options?.initialData);
     const [error, setError] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
     const [page, setPage] = useState(1);
-    const [total, setTotal] = useState(0);
+    const [total, setTotal] = useState(options?.initialTotal || 0);
+
+    const isFirstRender = useRef(true);
 
     const { settings, fetchSettings } = useSettingsStore();
     const limit = isAdmin ? 0 : (settings?.projectsLimit || 4);
@@ -36,12 +38,25 @@ export function useProductProjects(options?: { admin?: boolean }): UseProductPro
         }
     }, [fetchSettings, isAdmin]);
 
+    useEffect(() => {
+        if (options?.initialData) {
+            setProducts(options.initialData);
+            setTotal(options.initialTotal || 0);
+            setIsLoading(false);
+        }
+    }, [options?.initialData, options?.initialTotal]);
+
     // Reset page to 1 when category changes
     useEffect(() => {
         setPage(1);
     }, [activeCategory]);
 
     const fetchProducts = useCallback(async () => {
+        if (isFirstRender.current && options?.initialData) {
+            isFirstRender.current = false;
+            setIsLoading(false);
+            return;
+        }
         setIsLoading(true);
         setError(null);
         try {
@@ -69,7 +84,7 @@ export function useProductProjects(options?: { admin?: boolean }): UseProductPro
         } finally {
             setIsLoading(false);
         }
-    }, [activeCategory, page, limit, isAdmin]);
+    }, [activeCategory, page, limit, isAdmin, options?.initialData, options?.initialTotal]);
 
     useEffect(() => {
         fetchProducts();

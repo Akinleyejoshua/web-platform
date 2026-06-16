@@ -11,9 +11,9 @@ interface UseSkillsReturn {
     refetch: () => Promise<void>;
 }
 
-export function useSkills(): UseSkillsReturn {
-    const [skills, setSkills] = useState<ISkill[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+export function useSkills(initialData?: ISkill[]): UseSkillsReturn {
+    const [skills, setSkills] = useState<ISkill[]>(initialData || []);
+    const [isLoading, setIsLoading] = useState(!initialData);
     const [error, setError] = useState<string | null>(null);
 
     const fetchSkills = useCallback(async () => {
@@ -33,8 +33,13 @@ export function useSkills(): UseSkillsReturn {
     }, []);
 
     useEffect(() => {
+        if (initialData) {
+            setSkills(initialData);
+            setIsLoading(false);
+            return;
+        }
         fetchSkills();
-    }, [fetchSkills]);
+    }, [fetchSkills, initialData]);
 
     return {
         skills,

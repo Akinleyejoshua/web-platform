@@ -6,6 +6,7 @@ export interface ISettings extends Document {
     fontWeight: number;
     accentColor: string;
     projectsLimit: number;
+    enableCache: boolean;
 }
 
 const SettingsSchema = new Schema<ISettings>(
@@ -35,6 +36,10 @@ const SettingsSchema = new Schema<ISettings>(
             default: 4,
             min: 1,
             max: 20,
+        },
+        enableCache: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

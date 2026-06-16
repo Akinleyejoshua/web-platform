@@ -7,10 +7,16 @@ import { CategoryTabs } from './category-tabs';
 import { Loader } from '@/app/components/atoms/loader';
 import { Carousel } from './carousel';
 import { useProjects } from '@/app/hooks/use-projects';
+import { IProject } from '@/app/lib/models/project';
 import styles from './projects.module.css';
 
-export function Projects() {
-    const { projects, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProjects();
+interface ProjectsProps {
+    initialData?: IProject[];
+    initialTotal?: number;
+}
+
+export function Projects({ initialData, initialTotal }: ProjectsProps = {}) {
+    const { projects, isLoading, error, activeCategory, setActiveCategory, page, setPage, total, limit, refetch } = useProjects({ initialData, initialTotal });
 
     const totalPages = Math.ceil(total / limit);
 
