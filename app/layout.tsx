@@ -1,15 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter, Poppins, Raleway } from 'next/font/google';
+import { Poppins, Raleway } from 'next/font/google';
 import { Bricolage_Grotesque } from 'next/font/google';
 import { ThemeProvider } from '@/app/components/providers/theme-provider';
 import './globals.css';
 import { siteUrl } from '@/app/lib/site.config';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],

@@ -5,6 +5,7 @@ import { FiGithub, FiExternalLink, FiCode, FiMaximize2, FiChevronLeft, FiChevron
 import { Badge } from '@/app/components/atoms/badge';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import { AssetPreviewLightbox } from './asset-preview-lightbox';
+import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './project-card.module.css';
 
 export interface IAsset {
@@ -224,10 +225,11 @@ export function ProjectCard({
                 return (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
-                        src={asset.url}
+                        src={optimizeImageUrl(asset.url, 640)}
                         alt={`${title} - Asset ${index + 1}`}
                         className={styles.image}
                         onError={() => handleImageError(index)}
+                        loading="lazy"
                     />
                 );
         }

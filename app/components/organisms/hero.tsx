@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { FiArrowRight, FiDownload } from 'react-icons/fi';
 import { Container } from '@/app/components/layout/container';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
@@ -23,7 +24,7 @@ export function Hero({
     primaryCtaLink = '#projects',
     secondaryCtaText = 'Get In Touch',
     secondaryCtaLink = '#contact',
-    heroImage = '/hero-image.jpg',
+    heroImage = './public/profile_pic.jpeg',
 }: HeroProps) {
     const handlePrimaryClick = () => {
         trackClick('hero_primary_cta', true);
@@ -48,11 +49,13 @@ export function Hero({
                         <div className={styles.portraitWrapper}>
                             <div className={styles.portraitRing}>
                                 <div className={styles.portraitInner}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
+                                    <Image
                                         src={heroImage}
                                         alt="Portrait"
                                         className={styles.heroImage}
+                                        width={110}
+                                        height={110}
+                                        priority
                                     />
                                 </div>
                             </div>

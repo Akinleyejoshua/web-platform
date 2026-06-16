@@ -9,6 +9,7 @@ import { IHero } from '@/app/lib/models/hero';
 import { IAbout } from '@/app/lib/models/about';
 import { IContact } from '@/app/lib/models/contact';
 import { usePageViewTracker, useSectionViewTracker } from '@/app/hooks/useAnalyticsTracker';
+import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './page.module.css';
 import blogStyles from './blog/blog.module.css';
 
@@ -31,11 +32,36 @@ interface PortfolioData {
   latestBlogs: BlogPost[];
 }
 
+const defaultHero: IHero = {
+  headline: 'Joshua Akinleye',
+  subtext: "I'm a Full Stack Developer & Machine Learning Engineer. As a Lead full-stack developer and ML Engineer, I possess a diverse skill set, proficient in both front-end and back-end and data-science technologies.",
+  primaryCtaText: 'View Projects',
+  primaryCtaLink: '#projects',
+  secondaryCtaText: 'Get In Touch',
+  secondaryCtaLink: '#contact',
+  heroImage: '/hero-image.jpg',
+} as any;
+
+const defaultAbout: IAbout = {
+  bio: "As a Lead full-stack developer and ML Engineer, I possess a diverse skill set, proficient in both front-end and back-end and data-science technologies.\n\nMy expertise includes designing user interfaces, implementing server-side logic, managing databases, building and deploying ML models. With a solid understanding of web development frameworks and languages, I contribute to creating seamless and efficient applications.\n\nMy problem-solving abilities and adaptability make me a valuable asset in the ever-evolving landscape of software development.",
+  socialLinks: [
+    { platform: 'github', url: 'http://github.com/Akinleyejoshua', icon: 'github' },
+    { platform: 'turing', url: 'https://matching.turing.com/developer-resume-preview/94fcd098ef28063a611a36b6c211b83394302204b3221e', icon: 'linkedin' },
+    { platform: 'linkedin', url: 'https://linkedin.com/in/joshua-a-9895b61ab', icon: 'linkedin' },
+    { platform: 'website', url: 'https://akinleyejoshua.vercel.app', icon: 'globe' },
+  ],
+} as any;
+
+const defaultContact: IContact = {
+  email: 'akinleyejoshua.dev@gmail.com',
+  phone: '23408131519518',
+} as any;
+
 export default function Home() {
   const [data, setData] = useState<PortfolioData>({
-    hero: null,
-    about: null,
-    contact: null,
+    hero: defaultHero,
+    about: defaultAbout,
+    contact: defaultContact,
     latestBlogs: [],
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -72,9 +98,9 @@ export default function Home() {
         ]);
 
         setData({
-          hero: heroRes.data,
-          about: aboutRes.data,
-          contact: contactRes.data,
+          hero: heroRes.data || defaultHero,
+          about: aboutRes.data || defaultAbout,
+          contact: contactRes.data || defaultContact,
           latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
         });
       } catch (error) {
@@ -86,10 +112,6 @@ export default function Home() {
 
     fetchData();
   }, []);
-
-  if (isLoading) {
-    return <Loader variant="fullscreen" />;
-  }
 
   const { hero, about, contact, latestBlogs } = data;
 
@@ -151,7 +173,7 @@ export default function Home() {
                   <div className={blogStyles.cardHeader}>
                     {blog.coverImage ? (
                       <img
-                        src={blog.coverImage}
+                        src={optimizeImageUrl(blog.coverImage, 640)}
                         alt={blog.title}
                         className={blogStyles.coverImage}
                         loading="lazy"
