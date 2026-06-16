@@ -2,29 +2,59 @@ import React from 'react';
 import styles from './timeline-item.module.css';
 
 interface TimelineItemProps {
-    role: string;
-    company: string;
-    startDate: string;
-    endDate: string | null;
+    role?: string;
+    company?: string;
+    startDate?: string;
+    endDate?: string | null;
     isCurrent?: boolean;
-    description: string[];
+    description?: string[];
     className?: string;
+    isLoading?: boolean;
 }
 
 function formatDate(dateString: string): string {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
 export function TimelineItem({
-    role,
-    company,
-    startDate,
-    endDate,
+    role = '',
+    company = '',
+    startDate = '',
+    endDate = null,
     isCurrent = false,
-    description,
+    description = [],
     className = '',
+    isLoading = false,
 }: TimelineItemProps) {
+    if (isLoading) {
+        return (
+            <div className={`${styles.item} ${className}`.trim()} style={{ pointerEvents: 'none' }}>
+                {/* Left Side: Meta Info Skeleton */}
+                <div className={styles.metaSide}>
+                    <div className="skeleton" style={{ width: '120px', height: '1rem', marginBottom: '8px' }} />
+                    <div className="skeleton" style={{ width: '80px', height: '1.25rem' }} />
+                </div>
+
+                {/* Middle: Divider dot & Line */}
+                <div className={styles.dividerSide}>
+                    <div className={`${styles.dot} skeleton`} style={{ background: 'var(--color-border)' }} />
+                    <div className={styles.line} />
+                </div>
+
+                {/* Right Side: Details Skeleton */}
+                <div className={styles.detailsSide}>
+                    <div className="skeleton" style={{ width: '150px', height: '1.5rem', marginBottom: '12px' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div className="skeleton" style={{ width: '100%', height: '1rem' }} />
+                        <div className="skeleton" style={{ width: '90%', height: '1rem' }} />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     const formattedStart = formatDate(startDate);
     const formattedEnd = endDate ? formatDate(endDate) : 'Present';
 

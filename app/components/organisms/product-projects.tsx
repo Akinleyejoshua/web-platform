@@ -43,8 +43,10 @@ export function ProductProjects() {
             </div>
 
             {isLoading ? (
-                <div className={styles.loaderWrapper}>
-                    <Loader variant="section" />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '2rem 0' }}>
+                    <ProjectCard isLoading={true} />
+                    <ProjectCard isLoading={true} />
+                    <ProjectCard isLoading={true} />
                 </div>
             ) : error ? (
                 <div className={styles.errorState}>

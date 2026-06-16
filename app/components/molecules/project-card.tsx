@@ -14,29 +14,31 @@ export interface IAsset {
 }
 
 interface ProjectCardProps {
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
     mediaType?: 'image' | 'video';
     mediaUrl?: string;
     assets?: IAsset[];
-    technologies: string[];
+    technologies?: string[];
     githubUrl?: string;
     liveUrl?: string;
     blogUrl?: string;
     className?: string;
+    isLoading?: boolean;
 }
 
 export function ProjectCard({
-    title,
-    description,
+    title = '',
+    description = '',
     mediaType = 'image',
     mediaUrl = '',
     assets = [],
-    technologies,
+    technologies = [],
     githubUrl,
     liveUrl,
     blogUrl,
     className = '',
+    isLoading = false,
 }: ProjectCardProps) {
     const [imageError, setImageError] = useState<Record<number, boolean>>({});
     const [activeAssetIndex, setActiveAssetIndex] = useState(0);
@@ -234,6 +236,29 @@ export function ProjectCard({
                 );
         }
     };
+
+    if (isLoading) {
+        return (
+            <article className={`${styles.card} ${className}`.trim()} style={{ pointerEvents: 'none' }}>
+                <div className={`${styles.media} skeleton`} style={{ height: '200px', width: '100%' }} />
+                <div className={styles.content}>
+                    <div className="skeleton" style={{ width: '40%', height: '0.875rem', marginBottom: '12px', borderRadius: '4px' }} />
+                    <div className="skeleton" style={{ width: '80%', height: '1.5rem', marginBottom: '12px' }} />
+                    <div className="skeleton" style={{ width: '100%', height: '1rem', marginBottom: '8px' }} />
+                    <div className="skeleton" style={{ width: '90%', height: '1rem', marginBottom: '20px' }} />
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                        <div className="skeleton" style={{ width: '60px', height: '24px', borderRadius: '12px' }} />
+                        <div className="skeleton" style={{ width: '60px', height: '24px', borderRadius: '12px' }} />
+                        <div className="skeleton" style={{ width: '60px', height: '24px', borderRadius: '12px' }} />
+                    </div>
+                    <div style={{ display: 'flex', gap: '16px' }}>
+                        <div className="skeleton" style={{ width: '80px', height: '36px', borderRadius: '18px' }} />
+                        <div className="skeleton" style={{ width: '80px', height: '36px', borderRadius: '18px' }} />
+                    </div>
+                </div>
+            </article>
+        );
+    }
 
     return (
         <>

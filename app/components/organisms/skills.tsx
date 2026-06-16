@@ -61,8 +61,22 @@ export function Skills() {
             alternate
         >
             {isLoading ? (
-                <div className={styles.loaderWrapper}>
-                    <Loader variant="section" />
+                <div className={styles.container}>
+                    {[1, 2].map((groupIndex) => (
+                        <div key={groupIndex} className={styles.categoryGroup} style={{ width: '100%' }}>
+                            <div className="skeleton" style={{ width: '120px', height: '1.5rem', marginBottom: '1.25rem' }} />
+                            <div className={styles.skillGrid}>
+                                {[1, 2, 3, 4].map((cardIndex) => (
+                                    <div key={cardIndex} className={styles.skillCard} style={{ pointerEvents: 'none', background: 'rgba(255,255,255,0.02)' }}>
+                                        <div className={`${styles.iconWrapper} skeleton`} style={{ width: '48px', height: '48px', borderRadius: '8px' }} />
+                                        <div className={styles.skillInfo}>
+                                            <div className="skeleton" style={{ width: '70px', height: '1rem' }} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : error ? (
                 <div className={styles.errorState}>

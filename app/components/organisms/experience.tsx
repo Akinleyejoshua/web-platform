@@ -17,7 +17,11 @@ export function Experience() {
             subtitle="My professional journey and career milestones"
         >
             {isLoading ? (
-                <Loader variant="section" />
+                <div className={styles.timeline}>
+                    <TimelineItem isLoading={true} />
+                    <TimelineItem isLoading={true} />
+                    <TimelineItem isLoading={true} />
+                </div>
             ) : error ? (
                 <p className={styles.empty}>Unable to load experiences</p>
             ) : experiences.length === 0 ? (
