@@ -16,6 +16,7 @@ import { usePageViewTracker, useSectionViewTracker } from '@/app/hooks/useAnalyt
 import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './page.module.css';
 import blogStyles from './blog/blog.module.css';
+import cacheData from '@/app/lib/cache-data';
 
 interface BlogPost {
   _id: string;
@@ -107,33 +108,28 @@ export default function Home() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // Step 1: Check cache config and load settings
         const [configRes, settingsRes] = await Promise.all([
-          axios.get('/api/cache-config'),
+          axios.get(`/api/cache-config?t=${Date.now()}`, {
+            headers: {
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          }),
           axios.get('/api/settings')
         ]);
 
         const enableCache = configRes.data?.enableCache;
+        const cachedSections = configRes.data?.cachedSections || [];
         const currentSettings = settingsRes.data;
         const limit = currentSettings?.projectsLimit || 4;
 
-        let cache: any = {};
-        let cacheLoaded = false;
-
-        if (enableCache) {
-          try {
-            // Step 2a: Fetch cache.json directly from the client (public static file)
-            const cacheRes = await axios.get('/cache.json');
-            cache = cacheRes.data || {};
-            cacheLoaded = true;
-          } catch (cacheError) {
-            console.warn('Failed to fetch cache.json, will query database for all sections:', cacheError);
-          }
-        }
+        const cache: any = cacheData || {};
+        const cacheLoaded = Object.keys(cache).length > 0;
 
         // Helper to check if a section is cached
         const isCached = (section: string) => {
-          return cacheLoaded && cache[section] !== undefined && cache[section] !== null;
+          return enableCache && cacheLoaded && cachedSections.includes(section) && cache[section] !== undefined && cache[section] !== null;
         };
 
         // Helper to extract data from wrapped cache structure

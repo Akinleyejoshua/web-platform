@@ -8,6 +8,7 @@ import {
     clearAllCache,
     listCachedSections,
     setCachedSection,
+    writeCache,
 } from '@/app/lib/cache';
 import Hero from '@/app/lib/models/hero';
 import About from '@/app/lib/models/about';
@@ -78,6 +79,8 @@ async function fetchSectionData(section: CacheableSection): Promise<unknown> {
     }
 }
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/cache — list cached sections and their metadata
  */
@@ -133,18 +136,30 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        const cache = await readCache();
         const results: Record<string, string> = {};
 
         for (const section of sections) {
             try {
                 const data = await fetchSectionData(section);
-                await setCachedSection(section, data);
-                results[section] = 'cached';
+                if (data !== null && data !== undefined) {
+                    const isArray = Array.isArray(data);
+                    cache[section] = {
+                        data,
+                        _cachedAt: new Date().toISOString(),
+                        _type: isArray ? 'array' : 'object',
+                    };
+                    results[section] = 'cached';
+                } else {
+                    results[section] = 'skipped';
+                }
             } catch (err) {
                 console.error(`Failed to cache section ${section}:`, err);
                 results[section] = 'failed';
             }
         }
+
+        await writeCache(cache);
 
         return NextResponse.json(
             { message: 'Cache updated', results },

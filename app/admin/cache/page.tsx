@@ -56,7 +56,7 @@ export default function CacheManagerPage() {
 
     const fetchCacheStatus = useCallback(async () => {
         try {
-            const res = await fetch('/api/cache');
+            const res = await fetch(`/api/cache?t=${Date.now()}`, { cache: 'no-store' });
             if (!res.ok) throw new Error('Failed to fetch cache status');
             const data = await res.json();
             setSections(data.sections || []);
