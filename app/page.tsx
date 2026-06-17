@@ -123,62 +123,53 @@ export default function Home() {
         const currentSettings = settingsRes.data;
         const limit = currentSettings?.projectsLimit || 4;
 
-        let cache: any = {};
-        if (enableCache) {
+        // Helper to dynamically load section cache data on demand
+        const loadSectionCache = async (section: string) => {
+          if (!enableCache || !cachedSections.includes(section)) return null;
           try {
-            const importedCache = await import('@/app/lib/cache-data');
-            cache = importedCache.default || importedCache.cacheData || {};
+            const module = await import(`@/app/lib/cache-data/${section}`);
+            const cacheEntry = module.default || module.cacheData || null;
+            if (cacheEntry && typeof cacheEntry === 'object' && 'data' in cacheEntry) {
+              return cacheEntry.data;
+            }
+            return cacheEntry;
           } catch (e) {
-            console.error('Failed to load cache data dynamically', e);
+            console.error(`Failed to load cache data dynamically for section: ${section}`, e);
+            return null;
           }
-        }
-        const cacheLoaded = Object.keys(cache).length > 0;
-
-        // Helper to check if a section is cached
-        const isCached = (section: string) => {
-          return enableCache && cacheLoaded && cachedSections.includes(section) && cache[section] !== undefined && cache[section] !== null;
         };
 
-        // Helper to extract data from wrapped cache structure
-        function getSectionData<T>(section: string, fallback: T): T {
-          const entry = cache[section];
-          if (entry && typeof entry === 'object' && entry !== null && 'data' in entry) {
-            return (entry as any).data as T;
-          }
-          return (entry as T) || fallback;
-        }
-
         // Prepare the promises: resolve from cache if exists, otherwise fetch from DB
-        const heroPromise = isCached('hero') 
-          ? Promise.resolve({ data: getSectionData('hero', defaultHero) }) 
+        const heroPromise = cachedSections.includes('hero') && enableCache
+          ? loadSectionCache('hero').then(data => ({ data: data || defaultHero }))
           : axios.get('/api/hero');
 
-        const aboutPromise = isCached('about') 
-          ? Promise.resolve({ data: getSectionData('about', defaultAbout) }) 
+        const aboutPromise = cachedSections.includes('about') && enableCache
+          ? loadSectionCache('about').then(data => ({ data: data || defaultAbout }))
           : axios.get('/api/about');
 
-        const contactPromise = isCached('contact') 
-          ? Promise.resolve({ data: getSectionData('contact', defaultContact) }) 
+        const contactPromise = cachedSections.includes('contact') && enableCache
+          ? loadSectionCache('contact').then(data => ({ data: data || defaultContact }))
           : axios.get('/api/contact');
 
-        const blogPromise = isCached('blog') 
-          ? Promise.resolve({ data: getSectionData('blog', []) }) 
+        const blogPromise = cachedSections.includes('blog') && enableCache
+          ? loadSectionCache('blog').then(data => ({ data: data || [] }))
           : axios.get('/api/blog');
 
-        const skillsPromise = isCached('skills') 
-          ? Promise.resolve({ data: getSectionData('skills', []) }) 
+        const skillsPromise = cachedSections.includes('skills') && enableCache
+          ? loadSectionCache('skills').then(data => ({ data: data || [] }))
           : axios.get('/api/skills');
 
-        const experiencePromise = isCached('experience') 
-          ? Promise.resolve({ data: getSectionData('experience', []) }) 
+        const experiencePromise = cachedSections.includes('experience') && enableCache
+          ? loadSectionCache('experience').then(data => ({ data: data || [] }))
           : axios.get('/api/experience');
 
-        const projectsPromise = isCached('projects') 
-          ? Promise.resolve({ data: { data: getSectionData('projects', []), total: getSectionData('projects', []).length } }) 
+        const projectsPromise = cachedSections.includes('projects') && enableCache
+          ? loadSectionCache('projects').then(data => ({ data: { data: data || [], total: (data || []).length } }))
           : axios.get('/api/projects', { params: { page: 1, limit } });
 
-        const productsPromise = isCached('product-projects') 
-          ? Promise.resolve({ data: { data: getSectionData('product-projects', []), total: getSectionData('product-projects', []).length } }) 
+        const productsPromise = cachedSections.includes('product-projects') && enableCache
+          ? loadSectionCache('product-projects').then(data => ({ data: { data: data || [], total: (data || []).length } }))
           : axios.get('/api/product-projects', { params: { page: 1, limit } });
 
         // Query database endpoints in parallel ONLY for the uncached sections
