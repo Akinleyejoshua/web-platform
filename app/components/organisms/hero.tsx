@@ -88,13 +88,13 @@ export function Hero({
                             <div className={styles.portraitWrapper}>
                                 <div className={styles.portraitRing}>
                                     <div className={styles.portraitInner}>
-                                        <Image
+                                        <img
                                             src={heroImage}
                                             alt="Portrait"
                                             className={styles.heroImage}
                                             width={110}
                                             height={110}
-                                            priority
+
                                         />
                                     </div>
                                 </div>
