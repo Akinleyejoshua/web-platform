@@ -16,7 +16,6 @@ import { usePageViewTracker, useSectionViewTracker } from '@/app/hooks/useAnalyt
 import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './page.module.css';
 import blogStyles from './blog/blog.module.css';
-import cacheData from '@/app/lib/cache-data';
 
 interface BlogPost {
   _id: string;
@@ -124,7 +123,15 @@ export default function Home() {
         const currentSettings = settingsRes.data;
         const limit = currentSettings?.projectsLimit || 4;
 
-        const cache: any = cacheData || {};
+        let cache: any = {};
+        if (enableCache) {
+          try {
+            const importedCache = await import('@/app/lib/cache-data');
+            cache = importedCache.default || importedCache.cacheData || {};
+          } catch (e) {
+            console.error('Failed to load cache data dynamically', e);
+          }
+        }
         const cacheLoaded = Object.keys(cache).length > 0;
 
         // Helper to check if a section is cached
