@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import BlogPost from '@/app/lib/models/blogPost';
-import { getCachedSection } from '@/app/lib/cache';
+import { getCachedSection, setCachedSection } from '@/app/lib/cache';
+
+// Helper function to update the blog cache file
+async function updateBlogCache() {
+    try {
+        const visibleBlogs = await BlogPost.find({ isVisible: true }).sort({ createdAt: -1 }).lean();
+        await setCachedSection('blog', visibleBlogs);
+    } catch (err) {
+        console.error('Failed to update blog cache:', err);
+    }
+}
 
 // GET: fetch all blog posts, or filter by isVisible/slug
 export async function GET(request: NextRequest) {
@@ -102,6 +112,10 @@ export async function POST(request: NextRequest) {
         }
 
         const blog = await BlogPost.create(data);
+        
+        // Update cache
+        await updateBlogCache();
+
         return NextResponse.json(blog, { status: 201 });
     } catch (error) {
         console.error('Blog POST error:', error);
@@ -136,6 +150,9 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
         }
 
+        // Update cache
+        await updateBlogCache();
+
         return NextResponse.json(blog, { status: 200 });
     } catch (error) {
         console.error('Blog PUT error:', error);
@@ -160,6 +177,9 @@ export async function DELETE(request: NextRequest) {
         if (!blog) {
             return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
         }
+
+        // Update cache
+        await updateBlogCache();
 
         return NextResponse.json({ message: 'Blog post deleted successfully' }, { status: 200 });
     } catch (error) {
