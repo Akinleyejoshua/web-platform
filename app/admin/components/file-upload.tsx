@@ -47,6 +47,15 @@ export function FileUpload({
         }
     }, [value]);
 
+    // Sync preview state when value prop changes (e.g. after API load)
+    useEffect(() => {
+        const sanitized = value ? value.trim().replace(/^:+/, '') : '';
+        setPreview(sanitized || null);
+        if (value && value !== sanitized) {
+            onChange(sanitized);
+        }
+    }, [value]);
+
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -109,8 +118,9 @@ export function FileUpload({
 
     const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const url = e.target.value;
-        onChange(url);
-        setPreview(url || null);
+        const sanitized = url.trim().replace(/^:+/, '');
+        onChange(sanitized);
+        setPreview(sanitized || null);
     };
 
     const handleClear = () => {

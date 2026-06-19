@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
 import Hero from '@/app/lib/models/hero';
-import { getCachedSection } from '@/app/lib/cache';
+import { getCachedSection, setCachedSection } from '@/app/lib/cache';
 
 export async function GET(request: NextRequest) {
     try {
@@ -48,6 +48,9 @@ export async function PUT(request: NextRequest) {
         } else {
             hero = await Hero.findByIdAndUpdate(hero._id, data, { new: true });
         }
+
+        // Update static cache file on save
+        await setCachedSection('hero', hero);
 
         return NextResponse.json(hero, { status: 200 });
     } catch (error) {
