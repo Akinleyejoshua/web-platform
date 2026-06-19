@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FiArrowRight, FiDownload } from 'react-icons/fi';
 import { Container } from '@/app/components/layout/container';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
+import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './hero.module.css';
 
 interface HeroProps {
@@ -89,7 +90,7 @@ export function Hero({
                                 <div className={styles.portraitRing}>
                                     <div className={styles.portraitInner}>
                                         <img
-                                            src={heroImage}
+                                            src={optimizeImageUrl(heroImage, 640)}
                                             alt="Portrait"
                                             className={styles.heroImage}
                                             width={110}
