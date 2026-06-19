@@ -51,7 +51,7 @@ export function useProductProjects(options?: { admin?: boolean; initialData?: IP
         setPage(1);
     }, [activeCategory]);
 
-    const fetchProducts = useCallback(async () => {
+    const fetchProducts = useCallback(async (signal?: AbortSignal) => {
         if (isFirstRender.current && options?.initialData) {
             isFirstRender.current = false;
             setIsLoading(false);
@@ -68,7 +68,7 @@ export function useProductProjects(options?: { admin?: boolean; initialData?: IP
                 params.limit = limit;
             }
 
-            const response = await axios.get('/api/product-projects', { params });
+            const response = await axios.get('/api/product-projects', { params, signal });
             if (!isAdmin && limit > 0) {
                 setProducts(response.data.data || []);
                 setTotal(response.data.total || 0);
@@ -76,18 +76,21 @@ export function useProductProjects(options?: { admin?: boolean; initialData?: IP
                 setProducts(response.data || []);
                 setTotal(response.data.length || 0);
             }
+            setIsLoading(false);
         } catch (err) {
+            if (axios.isCancel(err)) return;
             const message = axios.isAxiosError(err)
                 ? err.response?.data?.error || 'Failed to fetch products'
                 : 'An unexpected error occurred';
             setError(message);
-        } finally {
             setIsLoading(false);
         }
     }, [activeCategory, page, limit, isAdmin, options?.initialData, options?.initialTotal]);
 
     useEffect(() => {
-        fetchProducts();
+        const controller = new AbortController();
+        fetchProducts(controller.signal);
+        return () => controller.abort();
     }, [fetchProducts]);
 
     return {
