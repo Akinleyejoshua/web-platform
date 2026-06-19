@@ -84,6 +84,7 @@ export default function Home() {
   const [isHeroLoading, setIsHeroLoading] = useState(true);
   const [isAboutLoading, setIsAboutLoading] = useState(true);
   const [isContactLoading, setIsContactLoading] = useState(true);
+  const [isBlogLoading, setIsBlogLoading] = useState(true);
 
   // Section refs for tracking
   const heroRef = useRef<HTMLElement>(null);
@@ -199,33 +200,57 @@ export default function Home() {
           setIsContactLoading(false);
         });
 
-        // Resolve larger collections together
-        Promise.all([
-          blogPromise,
-          skillsPromise,
-          experiencePromise,
-          projectsPromise,
-          productsPromise
-        ]).then(([blogRes, skillsRes, experienceRes, projectsRes, productsRes]) => {
-          const projectsData = projectsRes.data?.data ?? projectsRes.data ?? [];
-          const projectsTotal = projectsRes.data?.total ?? (Array.isArray(projectsRes.data) ? projectsRes.data.length : 0);
-          
-          const productsData = productsRes.data?.data ?? productsRes.data ?? [];
-          const productsTotal = productsRes.data?.total ?? (Array.isArray(productsRes.data) ? productsRes.data.length : 0);
+        // Resolve Skills independently
+        skillsPromise.then((res) => {
+          setData(prev => ({ ...prev, skills: res.data || [] }));
+        }).catch((err) => {
+          console.error('Failed to load skills:', err);
+        });
 
+        // Resolve Experience independently
+        experiencePromise.then((res) => {
+          setData(prev => ({ ...prev, experience: res.data || [] }));
+        }).catch((err) => {
+          console.error('Failed to load experience:', err);
+        });
+
+        // Resolve Projects independently
+        projectsPromise.then((res) => {
+          const projectsData = res.data?.data ?? res.data ?? [];
+          const projectsTotal = res.data?.total ?? (Array.isArray(res.data) ? res.data.length : 0);
           setData(prev => ({
             ...prev,
-            latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
-            skills: skillsRes.data || [],
-            experience: experienceRes.data || [],
             projects: Array.isArray(projectsData) ? projectsData.slice(0, limit) : [],
             projectsTotal,
+          }));
+        }).catch((err) => {
+          console.error('Failed to load projects:', err);
+        });
+
+        // Resolve Product Projects independently
+        productsPromise.then((res) => {
+          const productsData = res.data?.data ?? res.data ?? [];
+          const productsTotal = res.data?.total ?? (Array.isArray(res.data) ? res.data.length : 0);
+          setData(prev => ({
+            ...prev,
             productProjects: Array.isArray(productsData) ? productsData.slice(0, limit) : [],
             productProjectsTotal: productsTotal,
           }));
+        }).catch((err) => {
+          console.error('Failed to load products:', err);
+        });
+
+        // Resolve Blogs independently
+        blogPromise.then((res) => {
+          setData(prev => ({
+            ...prev,
+            latestBlogs: Array.isArray(res.data) ? res.data.slice(0, 3) : [],
+          }));
+          setIsBlogLoading(false);
           setIsLoading(false);
-        }).catch((error) => {
-          console.error('Failed to fetch portfolio lists:', error);
+        }).catch((err) => {
+          console.error('Failed to load blogs:', err);
+          setIsBlogLoading(false);
           setIsLoading(false);
         });
 
@@ -234,6 +259,7 @@ export default function Home() {
         setIsHeroLoading(false);
         setIsAboutLoading(false);
         setIsContactLoading(false);
+        setIsBlogLoading(false);
         setIsLoading(false);
       }
     };
@@ -286,7 +312,7 @@ export default function Home() {
 
      
 
-        {(isLoading || latestBlogs.length > 0) && (
+        {(isBlogLoading || latestBlogs.length > 0) && (
         <section ref={blogsRef} id="latest-blogs-section" style={{ padding: '6rem 0', borderBottom: '1px solid var(--color-border)' }}>
           <div className={blogStyles.container}>
             <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
@@ -298,7 +324,7 @@ export default function Home() {
             </div>
 
             <div className={blogStyles.blogGrid}>
-              {isLoading ? (
+              {isBlogLoading ? (
                 Array.from({ length: 3 }).map((_, idx) => (
                   <article key={idx} className={blogStyles.blogCard} style={{ pointerEvents: 'none' }}>
                     <div className={`${blogStyles.cardHeader} skeleton`} style={{ height: '200px', width: '100%' }} />
