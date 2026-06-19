@@ -81,6 +81,9 @@ export default function Home() {
     productProjectsTotal: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isHeroLoading, setIsHeroLoading] = useState(true);
+  const [isAboutLoading, setIsAboutLoading] = useState(true);
+  const [isContactLoading, setIsContactLoading] = useState(true);
 
   // Section refs for tracking
   const heroRef = useRef<HTMLElement>(null);
@@ -106,7 +109,6 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
         const [configRes, settingsRes] = await Promise.all([
           axios.get(`/api/cache-config?t=${Date.now()}`, {
             headers: {
@@ -172,39 +174,66 @@ export default function Home() {
           ? loadSectionCache('product-projects').then(data => ({ data: { data: data || [], total: (data || []).length } }))
           : axios.get('/api/product-projects', { params: { page: 1, limit } });
 
-        // Query database endpoints in parallel ONLY for the uncached sections
-        const [heroRes, aboutRes, contactRes, blogRes, skillsRes, experienceRes, projectsRes, productsRes] = await Promise.all([
-          heroPromise,
-          aboutPromise,
-          contactPromise,
+        // Resolve Hero, About, and Contact independently
+        heroPromise.then((res) => {
+          setData(prev => ({ ...prev, hero: res.data || defaultHero }));
+          setIsHeroLoading(false);
+        }).catch((err) => {
+          console.error('Failed to load hero section:', err);
+          setIsHeroLoading(false);
+        });
+
+        aboutPromise.then((res) => {
+          setData(prev => ({ ...prev, about: res.data || defaultAbout }));
+          setIsAboutLoading(false);
+        }).catch((err) => {
+          console.error('Failed to load about section:', err);
+          setIsAboutLoading(false);
+        });
+
+        contactPromise.then((res) => {
+          setData(prev => ({ ...prev, contact: res.data || defaultContact }));
+          setIsContactLoading(false);
+        }).catch((err) => {
+          console.error('Failed to load contact section:', err);
+          setIsContactLoading(false);
+        });
+
+        // Resolve larger collections together
+        Promise.all([
           blogPromise,
           skillsPromise,
           experiencePromise,
           projectsPromise,
           productsPromise
-        ]);
+        ]).then(([blogRes, skillsRes, experienceRes, projectsRes, productsRes]) => {
+          const projectsData = projectsRes.data?.data ?? projectsRes.data ?? [];
+          const projectsTotal = projectsRes.data?.total ?? (Array.isArray(projectsRes.data) ? projectsRes.data.length : 0);
+          
+          const productsData = productsRes.data?.data ?? productsRes.data ?? [];
+          const productsTotal = productsRes.data?.total ?? (Array.isArray(productsRes.data) ? productsRes.data.length : 0);
 
-        const projectsData = projectsRes.data?.data ?? projectsRes.data ?? [];
-        const projectsTotal = projectsRes.data?.total ?? (Array.isArray(projectsRes.data) ? projectsRes.data.length : 0);
-        
-        const productsData = productsRes.data?.data ?? productsRes.data ?? [];
-        const productsTotal = productsRes.data?.total ?? (Array.isArray(productsRes.data) ? productsRes.data.length : 0);
-
-        setData({
-          hero: heroRes.data || defaultHero,
-          about: aboutRes.data || defaultAbout,
-          contact: contactRes.data || defaultContact,
-          latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
-          skills: skillsRes.data || [],
-          experience: experienceRes.data || [],
-          projects: Array.isArray(projectsData) ? projectsData.slice(0, limit) : [],
-          projectsTotal,
-          productProjects: Array.isArray(productsData) ? productsData.slice(0, limit) : [],
-          productProjectsTotal: productsTotal,
+          setData(prev => ({
+            ...prev,
+            latestBlogs: Array.isArray(blogRes.data) ? blogRes.data.slice(0, 3) : [],
+            skills: skillsRes.data || [],
+            experience: experienceRes.data || [],
+            projects: Array.isArray(projectsData) ? projectsData.slice(0, limit) : [],
+            projectsTotal,
+            productProjects: Array.isArray(productsData) ? productsData.slice(0, limit) : [],
+            productProjectsTotal: productsTotal,
+          }));
+          setIsLoading(false);
+        }).catch((error) => {
+          console.error('Failed to fetch portfolio lists:', error);
+          setIsLoading(false);
         });
+
       } catch (error) {
-        console.error('Failed to fetch portfolio data:', error);
-      } finally {
+        console.error('Failed to initialize page data:', error);
+        setIsHeroLoading(false);
+        setIsAboutLoading(false);
+        setIsContactLoading(false);
         setIsLoading(false);
       }
     };
@@ -227,7 +256,7 @@ export default function Home() {
           secondaryCtaText={hero?.secondaryCtaText}
           secondaryCtaLink={hero?.secondaryCtaLink}
           heroImage={hero?.heroImage}
-          isLoading={isLoading}
+          isLoading={isHeroLoading}
         />
       </section>
 
@@ -235,7 +264,7 @@ export default function Home() {
         <About
           bio={about?.bio}
           socialLinks={about?.socialLinks}
-          isLoading={isLoading}
+          isLoading={isAboutLoading}
         />
       </section>
 
@@ -393,7 +422,7 @@ export default function Home() {
           email={contact?.email}
           phone={contact?.phone}
           socialLinks={about?.socialLinks}
-          isLoading={isLoading}
+          isLoading={isContactLoading}
         />
       </section>
 
