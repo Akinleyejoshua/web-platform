@@ -64,26 +64,28 @@ export default function AdminDashboardPage() {
         const maxPossible = Math.max(...dailyStats.map(d => d.views), 1);
 
         const aggregateByWeek = (data: typeof dailyStats) => {
+            const chronologicalData = [...data].reverse();
             const weeks: { week: string; views: number; date: string }[] = [];
-            data.forEach((day, idx) => {
+            chronologicalData.forEach((day, idx) => {
                 const weekNum = Math.floor(idx / 7);
                 if (!weeks[weekNum]) {
                     weeks[weekNum] = { week: `Week ${weekNum + 1}`, views: 0, date: day.date };
                 }
                 weeks[weekNum].views += day.views;
             });
-            return weeks.reverse();
+            return weeks;
         };
 
         const aggregateByMonth = (data: typeof dailyStats) => {
+            const chronologicalData = [...data].reverse();
             const months: Map<string, { views: number; date: string }> = new Map();
-            data.forEach((day) => {
+            chronologicalData.forEach((day) => {
                 const date = new Date(day.date);
                 const monthKey = `${date.toLocaleString('default', { month: 'short' })} ${date.getFullYear()}`;
                 const existing = months.get(monthKey) || { views: 0, date: day.date };
                 months.set(monthKey, { views: existing.views + day.views, date: day.date });
             });
-            return Array.from(months.entries()).map(([label, data]) => ({ week: label, views: data.views, date: data.date })).reverse();
+            return Array.from(months.entries()).map(([label, data]) => ({ week: label, views: data.views, date: data.date }));
         };
 
         switch (timeRange) {
@@ -92,7 +94,7 @@ export default function AdminDashboardPage() {
             case '7d':
                 return { data: dailyStats.slice(0, 7).reverse(), maxViews: Math.max(...dailyStats.slice(0, 7).map(d => d.views), 1), label: 'Last 7 days' };
             case '30d':
-                const weeklyData = aggregateByWeek(dailyStats.slice(0, 30));
+                const weeklyData = aggregateByWeek(dailyStats.slice(0, 28));
                 return { data: weeklyData, maxViews: Math.max(...weeklyData.map(d => d.views), 1), label: 'Last 4 weeks (1 month)' };
             case '1y':
                 const monthlyData = aggregateByMonth(dailyStats.slice(0, 365));

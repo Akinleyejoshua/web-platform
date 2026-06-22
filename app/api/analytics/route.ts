@@ -11,18 +11,24 @@ export async function GET() {
     try {
         await connectDB();
 
-        // Get last 30 days of analytics
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        const startDate = thirtyDaysAgo.toISOString().split('T')[0];
+        // Get last 365 days of analytics
+        const oneYearAgo = new Date();
+        oneYearAgo.setDate(oneYearAgo.getDate() - 365);
+        const startDate = oneYearAgo.toISOString().split('T')[0];
 
         const analytics = await Analytics.find({
             date: { $gte: startDate },
         }).sort({ date: -1 }).lean();
 
+        // Filter last 30 days of analytics for 30-day metrics
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+        const last30DaysAnalytics = analytics.filter(entry => entry.date >= thirtyDaysAgoStr);
+
         // Calculate totals for the last 30 days
-        const totalViews = analytics.reduce((sum, entry) => sum + (entry.views || 0), 0);
-        const totalVisitors = analytics.reduce((sum, entry) => sum + (entry.uniqueVisitors || 0), 0);
+        const totalViews = last30DaysAnalytics.reduce((sum, entry) => sum + (entry.views || 0), 0);
+        const totalVisitors = last30DaysAnalytics.reduce((sum, entry) => sum + (entry.uniqueVisitors || 0), 0);
 
         // Calculate all-time totals
         const allTimeStats = await Analytics.aggregate([
@@ -37,9 +43,9 @@ export async function GET() {
         const allTimeViews = allTimeStats[0]?.totalViews || 0;
         const allTimeVisitors = allTimeStats[0]?.totalVisitors || 0;
 
-        // Aggregate section views
+        // Aggregate section views (last 30 days)
         const sectionViewTotals: Record<string, number> = {};
-        analytics.forEach(entry => {
+        last30DaysAnalytics.forEach(entry => {
             if (entry.sectionViews) {
                 // Handle both Map and plain object
                 const sectionMap = entry.sectionViews instanceof Map
@@ -51,9 +57,9 @@ export async function GET() {
             }
         });
 
-        // Aggregate clicks
+        // Aggregate clicks (last 30 days)
         const clickTotals: Record<string, number> = {};
-        analytics.forEach(entry => {
+        last30DaysAnalytics.forEach(entry => {
             if (entry.clicks) {
                 // Handle both Map and plain object
                 const clickMap = entry.clicks instanceof Map
