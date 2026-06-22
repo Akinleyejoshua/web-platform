@@ -110,6 +110,8 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Comment out cache configuration as we are no longer using it
+        /*
         const [configRes, settingsRes] = await Promise.all([
           axios.get(`/api/cache-config?t=${Date.now()}`, {
             headers: {
@@ -123,6 +125,10 @@ export default function Home() {
 
         const enableCache = configRes.data?.enableCache;
         const cachedSections = configRes.data?.cachedSections || [];
+        */
+        const settingsRes = await axios.get('/api/settings');
+        const enableCache = false;
+        const cachedSections: string[] = [];
         const currentSettings = settingsRes.data;
         const limit = currentSettings?.projectsLimit || 4;
 
