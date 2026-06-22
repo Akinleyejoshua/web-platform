@@ -12,16 +12,57 @@ interface SocialLinkData {
 interface AboutProps {
     bio?: string;
     socialLinks?: SocialLinkData[];
+    videoUrl?: string;
+    videoPublic?: boolean;
     isLoading?: boolean;
 }
 
 export function About({
     bio = 'A passionate developer creating innovative solutions.',
     socialLinks = [],
+    videoUrl = '',
+    videoPublic = false,
     isLoading = false,
 }: AboutProps) {
     const isHtml = /<[a-z][\s\S]*>/i.test(bio);
     const bioParagraphs = isHtml ? [] : bio.split('\n').filter((p) => p.trim());
+
+    const getEmbedUrl = (url: string) => {
+        if (!url) return null;
+        
+        // Youtube
+        const youtubeReg = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        const ytMatch = url.match(youtubeReg);
+        if (ytMatch) {
+            return { type: 'youtube', url: `https://www.youtube.com/embed/${ytMatch[1]}` };
+        }
+
+        // Loom
+        const loomReg = /loom\.com\/(?:share|embed)\/([a-zA-Z0-9\-]+)/;
+        const loomMatch = url.match(loomReg);
+        if (loomMatch) {
+            return { type: 'loom', url: `https://www.loom.com/embed/${loomMatch[1]}` };
+        }
+
+        // Vimeo
+        const vimeoReg = /vimeo\.com\/(?:video\/)?([0-9]+)/;
+        const vimeoMatch = url.match(vimeoReg);
+        if (vimeoMatch) {
+            return { type: 'vimeo', url: `https://player.vimeo.com/video/${vimeoMatch[1]}` };
+        }
+
+        // Direct video files
+        if (/\.(mp4|webm|ogg)$/i.test(url) || url.includes('/video/') || url.includes('/uploads/')) {
+            return { type: 'direct', url };
+        }
+
+        // Check if already an embed
+        if (url.includes('embed') || url.includes('player')) {
+            return { type: 'iframe', url };
+        }
+
+        return { type: 'direct', url };
+    };
 
     return (
         <Section
@@ -58,6 +99,31 @@ export function About({
                             ))
                         )}
                     </div>
+
+                    {/* Video Player */}
+                    {!isLoading && videoPublic && videoUrl && (() => {
+                        const parsedVideo = getEmbedUrl(videoUrl);
+                        if (!parsedVideo) return null;
+
+                        return (
+                            <div className={styles.videoWrapper}>
+                                {parsedVideo.type === 'direct' ? (
+                                    <video 
+                                        src={parsedVideo.url} 
+                                        controls 
+                                        className={styles.videoElement}
+                                    />
+                                ) : (
+                                    <iframe
+                                        src={parsedVideo.url}
+                                        allowFullScreen
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        className={styles.videoIframe}
+                                    />
+                                )}
+                            </div>
+                        );
+                    })()}
 
                     {/* Footer Connections */}
                     {isLoading ? (

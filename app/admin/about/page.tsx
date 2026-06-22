@@ -19,6 +19,8 @@ interface SocialLink {
 export default function AdminAboutPage() {
     const [bio, setBio] = useState('');
     const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [videoPublic, setVideoPublic] = useState(false);
     const [editingLink, setEditingLink] = useState<SocialLink | null>(null);
     const [editingLinkIndex, setEditingLinkIndex] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +33,8 @@ export default function AdminAboutPage() {
                 const response = await axios.get('/api/about');
                 setBio(response.data.bio || '');
                 setSocialLinks(response.data.socialLinks || []);
+                setVideoUrl(response.data.videoUrl || '');
+                setVideoPublic(response.data.videoPublic || false);
             } catch (error) {
                 console.error('Failed to fetch about data:', error);
             } finally {
@@ -80,7 +84,7 @@ export default function AdminAboutPage() {
         setMessage(null);
 
         try {
-            await axios.put('/api/about', { bio, socialLinks });
+            await axios.put('/api/about', { bio, socialLinks, videoUrl, videoPublic });
             setMessage({ type: 'success', text: 'About section updated successfully!' });
         } catch (error) {
             setMessage({ type: 'error', text: 'Failed to update about section.' });
@@ -127,6 +131,33 @@ export default function AdminAboutPage() {
                         onChange={(val) => setBio(val)}
                         placeholder="Write a brief introduction about yourself, your skills, and what you do..."
                     />
+                </div>
+
+                <div className={styles.sectionTitle}>Intro Video</div>
+
+                <div className={styles.row}>
+                    <div className={styles.field} style={{ flex: 3 }}>
+                        <label htmlFor="videoUrl" className={styles.label}>Video URL</label>
+                        <input
+                            type="text"
+                            id="videoUrl"
+                            value={videoUrl}
+                            onChange={(e) => setVideoUrl(e.target.value)}
+                            className={styles.input}
+                            placeholder="e.g. YouTube URL, Loom link, Vimeo link, or direct MP4 URL"
+                        />
+                    </div>
+                    <div className={styles.field} style={{ flex: 1, display: 'flex', alignItems: 'center', marginTop: '1.8rem' }}>
+                        <label className={styles.checkboxLabel}>
+                            <input
+                                type="checkbox"
+                                checked={videoPublic}
+                                onChange={(e) => setVideoPublic(e.target.checked)}
+                                className={styles.checkboxInput}
+                            />
+                            Make Video Public
+                        </label>
+                    </div>
                 </div>
 
                 <div className={styles.sectionTitle}>

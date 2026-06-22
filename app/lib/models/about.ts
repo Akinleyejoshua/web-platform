@@ -9,6 +9,8 @@ export interface ISocialLink {
 export interface IAbout extends Document {
     bio: string;
     socialLinks: ISocialLink[];
+    videoUrl?: string;
+    videoPublic?: boolean;
     updatedAt: Date;
 }
 
@@ -29,6 +31,8 @@ const AboutSchema = new Schema<IAbout>(
             default: 'A passionate developer creating innovative solutions.',
         },
         socialLinks: { type: [SocialLinkSchema], default: [] },
+        videoUrl: { type: String, default: '' },
+        videoPublic: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

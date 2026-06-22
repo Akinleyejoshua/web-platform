@@ -290,6 +290,8 @@ export default function Home() {
         <About
           bio={about?.bio}
           socialLinks={about?.socialLinks}
+          videoUrl={about?.videoUrl}
+          videoPublic={about?.videoPublic}
           isLoading={isAboutLoading}
         />
       </section>
