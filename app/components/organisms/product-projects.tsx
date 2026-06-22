@@ -75,6 +75,7 @@ export function ProductProjects({ initialData, initialTotal }: ProductProjectsPr
                                 mediaUrl={product.mediaUrl}
                                 assets={product.assets}
                                 technologies={product.technologies}
+                                githubUrl={product.githubUrl}
                                 liveUrl={product.liveUrl}
                                 blogUrl={product.blogUrl}
                             />

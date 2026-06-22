@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown, FiBookOpen } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown, FiBookOpen, FiGithub } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -20,6 +20,7 @@ interface ProductItem {
     mediaUrl: string;
     assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
     technologies: string[];
+    githubUrl?: string;
     liveUrl: string;
     blogUrl?: string;
     order: number;
@@ -34,6 +35,7 @@ const emptyProduct: ProductItem = {
     mediaUrl: '',
     assets: [],
     technologies: [],
+    githubUrl: '',
     liveUrl: '',
     blogUrl: '',
     order: 0,
@@ -405,6 +407,21 @@ export default function AdminProductsPage() {
                     </div>
 
                     <div className={styles.field}>
+                        <label className={styles.label}>GitHub URL (Optional)</label>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type="text"
+                                value={editingItem.githubUrl || ''}
+                                onChange={(e) => setEditingItem({ ...editingItem, githubUrl: e.target.value })}
+                                className={styles.input}
+                                style={{ paddingLeft: '40px' }}
+                                placeholder="https://github.com/..."
+                            />
+                            <FiGithub style={{ position: 'absolute', left: '12px', top: '14px', color: 'var(--color-text-secondary)' }} size={18} />
+                        </div>
+                    </div>
+
+                    <div className={styles.field}>
                         <label className={styles.label}>Blog Post Link / URL (Optional)</label>
                         <div style={{ position: 'relative' }}>
                             <input
@@ -494,6 +511,11 @@ export default function AdminProductsPage() {
                                     <button onClick={() => handleMove(index, 'down')} disabled={index === products.length - 1} className={projectStyles.actionBtn}>
                                         <FiArrowDown size={16} />
                                     </button>
+                                    {product.githubUrl && (
+                                        <a href={product.githubUrl} target="_blank" rel="noopener noreferrer" className={projectStyles.actionBtn} title="View Source on GitHub">
+                                            <FiGithub size={16} />
+                                        </a>
+                                    )}
                                     {product.liveUrl && (
                                         <a href={product.liveUrl} target="_blank" rel="noopener noreferrer" className={projectStyles.actionBtn}>
                                             <FiExternalLink size={16} />

@@ -15,6 +15,7 @@ export interface IProductProject extends Document {
     mediaUrl: string;
     assets?: IAsset[];
     technologies: string[];
+    githubUrl?: string;
     liveUrl: string;
     blogUrl?: string;
     featured: boolean;
@@ -51,6 +52,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
         mediaUrl: { type: String, default: '' },
         assets: { type: [AssetSchema], default: [] },
         technologies: { type: [String], default: [] },
+        githubUrl: { type: String, default: '' },
         liveUrl: { type: String, default: '' },
         blogUrl: { type: String, default: '' },
         featured: { type: Boolean, default: false },
