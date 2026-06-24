@@ -117,14 +117,16 @@ export function Header({ investUrl = '/invest' }: HeaderProps) {
                             <FiTrendingUp size={16} />
                             Invest
                         </Button>
-                        <ThemeToggle />
+                        <ThemeToggle className={styles.themeToggle} />
                         <button
-                            className={styles.menuBtn}
+                            className={`${styles.menuBtn} ${isMobileMenuOpen ? styles.active : ''}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-label="Toggle menu"
                             aria-expanded={isMobileMenuOpen}
                         >
-                            <FiMenu size={22} />
+                            <span className={styles.hamburgerLine} />
+                            <span className={styles.hamburgerLine} />
+                            <span className={styles.hamburgerLine} />
                         </button>
                     </div>
                 </div>
