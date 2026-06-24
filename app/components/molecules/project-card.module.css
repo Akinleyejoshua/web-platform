@@ -304,7 +304,7 @@
     gap: 6px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #ffffff;
+    color: #ffffff !important;
     text-decoration: none;
     background: var(--color-accent, #6366f1);
     border: 1px solid var(--color-accent, #6366f1);
@@ -315,6 +315,7 @@
 }
 
 .blogLink:hover {
+    color: #ffffff !important;
     background: var(--color-accent-hover, #4f46e5);
     border-color: var(--color-accent-hover, #4f46e5);
     transform: translateY(-1px);
