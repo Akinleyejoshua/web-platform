@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy, FiBookOpen } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy, FiBookOpen, FiDownload } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
@@ -46,12 +46,15 @@ const emptyProject: ProjectItem = {
 
 export default function AdminProjectsPage() {
     const [projects, setProjects] = useState<ProjectItem[]>([]);
+    const [allProducts, setAllProducts] = useState<any[]>([]);
     const [editingItem, setEditingItem] = useState<ProjectItem | null>(null);
     const [techInput, setTechInput] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
+    const [importSourceType, setImportSourceType] = useState<'product' | 'project'>('product');
+    const [selectedImportId, setSelectedImportId] = useState('');
 
     const fetchProjects = async () => {
         try {
@@ -64,14 +67,25 @@ export default function AdminProjectsPage() {
         }
     };
 
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get('/api/product-projects?admin=true');
+            setAllProducts(response.data);
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
+        }
+    };
+
     useEffect(() => {
         fetchProjects();
+        fetchProducts();
     }, []);
 
     const handleAdd = () => {
         setEditingItem({ ...emptyProject, order: projects.length });
         setTechInput('');
         setFormUploadMode('storage');
+        setSelectedImportId('');
     };
 
     const handleEdit = (project: ProjectItem) => {
@@ -86,6 +100,51 @@ export default function AdminProjectsPage() {
 
     const handleCancel = () => {
         setEditingItem(null);
+    };
+
+    const handleImportData = () => {
+        if (!selectedImportId) {
+            alert('Please select an item to import.');
+            return;
+        }
+
+        let sourceItem: any = null;
+        if (importSourceType === 'product') {
+            sourceItem = allProducts.find(p => p._id === selectedImportId);
+        } else {
+            sourceItem = projects.find(p => p._id === selectedImportId);
+        }
+
+        if (!sourceItem) {
+            alert('Selected item not found.');
+            return;
+        }
+
+        if (!editingItem) return;
+
+        setEditingItem({
+            ...editingItem,
+            title: sourceItem.title || editingItem.title,
+            description: sourceItem.description || editingItem.description,
+            category: (importSourceType === 'project' && sourceItem.category) ? sourceItem.category : editingItem.category,
+            mediaType: sourceItem.mediaType || editingItem.mediaType,
+            mediaUrl: sourceItem.mediaUrl || editingItem.mediaUrl,
+            assets: sourceItem.assets ? JSON.parse(JSON.stringify(sourceItem.assets)) : [],
+            technologies: sourceItem.technologies || editingItem.technologies,
+            githubUrl: sourceItem.githubUrl || editingItem.githubUrl || '',
+            liveUrl: sourceItem.liveUrl || editingItem.liveUrl,
+            blogUrl: sourceItem.blogUrl || editingItem.blogUrl || '',
+        });
+
+        if (sourceItem.technologies) {
+            setTechInput(sourceItem.technologies.join(', '));
+        }
+
+        const usesBase64 = sourceItem.mediaUrl?.startsWith('data:') || 
+                           sourceItem.assets?.some((a: any) => a.url?.startsWith('data:'));
+        setFormUploadMode(usesBase64 ? 'base64' : 'storage');
+
+        setMessage({ type: 'success', text: `Successfully imported content from "${sourceItem.title}"!` });
     };
 
     const handleSave = async () => {
@@ -249,6 +308,50 @@ export default function AdminProjectsPage() {
                                 disabled={isSaving}
                             >
                                 {isSaving ? 'Generating...' : 'Generate Details'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Import/Exchange Data Block */}
+                    <div style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px dashed rgba(59, 130, 246, 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label className={styles.label} style={{ fontWeight: 600, color: '#3b82f6', marginBottom: 0 }}>Import / Exchange Data</label>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Pre-fill this form by importing details, assets, and properties from an existing product or project.</span>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
+                            <select
+                                value={importSourceType}
+                                onChange={(e) => {
+                                    setImportSourceType(e.target.value as any);
+                                    setSelectedImportId('');
+                                }}
+                                className={styles.select}
+                                style={{ minWidth: '150px', height: '44px' }}
+                            >
+                                <option value="product">From Product</option>
+                                <option value="project">From Project</option>
+                            </select>
+                            <select
+                                value={selectedImportId}
+                                onChange={(e) => setSelectedImportId(e.target.value)}
+                                className={styles.select}
+                                style={{ flex: 1, minWidth: '200px', height: '44px' }}
+                            >
+                                <option value="">-- Select Item to Import --</option>
+                                {importSourceType === 'product'
+                                    ? allProducts.map(p => (
+                                        <option key={p._id} value={p._id}>{p.title}</option>
+                                      ))
+                                    : projects.filter(p => p._id !== editingItem._id).map(p => (
+                                        <option key={p._id} value={p._id}>{p.title}</option>
+                                      ))
+                                }
+                            </select>
+                            <button
+                                type="button"
+                                onClick={handleImportData}
+                                className={styles.addAssetBtn}
+                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: '#3b82f6', gap: '6px' }}
+                            >
+                                <FiDownload size={16} /> Import Content
                             </button>
                         </div>
                     </div>
