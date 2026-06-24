@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
     FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiImage, FiEye, FiEyeOff, FiCalendar, FiTag,
-    FiDownload
+    FiDownload, FiShare2
 } from 'react-icons/fi';
 import { FileUpload, RichTextEditor } from '../components';
 import { Loader } from '@/app/components/atoms/loader';
@@ -191,6 +191,12 @@ The blog post should explain what the ${blogImportSourceType} is, the problem it
         } catch (error) {
             setMessage({ type: 'error', text: 'Failed to delete blog post.' });
         }
+    };
+
+    const copyShareLink = (slug: string) => {
+        const url = `${window.location.origin}/blog/${slug}`;
+        navigator.clipboard.writeText(url);
+        setMessage({ type: 'success', text: 'Blog post share link copied to clipboard!' });
     };
 
     const handleTagsBlur = () => {
@@ -627,6 +633,13 @@ The blog post should explain what the ${blogImportSourceType} is, the problem it
                                 </div>
 
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', borderTop: '1px solid var(--color-border)', paddingTop: '12px', marginTop: '6px' }}>
+                                    <button 
+                                        onClick={() => copyShareLink(blog.slug)} 
+                                        className={styles.cancelBtn} 
+                                        style={{ padding: '6px 12px', fontSize: '0.85rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    >
+                                        <FiShare2 size={12} /> Share
+                                    </button>
                                     <button 
                                         onClick={() => handleEdit(blog)} 
                                         className={styles.cancelBtn} 

@@ -38,14 +38,25 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start w
 
     // Keep backup selection to restore before inserting
     const savedRangeRef = useRef<Range | null>(null);
+    const isInternalChangeRef = useRef(false);
 
     // Handle initial load or external updates
     useEffect(() => {
-        if (editorRef.current && editorRef.current.innerHTML !== value) {
-            editorRef.current.innerHTML = value || '';
+        let isExternal = false;
+        if (editorRef.current) {
+            if (isInternalChangeRef.current) {
+                isInternalChangeRef.current = false;
+            } else if (editorRef.current.innerHTML !== value) {
+                editorRef.current.innerHTML = value || '';
+                isExternal = true;
+            }
+        } else {
+            isExternal = true;
         }
         updateCounts();
-        highlightCode();
+        if (isExternal) {
+            highlightCode();
+        }
     }, [value]);
 
     // Highlight code blocks inside editor
@@ -59,9 +70,12 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start w
         }
     };
 
-    // Run highlight when returning to visual view
+    // Run highlight and restore content when returning to visual view
     useEffect(() => {
-        highlightCode();
+        if (!isSourceMode && editorRef.current) {
+            editorRef.current.innerHTML = value || '';
+            highlightCode();
+        }
     }, [isSourceMode]);
 
     const updateCounts = () => {
@@ -98,6 +112,7 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start w
         document.execCommand(command, false, val);
         updateActiveFormats();
         if (editorRef.current) {
+            isInternalChangeRef.current = true;
             onChange(editorRef.current.innerHTML);
         }
     };
@@ -114,6 +129,7 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Start w
 
     const handleInput = () => {
         if (editorRef.current) {
+            isInternalChangeRef.current = true;
             onChange(editorRef.current.innerHTML);
             updateCounts();
         }
