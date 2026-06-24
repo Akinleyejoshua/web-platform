@@ -8,6 +8,7 @@ export interface IHero extends Document {
     secondaryCtaText: string;
     secondaryCtaLink: string;
     heroImage: string;
+    openToWork: boolean;
     updatedAt: Date;
 }
 
@@ -20,6 +21,7 @@ const HeroSchema = new Schema<IHero>(
         secondaryCtaText: { type: String, default: 'Contact Me' },
         secondaryCtaLink: { type: String, default: '#contact' },
         heroImage: { type: String, default: '/hero-image.jpg' },
+        openToWork: { type: Boolean, default: true },
     },
     { timestamps: true }
 );
