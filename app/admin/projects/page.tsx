@@ -313,8 +313,8 @@ export default function AdminProjectsPage() {
                     </div>
 
                     {/* Import/Exchange Data Block */}
-                    <div style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px dashed rgba(59, 130, 246, 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <label className={styles.label} style={{ fontWeight: 600, color: '#3b82f6', marginBottom: 0 }}>Import / Exchange Data</label>
+                    <div style={{ background: 'rgba(var(--color-accent-rgb, 99, 102, 241), 0.05)', border: '1px dashed rgba(var(--color-accent-rgb, 99, 102, 241), 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label className={styles.label} style={{ fontWeight: 600, color: 'var(--color-accent)', marginBottom: 0 }}>Import / Exchange Data</label>
                         <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Pre-fill this form by importing details, assets, and properties from an existing product or project.</span>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
                             <select
@@ -349,7 +349,7 @@ export default function AdminProjectsPage() {
                                 type="button"
                                 onClick={handleImportData}
                                 className={styles.addAssetBtn}
-                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: '#3b82f6', gap: '6px' }}
+                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: 'var(--color-accent)', gap: '6px' }}
                             >
                                 <FiDownload size={16} /> Import Content
                             </button>
