@@ -306,18 +306,19 @@
     font-weight: 600;
     color: #ffffff;
     text-decoration: none;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
-    border: 1px solid rgba(99, 102, 241, 0.4);
+    background: var(--color-accent, #6366f1);
+    border: 1px solid var(--color-accent, #6366f1);
     padding: 6px 14px;
     border-radius: 20px;
     transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(var(--color-accent-rgb, 99, 102, 241), 0.2);
 }
 
 .blogLink:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.35));
-    border-color: var(--color-accent, #6366f1);
+    background: var(--color-accent-hover, #4f46e5);
+    border-color: var(--color-accent-hover, #4f46e5);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 6px 16px rgba(var(--color-accent-rgb, 99, 102, 241), 0.4);
 }
 
 /* Mobile responsive */
