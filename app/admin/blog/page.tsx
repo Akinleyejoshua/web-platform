@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-    FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiImage, FiEye, FiEyeOff, FiCalendar, FiTag
+    FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiImage, FiEye, FiEyeOff, FiCalendar, FiTag,
+    FiDownload
 } from 'react-icons/fi';
 import { FileUpload, RichTextEditor } from '../components';
 import { Loader } from '@/app/components/atoms/loader';
@@ -36,12 +37,16 @@ const emptyBlog: BlogPostItem = {
 
 export default function AdminBlogPage() {
     const [blogs, setBlogs] = useState<BlogPostItem[]>([]);
+    const [allProjects, setAllProjects] = useState<any[]>([]);
+    const [allProducts, setAllProducts] = useState<any[]>([]);
     const [editingItem, setEditingItem] = useState<BlogPostItem | null>(null);
     const [tagsInput, setTagsInput] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
+    const [blogImportSourceType, setBlogImportSourceType] = useState<'product' | 'project'>('product');
+    const [selectedBlogImportId, setSelectedBlogImportId] = useState('');
 
     const fetchBlogs = async () => {
         try {
@@ -54,24 +59,98 @@ export default function AdminBlogPage() {
         }
     };
 
+    const fetchProjects = async () => {
+        try {
+            const response = await axios.get('/api/projects?admin=true');
+            setAllProjects(response.data);
+        } catch (error) {
+            console.error('Failed to fetch projects for blog import:', error);
+        }
+    };
+
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get('/api/product-projects?admin=true');
+            setAllProducts(response.data);
+        } catch (error) {
+            console.error('Failed to fetch products for blog import:', error);
+        }
+    };
+
     useEffect(() => {
         fetchBlogs();
+        fetchProjects();
+        fetchProducts();
     }, []);
 
     const handleAdd = () => {
         setEditingItem({ ...emptyBlog });
         setTagsInput('');
         setFormUploadMode('storage');
+        setSelectedBlogImportId('');
     };
 
     const handleEdit = (blog: BlogPostItem) => {
         setEditingItem({ ...blog, assets: blog.assets || [] });
         setTagsInput(blog.tags.join(', '));
         setFormUploadMode(blog.coverImage?.startsWith('data:') ? 'base64' : 'storage');
+        setSelectedBlogImportId('');
     };
 
     const handleCancel = () => {
         setEditingItem(null);
+    };
+
+    const handleGenerateBlogFromData = async () => {
+        if (!selectedBlogImportId) {
+            alert('Please select a project or product.');
+            return;
+        }
+
+        let selectedItem: any = null;
+        if (blogImportSourceType === 'product') {
+            selectedItem = allProducts.find(p => p._id === selectedBlogImportId);
+        } else {
+            selectedItem = allProjects.find(p => p._id === selectedBlogImportId);
+        }
+
+        if (!selectedItem) {
+            alert('Selected item not found.');
+            return;
+        }
+
+        setIsSaving(true);
+        setMessage(null);
+
+        const aiPrompt = `Write a comprehensive, professional, and detailed technical blog post about our ${blogImportSourceType} "${selectedItem.title}". 
+Here are the details of the ${blogImportSourceType}:
+Description: ${selectedItem.description}
+Technologies used: ${selectedItem.technologies?.join(', ')}
+${selectedItem.githubUrl ? `GitHub repository: ${selectedItem.githubUrl}` : ''}
+${selectedItem.liveUrl ? `Live URL / Demo: ${selectedItem.liveUrl}` : ''}
+
+The blog post should explain what the ${blogImportSourceType} is, the problem it solves, the technical implementation details (such as the architecture and how the technologies were used), and any key highlights/achievements. Make it engaging, educational, and structured with headings, bullet points, and code snippets where appropriate.`;
+
+        try {
+            const res = await axios.post('/api/generate', { prompt: aiPrompt, type: 'blog' });
+            if (res.data) {
+                setEditingItem({
+                    ...editingItem!,
+                    title: res.data.title || `Introducing ${selectedItem.title}`,
+                    excerpt: res.data.excerpt || selectedItem.description.substring(0, 150),
+                    content: res.data.content || '',
+                    tags: res.data.tags || selectedItem.technologies || [],
+                    coverImage: selectedItem.mediaUrl || editingItem?.coverImage || ''
+                });
+                setTagsInput(res.data.tags ? res.data.tags.join(', ') : (selectedItem.technologies ? selectedItem.technologies.join(', ') : ''));
+                alert('Blog post generated successfully from the project/product details!');
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert('Failed to generate content: ' + (err.response?.data?.error || err.message));
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleSave = async () => {
@@ -234,6 +313,51 @@ export default function AdminBlogPage() {
                                 disabled={isSaving}
                             >
                                 {isSaving ? 'Writing...' : 'Generate Draft'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* AI Blog Generator from Product/Project */}
+                    <div style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px dashed rgba(59, 130, 246, 0.3)', padding: '16px', borderRadius: '8px', marginBottom: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label className={styles.label} style={{ fontWeight: 600, color: '#3b82f6', marginBottom: 0 }}>AI Blog Generator from Product/Project</label>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Select a product or project to have Gemini write a technical blog post detailing its features, stack, and demo.</span>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
+                            <select
+                                value={blogImportSourceType}
+                                onChange={(e) => {
+                                    setBlogImportSourceType(e.target.value as any);
+                                    setSelectedBlogImportId('');
+                                }}
+                                className={styles.select}
+                                style={{ minWidth: '150px', height: '44px' }}
+                            >
+                                <option value="product">From Product</option>
+                                <option value="project">From Project</option>
+                            </select>
+                            <select
+                                value={selectedBlogImportId}
+                                onChange={(e) => setSelectedBlogImportId(e.target.value)}
+                                className={styles.select}
+                                style={{ flex: 1, minWidth: '200px', height: '44px' }}
+                            >
+                                <option value="">-- Select Product/Project --</option>
+                                {blogImportSourceType === 'product'
+                                    ? allProducts.map(p => (
+                                        <option key={p._id} value={p._id}>{p.title}</option>
+                                      ))
+                                    : allProjects.map(p => (
+                                        <option key={p._id} value={p._id}>{p.title}</option>
+                                      ))
+                                }
+                            </select>
+                            <button
+                                type="button"
+                                onClick={handleGenerateBlogFromData}
+                                className={styles.addAssetBtn}
+                                style={{ height: '44px', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', background: '#3b82f6', gap: '6px' }}
+                                disabled={isSaving}
+                            >
+                                <FiDownload size={16} /> {isSaving ? 'Writing...' : 'Generate Blog from Data'}
                             </button>
                         </div>
                     </div>
