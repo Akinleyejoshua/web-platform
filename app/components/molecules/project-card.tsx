@@ -16,7 +16,7 @@ export interface IAsset {
 interface ProjectCardProps {
     title?: string;
     description?: string;
-    mediaType?: 'image' | 'video';
+    mediaType?: 'image' | 'video' | 'video-url';
     mediaUrl?: string;
     assets?: IAsset[];
     technologies?: string[];
