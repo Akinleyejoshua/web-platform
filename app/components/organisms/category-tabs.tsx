@@ -12,6 +12,7 @@ interface CategoryTabsProps {
 const categories: { value: TabCategory; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'web', label: 'Web' },
+    { value: 'mobile', label: 'Mobile' },
     { value: 'ml', label: 'Machine Learning' },
     { value: 'data-science', label: 'Data Science/Analysis' },
     { value: 'web3', label: 'Web3' },

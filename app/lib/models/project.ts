@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export type ProjectCategory = 'web' | 'ml' | 'web3' | 'data-science' | 'others';
-export type MediaType = 'image' | 'video';
+export type ProjectCategory = 'web' | 'mobile' | 'ml' | 'web3' | 'data-science' | 'others';
+export type MediaType = 'image' | 'video' | 'video-url';
 
 export interface IAsset {
     type: 'image' | 'video' | 'youtube' | 'loom' | 'external';
@@ -41,13 +41,13 @@ const ProjectSchema = new Schema<IProject>(
         description: { type: String, required: true },
         category: {
             type: String,
-            enum: ['web', 'ml', 'web3', 'data-science', 'others'],
+            enum: ['web', 'mobile', 'ml', 'web3', 'data-science', 'others'],
             required: true,
             default: 'web',
         },
         mediaType: {
             type: String,
-            enum: ['image', 'video'],
+            enum: ['image', 'video', 'video-url'],
             default: 'image',
         },
         mediaUrl: { type: String, default: '' },

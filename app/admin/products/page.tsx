@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown, FiBookOpen, FiGithub, FiDownload } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiExternalLink, FiImage, FiPackage, FiArrowUp, FiArrowDown, FiBookOpen, FiGithub, FiDownload, FiFilm, FiPlay, FiYoutube } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
 import styles from '../components/editor.module.css';
 import projectStyles from '../projects/projects.module.css';
 
 type ProductCategory = 'saas' | 'b2b' | 'b2c' | 'tool' | 'other';
-type MediaType = 'image' | 'video';
+type MediaType = 'image' | 'video' | 'video-url';
 
 interface ProductItem {
     _id?: string;
@@ -382,15 +382,87 @@ export default function AdminProductsPage() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Product Image</label>
-                        <FileUpload
-                            value={editingItem.mediaUrl}
-                            onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
-                            label="Upload product screenshot"
-                            uploadMode={formUploadMode}
-                            onUploadModeChange={setFormUploadMode}
-                        />
+                        <label className={styles.label}>Media Type</label>
+                        <select
+                            value={editingItem.mediaType}
+                            onChange={(e) => setEditingItem({ ...editingItem, mediaType: e.target.value as MediaType })}
+                            className={styles.select}
+                        >
+                            <option value="image">Image</option>
+                            <option value="video">YouTube Video</option>
+                            <option value="video-url">Video URL (.mp4)</option>
+                        </select>
                     </div>
+
+                    {editingItem.mediaType === 'image' ? (
+                        <div className={styles.field}>
+                            <label className={styles.label}>Product Image</label>
+                            <FileUpload
+                                value={editingItem.mediaUrl}
+                                onChange={(url) => setEditingItem({ ...editingItem, mediaUrl: url })}
+                                label="Upload product screenshot"
+                                uploadMode={formUploadMode}
+                                onUploadModeChange={setFormUploadMode}
+                            />
+                        </div>
+                    ) : editingItem.mediaType === 'video-url' ? (
+                        <div className={styles.field}>
+                            <label className={styles.label}>Video URL (.mp4 / .webm)</label>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={editingItem.mediaUrl}
+                                    onChange={(e) => setEditingItem({ ...editingItem, mediaUrl: e.target.value })}
+                                    className={styles.input}
+                                    style={{ paddingLeft: '40px' }}
+                                    placeholder="https://example.com/demo.mp4"
+                                />
+                                <FiFilm style={{ position: 'absolute', left: '12px', top: '14px', color: '#8b5cf6' }} size={18} />
+                            </div>
+                            {editingItem.mediaUrl && (
+                                <div style={{ marginTop: '10px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)', background: '#000' }}>
+                                    <video
+                                        key={editingItem.mediaUrl}
+                                        src={editingItem.mediaUrl}
+                                        controls
+                                        muted
+                                        playsInline
+
+                                        style={{ width: '100%', maxHeight: '260px', display: 'block', objectFit: 'contain' }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className={styles.field}>
+                            <label className={styles.label}>YouTube URL</label>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="text"
+                                    value={editingItem.mediaUrl}
+                                    onChange={(e) => setEditingItem({ ...editingItem, mediaUrl: e.target.value })}
+                                    className={styles.input}
+                                    style={{ paddingLeft: '40px' }}
+                                    placeholder="https://youtube.com/watch?v=..."
+                                />
+                                <FiYoutube style={{ position: 'absolute', left: '12px', top: '14px', color: '#ff0000' }} size={18} />
+                            </div>
+                            {editingItem.mediaUrl && (() => {
+                                const match = editingItem.mediaUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
+                                const videoId = match ? match[1] : null;
+                                return videoId ? (
+                                    <div style={{ marginTop: '10px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)', position: 'relative', paddingTop: '56.25%' }}>
+                                        <iframe
+                                            src={`https://www.youtube.com/embed/${videoId}`}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                                        />
+                                    </div>
+                                ) : null;
+                            })()}
+                        </div>
+                    )}
 
                     {/* Product Assets List Section */}
                     <div style={{ marginTop: '2rem', marginBottom: '2rem', padding: '1.5rem', background: 'var(--color-bg-secondary, rgba(255,255,255,0.02))', border: '1px dashed var(--color-border)', borderRadius: '12px' }}>
@@ -469,22 +541,54 @@ export default function AdminProductsPage() {
                                                         onUploadModeChange={setFormUploadMode}
                                                     />
                                                 ) : (
-                                                    <input
-                                                        type="text"
-                                                        value={asset.url}
-                                                        onChange={(e) => {
-                                                            const currentAssets = [...(editingItem.assets || [])];
-                                                            currentAssets[index].url = e.target.value;
-                                                            setEditingItem({ ...editingItem, assets: currentAssets });
-                                                        }}
-                                                        className={styles.input}
-                                                        placeholder={
-                                                            asset.type === 'youtube' ? 'https://youtube.com/watch?v=...' :
-                                                            asset.type === 'loom' ? 'https://loom.com/share/...' :
-                                                            'https://...'
-                                                        }
-                                                        style={{ height: '38px', padding: '4px 12px', fontSize: '0.85rem' }}
-                                                    />
+                                                    <>
+                                                        <input
+                                                            type="text"
+                                                            value={asset.url}
+                                                            onChange={(e) => {
+                                                                const currentAssets = [...(editingItem.assets || [])];
+                                                                currentAssets[index].url = e.target.value;
+                                                                setEditingItem({ ...editingItem, assets: currentAssets });
+                                                            }}
+                                                            className={styles.input}
+                                                            placeholder={
+                                                                asset.type === 'video' ? 'https://example.com/demo.mp4' :
+                                                                asset.type === 'youtube' ? 'https://youtube.com/watch?v=...' :
+                                                                asset.type === 'loom' ? 'https://loom.com/share/...' :
+                                                                'https://...'
+                                                            }
+                                                            style={{ height: '38px', padding: '4px 12px', fontSize: '0.85rem' }}
+                                                        />
+                                                        {/* Inline video preview for video URL assets */}
+                                                        {asset.type === 'video' && asset.url && (
+                                                            <div style={{ marginTop: '8px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)', background: '#000' }}>
+                                                                <video
+                                                                    key={asset.url}
+                                                                    src={asset.url}
+                                                                    controls
+                                                                    muted
+                                                                    playsInline
+                            
+                                                                    style={{ width: '100%', maxHeight: '200px', display: 'block', objectFit: 'contain' }}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {/* Inline YouTube preview */}
+                                                        {asset.type === 'youtube' && asset.url && (() => {
+                                                            const match = asset.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s]+)/);
+                                                            const videoId = match ? match[1] : null;
+                                                            return videoId ? (
+                                                                <div style={{ marginTop: '8px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)', position: 'relative', paddingTop: '56.25%' }}>
+                                                                    <iframe
+                                                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                        allowFullScreen
+                                                                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                                                                    />
+                                                                </div>
+                                                            ) : null;
+                                                        })()}
+                                                    </>
                                                 )}
                                             </div>
                                         </div>

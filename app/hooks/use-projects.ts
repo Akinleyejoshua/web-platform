@@ -50,7 +50,7 @@ export function useProjects(options?: { admin?: boolean; initialData?: IProject[
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const domain = params.get('domain');
-            if (domain && ['web', 'ml', 'web3', 'data-science', 'others'].includes(domain)) {
+            if (domain && ['web', 'mobile', 'ml', 'web3', 'data-science', 'others'].includes(domain)) {
                 setActiveCategory(domain as ProjectCategory);
             }
         }

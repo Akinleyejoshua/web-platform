@@ -11,7 +11,7 @@ export interface IProductProject extends Document {
     title: string;
     description: string;
     category: ProductCategory;
-    mediaType: 'image' | 'video';
+    mediaType: 'image' | 'video' | 'video-url';
     mediaUrl: string;
     assets?: IAsset[];
     technologies: string[];
@@ -46,7 +46,7 @@ const ProductProjectSchema = new Schema<IProductProject>(
         },
         mediaType: {
             type: String,
-            enum: ['image', 'video'],
+            enum: ['image', 'video', 'video-url'],
             default: 'image',
         },
         mediaUrl: { type: String, default: '' },

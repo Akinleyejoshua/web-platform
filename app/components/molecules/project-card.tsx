@@ -58,6 +58,10 @@ export function ProjectCard({
         const list: IAsset[] = [];
         if (mediaUrl) {
             let type: IAsset['type'] = (mediaType || 'image') as any;
+            // Map 'video-url' mediaType to the 'video' asset type for rendering
+            if (type === ('video-url' as any)) {
+                type = 'video';
+            }
             if (isYouTubeUrl(mediaUrl)) {
                 type = 'youtube';
             } else if (isLoomUrl(mediaUrl)) {
