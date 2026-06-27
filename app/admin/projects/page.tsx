@@ -434,14 +434,15 @@ export default function AdminProjectsPage() {
                             {editingItem.mediaUrl && (
                                 <div style={{ marginTop: '10px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)', background: '#000' }}>
                                     <video
-                                        key={editingItem.mediaUrl}
-                                        src={editingItem.mediaUrl}
                                         controls
                                         muted
                                         playsInline
-
+                                        preload="auto"
                                         style={{ width: '100%', maxHeight: '260px', display: 'block', objectFit: 'contain' }}
-                                    />
+                                    >
+                                        <source src={editingItem.mediaUrl} />
+                                        Your browser does not support the video tag.
+                                    </video>
                                 </div>
                             )}
                         </div>
@@ -576,14 +577,14 @@ export default function AdminProjectsPage() {
                                                         {asset.type === 'video' && asset.url && (
                                                             <div style={{ marginTop: '8px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)', background: '#000' }}>
                                                                 <video
-                                                                    key={asset.url}
-                                                                    src={asset.url}
                                                                     controls
                                                                     muted
                                                                     playsInline
-                            
+                                                                    preload="auto"
                                                                     style={{ width: '100%', maxHeight: '200px', display: 'block', objectFit: 'contain' }}
-                                                                />
+                                                                >
+                                                                    <source src={asset.url} />
+                                                                </video>
                                                             </div>
                                                         )}
                                                         {/* Inline YouTube preview */}
