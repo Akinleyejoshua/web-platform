@@ -22,9 +22,8 @@ const TAG_TO_SKILL_MAP: Record<string, { name: string; iconName: string; categor
     'reactjs': { name: 'React', iconName: 'react', category: 'frontend' },
     'react.js': { name: 'React', iconName: 'react', category: 'frontend' },
     'next': { name: 'Next.js', iconName: 'nextjs', category: 'frontend' },
-    'nextjs': { name: 'Next.js', iconName: 'nextjs', category: 'frontend' },
+
     'next.js': { name: 'Next.js', iconName: 'nextjs', category: 'frontend' },
-    'nextjs': { name: 'Next.js', iconName: 'nextjs', category: 'frontend' },
     'vue': { name: 'Vue.js', iconName: 'vue', category: 'frontend' },
     'vuejs': { name: 'Vue.js', iconName: 'vue', category: 'frontend' },
     'vue.js': { name: 'Vue.js', iconName: 'vue', category: 'frontend' },
