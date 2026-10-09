@@ -68,7 +68,7 @@ export function ProductProjects({ initialData, initialTotal }: ProductProjectsPr
                     <div style={{
                         display: 'grid',
                         gridTemplateColumns: `
-                            repeat(auto-fill, minmax(460px, 1fr)
+                            repeat(auto-fill, minmax(min(460px, 100%), 1fr)
                         `,
                         gap: '20px',
                         padding: '0 12px'

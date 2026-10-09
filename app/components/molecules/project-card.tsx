@@ -373,7 +373,7 @@ export function ProjectCard({
                         <div className={styles.technologies}>
                             {technologies.map((tech) => (
                                 <Badge key={tech} variant="outline" className={styles.skillBadge}>
-                                    <SkillIcon skillName={tech} size={18} />
+                                    <SkillIcon skillName={tech} size={24} />
                                 </Badge>
                             ))}
                         </div>
