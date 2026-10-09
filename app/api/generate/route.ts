@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
             modelPrompt = `Generate a technical blog post based on this topic/prompt: "${prompt}". Respond ONLY with the JSON object structure specified. Do not include markdown code block wrapper around the JSON itself. Ensure the content value is a string containing valid HTML code.`;
         } else {
             // Project or Product data
-            systemInstruction = `You are a developer portfolio manager. You generate professional, engaging listings for projects and products. The response MUST be a JSON object with the following structure: { "title": "Catchy project/product title", "description": "A detailed, professional description of the project/product showcasing problem solved, engineering highlights, and value.", "technologies": ["Tech1", "Tech2", "Tech3"] }`;
+            systemInstruction = `You are a developer portfolio manager. You generate professional, engaging listings for projects and products. The response MUST be a JSON object with the following structure: { "title": "Catchy project/product title", "description": "A detailed, professional description of the project/product showcasing problem solved, engineering highlights, and value.", "technologies": ["Tech1", "Tech2", "Tech3"], "checks": [{"type": "feature", "label": "Feature label", "description": "Short detail"}, {"type": "goal", "label": "Goal label"}] }. The "type" for checks must be "feature" or "goal". Generate 3 to 5 checks.`;
             modelPrompt = `Generate project/product details based on this prompt: "${prompt}". Respond ONLY with the JSON object structure specified. Do not include markdown code block wrapper around the JSON itself.`;
         }
 

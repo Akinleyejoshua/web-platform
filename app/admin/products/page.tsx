@@ -340,6 +340,9 @@ export default function AdminProductsPage() {
                                                 technologies: res.data.technologies || editingItem.technologies
                                             });
                                             setTechInput(res.data.technologies ? res.data.technologies.join(', ') : '');
+                                            if (res.data.checks && Array.isArray(res.data.checks)) {
+                                                setChecks(res.data.checks);
+                                            }
                                             alert('Product details generated successfully!');
                                         }
                                     } catch (err: any) {

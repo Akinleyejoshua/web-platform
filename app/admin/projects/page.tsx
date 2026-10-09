@@ -362,6 +362,9 @@ export default function AdminProjectsPage() {
                                                 technologies: res.data.technologies || editingItem.technologies
                                             });
                                             setTechInput(res.data.technologies ? res.data.technologies.join(', ') : '');
+                                            if (res.data.checks && Array.isArray(res.data.checks)) {
+                                                setChecks(res.data.checks);
+                                            }
                                             alert('Project details generated successfully!');
                                         }
                                     } catch (err: any) {
