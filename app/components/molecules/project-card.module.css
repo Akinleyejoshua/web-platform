@@ -3,23 +3,22 @@
     display: flex;
     flex-direction: column;
     background: var(--color-card, rgba(20, 20, 25, 0.3));
-    /* border: 1px solid var(--color-border, rgba(255, 255, 255, 0.05)); */
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    box-shadow: none !important; /* Explicitly remove any shadow */
-    transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none !important;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
     height: auto;
     max-height: 100%;
+    min-width: 460px;
+    flex: 0 0 460px;
+    margin: 0 12px 20px 0;
 }
 
 .card:hover {
-    border-color: var(--color-accent, rgba(99, 102, 241, 0.5));
-    background: var(--color-card-hover, rgba(25, 25, 30, 0.4));
-    box-shadow: none !important;
-    transform: translateY(-2px);
+    border-color: var(--color-accent, rgba(99, 102, 241, 0.4));
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
 }
 
 .media {
@@ -262,8 +261,14 @@
 .technologies {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 20px;
+}
+
+.skillBadge {
+    padding: 2px;
+    background: transparent !important;
+    border: none !important;
 }
 
 .links {
@@ -320,6 +325,117 @@
     border-color: var(--color-accent-hover, #4f46e5);
     transform: translateY(-1px);
     box-shadow: 0 6px 16px rgba(var(--color-accent-rgb, 99, 102, 241), 0.4);
+}
+
+/* See More Button */
+.seeMoreBtn {
+    background: none;
+    border: none;
+    color: var(--color-accent, #6366f1);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.seeMoreBtn:hover {
+    color: var(--color-accent-hover, #4f46e5);
+}
+
+.seeMoreIcon {
+    transition: transform 0.2s ease;
+    font-size: 0.75rem;
+}
+
+.seeMoreBtn:hover .seeMoreIcon {
+    transform: rotate(180deg);
+}
+
+/* Checks / Features Section */
+.checksSection {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.checksHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent, #6366f1);
+    margin-bottom: 8px;
+}
+
+.checksIcon {
+    font-size: 0.75rem;
+}
+
+.checksList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
+    line-height: 1.4;
+}
+
+.checkIcon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--color-accent, #6366f1);
+}
+
+.checkItem.goal .checkIcon {
+    background: rgba(236, 72, 153, 0.15);
+    color: #ec4899;
+}
+
+.checkItem.archive .checkIcon {
+    background: rgba(251, 191, 36, 0.15);
+    color: #f59e0b;
+}
+
+.checkContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.checkLabel {
+    font-weight: 500;
+    color: var(--color-text, rgba(255, 255, 255, 0.9));
+}
+
+.checkDescription {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+    font-style: italic;
 }
 
 /* Mobile responsive */

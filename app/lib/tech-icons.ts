@@ -1,4 +1,7 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, SVGProps } from 'react';
+import * as SiIcons from 'react-icons/si';
+import * as FaIcons from 'react-icons/fa';
+import * as Fa6Icons from 'react-icons/fa6';
 
 // Import Simple Icons (brand-accurate logos) from react-icons/si
 import {

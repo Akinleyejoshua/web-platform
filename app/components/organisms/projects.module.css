@@ -1,5 +1,7 @@
 .projects {
     background: var(--color-bg-secondary);
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
 }
 
 .loading {

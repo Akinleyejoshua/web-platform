@@ -65,7 +65,14 @@ export function ProductProjects({ initialData, initialTotal }: ProductProjectsPr
                 <p className={styles.empty}>No products in this category yet.</p>
             ) : (
                 <>
-                    <Carousel key={page}>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: `
+                            repeat(auto-fill, minmax(460px, 1fr)
+                        `,
+                        gap: '20px',
+                        padding: '0 12px'
+                    }}>
                         {products.map((product) => (
                             <ProjectCard
                                 key={product._id as any}
@@ -78,9 +85,10 @@ export function ProductProjects({ initialData, initialTotal }: ProductProjectsPr
                                 githubUrl={product.githubUrl}
                                 liveUrl={product.liveUrl}
                                 blogUrl={product.blogUrl}
+                                checks={product.checks}
                             />
                         ))}
-                    </Carousel>
+                    </div>
 
                     {totalPages > 1 && (
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>

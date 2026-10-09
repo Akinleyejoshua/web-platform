@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { FiGithub, FiExternalLink, FiCode, FiMaximize2, FiChevronLeft, FiChevronRight, FiPlay, FiBookOpen } from 'react-icons/fi';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { FiGithub, FiExternalLink, FiCode, FiMaximize2, FiChevronLeft, FiChevronRight, FiPlay, FiBookOpen, FiChevronDown, FiCheck, FiTarget, FiArchive, FiZap } from 'react-icons/fi';
 import { Badge } from '@/app/components/atoms/badge';
+import { SkillIcon } from '@/app/components/atoms/skill-icon';
 import { trackClick } from '@/app/hooks/useAnalyticsTracker';
 import { AssetPreviewLightbox } from './asset-preview-lightbox';
 import { optimizeImageUrl } from '@/app/lib/image-utils';
 import styles from './project-card.module.css';
+import { ICheck, CheckType } from '@/app/lib/models/project';
 
 export interface IAsset {
     type: 'image' | 'video' | 'youtube' | 'loom' | 'external';
@@ -25,6 +27,7 @@ interface ProjectCardProps {
     blogUrl?: string;
     className?: string;
     isLoading?: boolean;
+    checks?: ICheck[];
 }
 
 export function ProjectCard({
@@ -39,10 +42,12 @@ export function ProjectCard({
     blogUrl,
     className = '',
     isLoading = false,
+    checks = [],
 }: ProjectCardProps) {
     const [imageError, setImageError] = useState<Record<number, boolean>>({});
     const [activeAssetIndex, setActiveAssetIndex] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
     const hoverIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const isYouTubeUrl = (url: string) => {
@@ -333,13 +338,69 @@ export function ProjectCard({
                         <span className={styles.categoryTag}>{technologies[0]}</span>
                     )}
                     <h3 className={styles.title}>{title}</h3>
-                    <p className={styles.description}>{description}</p>
+                    <p className={styles.description}>
+                        {isDescriptionExpanded 
+                            ? description 
+                            : description.length > 150 
+                                ? `${description.substring(0, 150)}...` 
+                                : description
+                        }
+                        {description.length > 150 && (
+                            <button
+                                className={styles.seeMoreBtn}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsDescriptionExpanded(!isDescriptionExpanded);
+                                }}
+                            >
+                                {isDescriptionExpanded ? ' Show Less' : ' See More'}
+                                <FiChevronDown className={styles.seeMoreIcon} />
+                            </button>
+                        )}
+                    </p>
 
+                    {/* Tech/Skills Section with skill icons */}
                     {technologies && technologies.length > 0 && (
                         <div className={styles.technologies}>
                             {technologies.map((tech) => (
-                                <Badge key={tech} variant="outline">{tech}</Badge>
+                                <Badge key={tech} variant="outline" className={styles.skillBadge}>
+                                    <SkillIcon skillName={tech} size={18} />
+                                </Badge>
                             ))}
+                        </div>
+                    )}
+
+                    {/* Checks / Features Section */}
+                    {checks && checks.length > 0 && (
+                        <div className={styles.checksSection}>
+                            <div className={styles.checksHeader}>
+                                <FiCheck className={styles.checksIcon} />
+                                <span>What I Delivered</span>
+                            </div>
+                            <ul className={styles.checksList}>
+                                {checks.map((check, index) => (
+                                    <li 
+                                        key={index} 
+                                        className={`${styles.checkItem} ${styles[check.type || 'feature']}`}
+                                    >
+                                        <span className={styles.checkIcon}>
+                                            {check.type === 'goal' ? (
+                                                <FiTarget size={12} />
+                                            ) : check.type === 'archive' ? (
+                                                <FiArchive size={12} />
+                                            ) : (
+                                                <FiCheck size={12} />
+                                            )}
+                                        </span>
+                                        <span className={styles.checkContent}>
+                                            <span className={styles.checkLabel}>{check.label}</span>
+                                            {check.description && (
+                                                <span className={styles.checkDescription}>{check.description}</span>
+                                            )}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     )}
 

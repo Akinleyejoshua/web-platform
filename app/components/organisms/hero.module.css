@@ -1,11 +1,11 @@
 .hero {
     position: relative;
-    min-height: 90vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 140px;
-    padding-bottom: var(--space-3xl);
+    padding-top: 120px;
+    padding-bottom: var(--space-2xl);
     overflow: hidden;
     background: var(--color-bg);
 }
@@ -48,8 +48,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
+    padding: 0 var(--space-md);
 }
 
 /* Portrait Section */

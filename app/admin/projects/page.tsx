@@ -1,17 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy, FiBookOpen, FiDownload, FiFilm, FiPlay } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck, FiGithub, FiExternalLink, FiImage, FiYoutube, FiArrowUp, FiArrowDown, FiCopy, FiBookOpen, FiDownload, FiFilm, FiPlay, FiSearch } from 'react-icons/fi';
 import { FileUpload } from '../components/file-upload';
 import { Loader } from '@/app/components/atoms/loader';
+import { getTechIcon, getTechBrandColor } from '@/app/lib/tech-icons';
 import styles from '../components/editor.module.css';
+import { ISkill } from '@/app/lib/models/skill';
 
 // Local specific styles for project card grid
 import projectStyles from './projects.module.css';
 
 type ProjectCategory = 'web' | 'mobile' | 'ml' | 'web3' | 'data-science' | 'others';
 type MediaType = 'image' | 'video' | 'video-url';
+type CheckType = 'feature' | 'goal' | 'archive';
+
+interface CheckItem {
+    type: CheckType;
+    label: string;
+    description?: string;
+}
 
 interface ProjectItem {
     _id?: string;
@@ -27,6 +36,7 @@ interface ProjectItem {
     blogUrl?: string;
     order: number;
     isVisible: boolean;
+    checks: CheckItem[];
 }
 
 const emptyProject: ProjectItem = {
@@ -42,6 +52,7 @@ const emptyProject: ProjectItem = {
     blogUrl: '',
     order: 0,
     isVisible: true,
+    checks: [],
 };
 
 export default function AdminProjectsPage() {
@@ -49,7 +60,13 @@ export default function AdminProjectsPage() {
     const [allProducts, setAllProducts] = useState<any[]>([]);
     const [editingItem, setEditingItem] = useState<ProjectItem | null>(null);
     const [techInput, setTechInput] = useState('');
+    const [selectedSkills, setSelectedSkills] = useState<ISkill[]>([]);
+    const [availableSkills, setAvailableSkills] = useState<ISkill[]>([]);
+    const [showSkillSuggestions, setShowSkillSuggestions] = useState(false);
+    const [skillSearchQuery, setSkillSearchQuery] = useState('');
+    const [checks, setChecks] = useState<CheckItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const skillsLoadingRef = useRef(false);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [formUploadMode, setFormUploadMode] = useState<'storage' | 'base64'>('storage');
@@ -79,7 +96,21 @@ export default function AdminProjectsPage() {
     useEffect(() => {
         fetchProjects();
         fetchProducts();
+        fetchSkills();
     }, []);
+
+    const fetchSkills = async () => {
+        if (skillsLoadingRef.current) return;
+        skillsLoadingRef.current = true;
+        try {
+            const response = await axios.get('/api/skills?isVisible=true');
+            setAvailableSkills(response.data || []);
+        } catch (error) {
+            console.error('Failed to fetch skills:', error);
+        } finally {
+            skillsLoadingRef.current = false;
+        }
+    };
 
     const handleAdd = () => {
         setEditingItem({ ...emptyProject, order: projects.length });
@@ -91,6 +122,17 @@ export default function AdminProjectsPage() {
     const handleEdit = (project: ProjectItem) => {
         setEditingItem({ ...project });
         setTechInput(project.technologies.join(', '));
+        setChecks(project.checks || []);
+        
+        // Find matching skills for existing technologies
+        if (project.technologies && availableSkills.length > 0) {
+            const matchedSkills = availableSkills.filter(skill => 
+                project.technologies!.some(t => t.toLowerCase() === skill.name.toLowerCase())
+            );
+            setSelectedSkills(matchedSkills);
+        } else {
+            setSelectedSkills([]);
+        }
         
         // Detect if any existing image uses base64
         const usesBase64 = project.mediaUrl?.startsWith('data:') || 
@@ -183,9 +225,35 @@ export default function AdminProjectsPage() {
 
     const handleTechBlur = () => {
         if (!editingItem) return;
-        const techs = techInput.split(',').map((t) => t.trim()).filter((t) => t);
-        setEditingItem({ ...editingItem, technologies: techs });
+        // Use selected skills if available, otherwise parse from input
+        if (selectedSkills.length > 0) {
+            const techs = selectedSkills.map(s => s.name);
+            setEditingItem({ ...editingItem, technologies: techs });
+        } else {
+            const techs = techInput.split(',').map((t) => t.trim()).filter((t) => t);
+            setEditingItem({ ...editingItem, technologies: techs });
+        }
     };
+
+    const handleSkillSelect = (skill: ISkill) => {
+        if (!selectedSkills.find(s => s._id === skill._id)) {
+            setSelectedSkills([...selectedSkills, skill]);
+            setTechInput(selectedSkills.map(s => s.name).join(', '));
+        }
+        setShowSkillSuggestions(false);
+        setSkillSearchQuery('');
+    };
+
+    const handleSkillRemove = (skillId: string) => {
+        const updated = selectedSkills.filter(s => s._id !== skillId);
+        setSelectedSkills(updated);
+        setTechInput(updated.map(s => s.name).join(', '));
+    };
+
+    const filteredSkills = availableSkills.filter(skill =>
+        skill.name.toLowerCase().includes(skillSearchQuery.toLowerCase()) &&
+        !selectedSkills.find(s => s._id === skill._id)
+    ).slice(0, 8);
 
     const handleMove = async (index: number, direction: 'up' | 'down') => {
         if (direction === 'up' && index === 0) return;
@@ -613,15 +681,246 @@ export default function AdminProjectsPage() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label}>Technologies (comma-separated)</label>
-                        <input
-                            type="text"
-                            value={techInput}
-                            onChange={(e) => setTechInput(e.target.value)}
-                            onBlur={handleTechBlur}
-                            className={styles.input}
-                            placeholder="React, Next.js, TensorFlow"
-                        />
+                        <label className={styles.label}>Technologies / Skills</label>
+                        <div style={{ position: 'relative' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'var(--color-bg-secondary)', minHeight: '44px' }}>
+                                {selectedSkills.map(skill => (
+                                    <span 
+                                        key={skill._id} 
+                                        style={{ 
+                                            display: 'inline-flex', 
+                                            alignItems: 'center', 
+                                            gap: '6px',
+                                            padding: '4px 10px',
+                                            background: 'var(--color-accent-light)',
+                                            border: '1px solid var(--color-accent)',
+                                            borderRadius: '20px',
+                                            fontSize: '0.8rem',
+                                            color: 'var(--color-accent)',
+                                        }}
+                                    >
+                                        <span>{skill.name}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSkillRemove(skill._id!)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0', color: 'inherit', display: 'flex' }}
+                                            title="Remove"
+                                        >
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                                <path d="M9.5 3.5L8.5 2.5L6 5L3.5 2.5L2.5 3.5L5 6L2.5 8.5L3.5 9.5L6 7L8.5 9.5L9.5 8.5L7 6L9.5 3.5Z"/>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                ))}
+                                {selectedSkills.length === 0 && (
+                                    <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', padding: '4px 0' }}>
+                                        Select from existing skills or type to add
+                                    </span>
+                                )}
+                            </div>
+                            <input
+                                type="text"
+                                value={skillSearchQuery}
+                                onChange={(e) => {
+                                    setSkillSearchQuery(e.target.value);
+                                    setShowSkillSuggestions(true);
+                                }}
+                                onFocus={() => setShowSkillSuggestions(true)}
+                                onBlur={() => setTimeout(() => setShowSkillSuggestions(false), 200)}
+                                className={styles.input}
+                                style={{ 
+                                    marginTop: '4px',
+                                    border: 'none',
+                                    background: 'transparent',
+                                    color: 'var(--color-text)',
+                                    outline: 'none',
+                                    paddingLeft: '12px'
+                                }}
+                                placeholder="Search skills... (e.g. React, TypeScript)"
+                            />
+                        </div>
+                        
+                        {/* Skill Suggestions Dropdown */}
+                        {showSkillSuggestions && filteredSkills.length > 0 && (
+                            <div style={{ 
+                                position: 'absolute', 
+                                top: '100%', 
+                                left: 0, 
+                                right: 0, 
+                                marginTop: '4px',
+                                background: 'var(--color-card)',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                maxHeight: '200px',
+                                overflowY: 'auto',
+                                zIndex: 50,
+                                padding: '4px'
+                            }}>
+                                {filteredSkills.map(skill => {
+                                    const IconComponent = getTechIcon(skill.iconName);
+                                    const brandColor = skill.color || getTechBrandColor(skill.iconName);
+                                    return (
+                                        <button
+                                            key={skill._id}
+                                            type="button"
+                                            onClick={() => handleSkillSelect(skill)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                                width: '100%',
+                                                padding: '8px 12px',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                borderRadius: '6px',
+                                                cursor: 'pointer',
+                                                textAlign: 'left',
+                                                color: 'var(--color-text)',
+                                                transition: 'background 0.15s'
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-secondary)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                        >
+                                            <IconComponent size={18} color={brandColor || 'var(--color-text-secondary)'} style={{ display: 'block', flexShrink: 0 }} />
+                                            <span style={{ fontSize: '0.85rem' }}>{skill.name}</span>
+                                            <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'var(--color-text-secondary)', textTransform: 'capitalize' }}>
+                                                {skill.category}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
+                        💡 Select skills from the dropdown to ensure proper logo display
+                    </p>
+
+                    {/* Checks / Features Section */}
+                    <div className={styles.section} style={{ margin: '16px 0', padding: '16px', background: 'var(--color-bg-secondary)', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                            <FiCheck size={18} style={{ color: 'var(--color-accent)' }} />
+                            <label className={styles.label} style={{ marginBottom: 0, fontWeight: 600 }}>What I Delivered (Checks / Features)</label>
+                        </div>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', margin: '0 0 16px 0' }}>
+                            Add key features, goals achieved, or archived items for this project.
+                        </p>
+                        
+                        <div className={styles.checksList}>
+                            {checks.map((check, index) => (
+                                <div key={index} className={styles.checkItem}>
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                                        {/* Type Selector */}
+                                        <select
+                                            value={check.type}
+                                            onChange={(e) => {
+                                                const updated = [...checks];
+                                                updated[index] = { ...updated[index], type: e.target.value as CheckType };
+                                                setChecks(updated);
+                                            }}
+                                            style={{
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border)',
+                                                background: 'var(--color-bg-secondary)',
+                                                color: 'var(--color-text)',
+                                                fontSize: '0.8rem',
+                                                marginRight: '8px',
+                                            }}
+                                        >
+                                            <option value="feature">Feature</option>
+                                            <option value="goal">Goal</option>
+                                            <option value="archive">Archived</option>
+                                        </select>
+                                        
+                                        {/* Label Input */}
+                                        <input
+                                            type="text"
+                                            value={check.label}
+                                            onChange={(e) => {
+                                                const updated = [...checks];
+                                                updated[index] = { ...updated[index], label: e.target.value };
+                                                setChecks(updated);
+                                            }}
+                                            placeholder="What was delivered/achieved?"
+                                            style={{
+                                                flex: 1,
+                                                padding: '6px 10px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border)',
+                                                background: 'var(--color-bg-secondary)',
+                                                color: 'var(--color-text)',
+                                                fontSize: '0.85rem',
+                                            }}
+                                        />
+                                        
+                                        {/* Description Input */}
+                                        <input
+                                            type="text"
+                                            value={check.description || ''}
+                                            onChange={(e) => {
+                                                const updated = [...checks];
+                                                updated[index] = { ...updated[index], description: e.target.value };
+                                                setChecks(updated);
+                                            }}
+                                            placeholder="Optional details"
+                                            style={{
+                                                flex: 1,
+                                                padding: '6px 10px',
+                                                borderRadius: '4px',
+                                                border: '1px solid var(--color-border)',
+                                                background: 'var(--color-bg-secondary)',
+                                                color: 'var(--color-text)',
+                                                fontSize: '0.85rem',
+                                            }}
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const updated = checks.filter((_, i) => i !== index);
+                                            setChecks(updated);
+                                        }}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            color: 'var(--color-text-secondary)',
+                                            cursor: 'pointer',
+                                            padding: '4px',
+                                            marginLeft: '8px',
+                                            borderRadius: '4px',
+                                        }}
+                                        title="Remove check"
+                                    >
+                                        <FiTrash2 size={14} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setChecks([...checks, { type: 'feature', label: '', description: '' }]);
+                            }}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                padding: '8px 16px',
+                                background: 'var(--color-accent)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                marginTop: '8px',
+                            }}
+                        >
+                            <FiPlus size={14} /> Add Check
+                        </button>
                     </div>
 
                     <div className={styles.row}>

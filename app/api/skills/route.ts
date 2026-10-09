@@ -9,16 +9,28 @@ export async function GET(request: NextRequest) {
         // Check for cached data (non-admin requests only)
         const { searchParams } = new URL(request.url);
         const isAdmin = searchParams.get('admin') === 'true';
+        const nameFilter = searchParams.get('name');
 
         if (!isAdmin) {
             const cached = await getCachedSection('skills');
             if (cached) {
+                if (nameFilter) {
+                    const filtered = (cached as any[]).filter((s: any) => 
+                        s.name?.toLowerCase().includes(nameFilter.toLowerCase())
+                    );
+                    return NextResponse.json(filtered, { status: 200 });
+                }
                 return NextResponse.json(cached, { status: 200 });
             }
         }
 
         await connectDB();
-        const skills = await Skill.find().sort({ order: 1, name: 1 }).lean();
+        let skills;
+        if (nameFilter) {
+            skills = await Skill.find({ name: { $regex: nameFilter, $options: 'i' } }).sort({ order: 1, name: 1 }).lean();
+        } else {
+            skills = await Skill.find().sort({ order: 1, name: 1 }).lean();
+        }
         return NextResponse.json(skills, { status: 200 });
     } catch (error) {
         console.error('Skill GET error:', error);

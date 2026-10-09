@@ -39,7 +39,7 @@ const FONT_OPTIONS = [
     },
 ];
 
-const SIZE_OPTIONS = [14, 15, 16, 17, 18];
+const SIZE_OPTIONS = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 const WEIGHT_OPTIONS = [
     { value: 300, label: 'Light' },

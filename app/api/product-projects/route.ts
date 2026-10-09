@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { denyIfReadOnly } from '@/app/lib/read-only-guard';
 import connectDB from '@/app/lib/db';
-import ProductProject from '@/app/lib/models/productProject';
+import ProductProject, { IProductProject } from '@/app/lib/models/productProject';
 import { getCachedSection } from '@/app/lib/cache';
 
 export async function GET(request: NextRequest) {

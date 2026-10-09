@@ -7,6 +7,14 @@ export interface IAsset {
     url: string;
 }
 
+export type CheckType = 'feature' | 'goal' | 'archive';
+
+export interface ICheck {
+    type: CheckType;
+    label: string;
+    description?: string;
+}
+
 export interface IProductProject extends Document {
     title: string;
     description: string;
@@ -21,6 +29,7 @@ export interface IProductProject extends Document {
     featured: boolean;
     isVisible: boolean;
     order: number;
+    checks: ICheck[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -58,6 +67,16 @@ const ProductProjectSchema = new Schema<IProductProject>(
         featured: { type: Boolean, default: false },
         isVisible: { type: Boolean, default: true },
         order: { type: Number, default: 0 },
+        checks: {
+            type: [
+                {
+                    type: { type: String, enum: ['feature', 'goal', 'archive'], required: true },
+                    label: { type: String, required: true },
+                    description: { type: String, default: '' },
+                }
+            ],
+            default: [],
+        },
     },
     { timestamps: true }
 );

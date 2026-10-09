@@ -50,7 +50,14 @@ export function Projects({ initialData, initialTotal }: ProjectsProps = {}) {
                 <p className={styles.empty}>No projects in this category yet.</p>
             ) : (
                 <>
-                    <Carousel key={page}>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: `
+                            repeat(auto-fill, minmax(460px, 1fr)
+                        `,
+                        gap: '20px',
+                        padding: '0 12px'
+                    }}>
                         {projects.map((project) => (
                             <ProjectCard
                                 key={project._id as any}
@@ -63,9 +70,10 @@ export function Projects({ initialData, initialTotal }: ProjectsProps = {}) {
                                 githubUrl={project.githubUrl}
                                 liveUrl={project.liveUrl}
                                 blogUrl={project.blogUrl}
+                                checks={project.checks}
                             />
                         ))}
-                    </Carousel>
+                    </div>
 
                     {totalPages > 1 && (
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '2rem' }}>
