@@ -44,12 +44,9 @@ export function SkillIcon({ skillName, size = 16, className = '' }: SkillIconPro
                         const brandColor = skill.color || getTechBrandColor(skill.iconName || normalizedName) || 'var(--color-text-secondary)';
                         
                         // Create the icon element
+                        const iconProps: Record<string, any> = { size, color: brandColor };
                         setLoadedIcon(
-                            React.createElement(IconComponent, { 
-                                size, 
-                                color: brandColor,
-                                style: { display: 'block' }
-                            })
+                            React.createElement(IconComponent, iconProps)
                         );
                         return;
                     }
@@ -61,12 +58,9 @@ export function SkillIcon({ skillName, size = 16, className = '' }: SkillIconPro
             // Fallback: use direct lookup from skill name
             const IconComponent = getTechIcon(normalizedName);
             const brandColor = getTechBrandColor(normalizedName) || 'var(--color-text-secondary)';
+            const fallbackProps: Record<string, any> = { size, color: brandColor };
             setLoadedIcon(
-                React.createElement(IconComponent, { 
-                    size, 
-                    color: brandColor,
-                    style: { display: 'block' }
-                })
+                React.createElement(IconComponent, fallbackProps)
             );
         }
         

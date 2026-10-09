@@ -232,8 +232,8 @@ export default function AdminProductsPage() {
         setSkillSearchQuery('');
     };
 
-    const handleSkillRemove = (skillId: string) => {
-        const updated = selectedSkills.filter(s => s._id !== skillId);
+    const handleSkillRemove = (skillId: any) => {
+        const updated = selectedSkills.filter(s => s._id.toString() !== skillId.toString());
         setSelectedSkills(updated);
         setTechInput(updated.map(s => s.name).join(', '));
     };
@@ -438,9 +438,8 @@ export default function AdminProductsPage() {
                         <label className={styles.label}>Technologies / Skills</label>
                         <div style={{ position: 'relative' }}>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'var(--color-bg-secondary)', minHeight: '44px' }}>
-                                {selectedSkills.map(skill => (
-                                    <span 
-                                        key={skill._id} 
+                                {selectedSkills.map(skill => (                                        <span 
+                                        key={skill._id?.toString() || skill.name} 
                                         style={{ 
                                             display: 'inline-flex', 
                                             alignItems: 'center', 
@@ -514,7 +513,7 @@ export default function AdminProductsPage() {
                                     const brandColor = skill.color || getTechBrandColor(skill.iconName);
                                     return (
                                         <button
-                                            key={skill._id}
+                                            key={skill._id?.toString() || skill.name}
                                             type="button"
                                             onClick={() => handleSkillSelect(skill)}
                                             style={{
@@ -534,7 +533,7 @@ export default function AdminProductsPage() {
                                             onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-bg-secondary)'}
                                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                                         >
-                                            <IconComponent size={18} color={brandColor || 'var(--color-text-secondary)'} style={{ display: 'block', flexShrink: 0 }} />
+                                            <IconComponent size={18} color={brandColor || 'var(--color-text-secondary)'} />
                                             <span style={{ fontSize: '0.85rem' }}>{skill.name}</span>
                                             <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'var(--color-text-secondary)', textTransform: 'capitalize' }}>
                                                 {skill.category}
