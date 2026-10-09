@@ -743,10 +743,7 @@ export default function AdminProjectsPage() {
                         {/* Skill Suggestions Dropdown */}
                         {showSkillSuggestions && filteredSkills.length > 0 && (
                             <div style={{ 
-                                position: 'absolute', 
-                                top: '100%', 
-                                left: 0, 
-                                right: 0, 
+                                position: 'relative', 
                                 marginTop: '4px',
                                 background: 'var(--color-card)',
                                 border: '1px solid var(--color-border)',
@@ -755,7 +752,8 @@ export default function AdminProjectsPage() {
                                 maxHeight: '200px',
                                 overflowY: 'auto',
                                 zIndex: 50,
-                                padding: '4px'
+                                padding: '4px',
+                                width: '100%'
                             }}>
                                 {filteredSkills.map(skill => {
                                     const IconComponent = getTechIcon(skill.iconName);
