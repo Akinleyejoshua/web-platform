@@ -22,6 +22,7 @@ interface ProjectCardProps {
     mediaUrl?: string;
     assets?: IAsset[];
     technologies?: string[];
+    enterpriseContext?: 'client' | 'company';
     githubUrl?: string;
     liveUrl?: string;
     blogUrl?: string;
@@ -37,6 +38,7 @@ export function ProjectCard({
     mediaUrl = '',
     assets = [],
     technologies = [],
+    enterpriseContext,
     githubUrl,
     liveUrl,
     blogUrl,
@@ -334,9 +336,16 @@ export function ProjectCard({
 
                 {/* Content Section */}
                 <div className={styles.content}>
-                    {technologies && technologies.length > 0 && (
-                        <span className={styles.categoryTag}>{technologies[0]}</span>
-                    )}
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+                        {technologies && technologies.length > 0 && (
+                            <span className={styles.categoryTag}>{technologies[0]}</span>
+                        )}
+                        {enterpriseContext && (
+                            <span className={styles.categoryTag} style={{ background: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}>
+                                {enterpriseContext === 'client' ? 'Client Work' : 'Company Role'}
+                            </span>
+                        )}
+                    </div>
                     <h3 className={styles.title}>{title}</h3>
                     <p className={styles.description}>
                         {isDescriptionExpanded 

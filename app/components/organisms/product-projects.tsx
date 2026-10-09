@@ -86,6 +86,7 @@ export function ProductProjects({ initialData, initialTotal }: ProductProjectsPr
                                 liveUrl={product.liveUrl}
                                 blogUrl={product.blogUrl}
                                 checks={product.checks}
+                                enterpriseContext={product.enterpriseContext}
                             />
                         ))}
                     </div>

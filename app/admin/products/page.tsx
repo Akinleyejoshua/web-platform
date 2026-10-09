@@ -25,6 +25,7 @@ interface ProductItem {
     title: string;
     description: string;
     category: ProductCategory;
+    enterpriseContext?: 'client' | 'company';
     mediaType: MediaType;
     mediaUrl: string;
     assets?: { type: 'image' | 'video' | 'youtube' | 'loom' | 'external'; url: string }[];
@@ -41,6 +42,7 @@ const emptyProduct: ProductItem = {
     title: '',
     description: '',
     category: 'saas',
+    enterpriseContext: undefined,
     mediaType: 'image',
     mediaUrl: '',
     assets: [],
@@ -175,6 +177,7 @@ export default function AdminProductsPage() {
             title: sourceItem.title || editingItem.title,
             description: sourceItem.description || editingItem.description,
             category: (importSourceType === 'product' && sourceItem.category) ? sourceItem.category : editingItem.category,
+            enterpriseContext: (importSourceType === 'product' && sourceItem.enterpriseContext) ? sourceItem.enterpriseContext : editingItem.enterpriseContext,
             mediaType: sourceItem.mediaType || editingItem.mediaType,
             mediaUrl: sourceItem.mediaUrl || editingItem.mediaUrl,
             assets: sourceItem.assets ? JSON.parse(JSON.stringify(sourceItem.assets)) : [],
@@ -207,7 +210,7 @@ export default function AdminProductsPage() {
         setMessage(null);
 
         try {
-            const dataToSave = { ...editingItem, technologies: techs };
+            const dataToSave = { ...editingItem, technologies: techs, checks };
             if (editingItem._id) {
                 await axios.put('/api/product-projects', dataToSave);
             } else {
@@ -422,6 +425,19 @@ export default function AdminProductsPage() {
                                 ))}
                             </select>
                         </div>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Context (Client or Company)</label>
+                        <select
+                            value={editingItem.enterpriseContext || ''}
+                            onChange={(e) => setEditingItem({ ...editingItem, enterpriseContext: e.target.value as 'client' | 'company' | undefined })}
+                            className={styles.select}
+                        >
+                            <option value="">Not Specified</option>
+                            <option value="client">Client Work</option>
+                            <option value="company">Current Company Role</option>
+                        </select>
                     </div>
 
                     <div className={styles.field}>

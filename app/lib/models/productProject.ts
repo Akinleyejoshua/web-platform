@@ -19,6 +19,7 @@ export interface IProductProject extends Document {
     title: string;
     description: string;
     category: ProductCategory;
+    enterpriseContext?: 'client' | 'company';
     mediaType: 'image' | 'video' | 'video-url';
     mediaUrl: string;
     assets?: IAsset[];
@@ -52,6 +53,11 @@ const ProductProjectSchema = new Schema<IProductProject>(
             enum: ['saas', 'b2b', 'b2c', 'tool', 'other'],
             required: true,
             default: 'saas',
+        },
+        enterpriseContext: {
+            type: String,
+            enum: ['client', 'company'],
+            required: false,
         },
         mediaType: {
             type: String,
