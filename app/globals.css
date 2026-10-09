@@ -54,8 +54,8 @@
   --transition-slow: 350ms ease;
 
   /* Container */
-  --container-max: 1200px;
-  --container-padding: 0rem;
+  --container-max: 1500px;
+  --container-padding: 1rem;
 
   /* Z-Index */
   --z-dropdown: 100;
